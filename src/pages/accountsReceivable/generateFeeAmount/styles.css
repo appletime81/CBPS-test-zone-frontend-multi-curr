@@ -1,0 +1,21 @@
+@media print {
+    body{
+      /* -webkit-print-color-adjust:exact; */
+      /* -moz-print-color-adjust:exact; */
+      /* -ms-print-color-adjust:exact; */
+      /* print-color-adjust:exact; */
+    }
+    .no-print {
+      display: none;
+      -webkit-print-color-adjust:exact;
+      -moz-print-color-adjust:exact;
+      -ms-print-color-adjust:exact;
+      print-color-adjust:exact;
+    }
+  }
+
+@media screen {
+    .no-show{
+        display: none;
+    }
+}

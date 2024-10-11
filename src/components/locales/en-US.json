@@ -1,0 +1,14 @@
+{
+    "Supplier Name":"Supplier Name",
+    "Invoice No":"Invoice No",
+    "Submarine Cable":"Submarine Cable",
+    "Work Title":"Work Title",
+    "Contract Type":"Contract Type",
+    "Issue Date":"Issue Date",
+    "Total Amount":"Total Amount",
+    "Due Date":"Due Date",
+    "Is Pro Forma":"Is Pro-Forma",
+    "Is Liability": "Is Liability",
+    "Is Recharge":"Is Recharge",
+    "Is Credit Memo": "Is Credit Memo"
+}

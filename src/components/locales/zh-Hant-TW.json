@@ -1,0 +1,14 @@
+{
+    "Supplier Name":"供應商",
+    "Invoice No":"發票號碼",
+    "Submarine Cable":"海纜名稱",
+    "Work Title":"海纜作業",
+    "Contract Type":"合約種類",
+    "Issue Date":"發票日期",
+    "Total Amount":"總金額",
+    "Due Date":"發票到期日",
+    "Is Pro Forma":"是否為Pro-Forma",
+    "Is Liability":"是否需攤分",
+    "Is Recharge":"是否短繳補收",
+    "Is Credit Memo": "是否為Credit Memo"
+}
