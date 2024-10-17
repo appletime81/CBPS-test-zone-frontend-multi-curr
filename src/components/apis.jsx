@@ -1,27 +1,27 @@
 //let env = 'internal-cbpsAlb-1176080923.ap-northeast-1.elb.amazonaws.com'
 // let env = '10.193.130.75:8000';
-let env = '172.28.124.164:8000';
+let env = '127.0.0.1:8000';
 let httpEnv = 'http';
 
 if (process.env.REACT_APP_ENV_FLAGE === 'qa') {
     env = 'cbpsqabe.cht.com.tw';
-    httpEnv = 'http';
+    httpEnv = 'https';
 } else if (process.env.REACT_APP_ENV_FLAGE === 'ol') {
     env = 'cbpsbe.cht.com.tw';
-    httpEnv = 'http';
+    httpEnv = 'https';
 }
 export const ssoUrlQA =
-    'http://iam-qa.cht.com.tw/auth/realms/B2E/protocol/openid-connect/auth?client_id=CBPS.QA.I&response_type=code&redirect_uri=http://cbpsqa.cht.com.tw&scope=ldap';
+    'https://iam-qa.cht.com.tw/auth/realms/B2E/protocol/openid-connect/auth?client_id=CBPS.QA.I&response_type=code&redirect_uri=https://cbpsqa.cht.com.tw&scope=ldap';
 export const ssoUrlOL =
-    'http://iam.cht.com.tw/auth/realms/B2E/protocol/openid-connect/auth?client_id=CBPS-CBPS.OL.I&response_type=code&redirect_uri=http://cbps.cht.com.tw&scope=ldap';
+    'https://iam.cht.com.tw/auth/realms/B2E/protocol/openid-connect/auth?client_id=CBPS-CBPS.OL.I&response_type=code&redirect_uri=https://cbps.cht.com.tw&scope=ldap';
 
-export const redirectUriQA = 'http://cbpsqa.cht.com.tw';
-export const redirectUriOL = 'http://cbps.cht.com.tw';
-// 'http://internal-cbpsalbfrontend-1323185980.ap-northeast-1.elb.amazonaws.com';
+export const redirectUriQA = 'https://cbpsqa.cht.com.tw';
+export const redirectUriOL = 'https://cbps.cht.com.tw';
+// 'https://internal-cbpsalbfrontend-1323185980.ap-northeast-1.elb.amazonaws.com';
 
 export const accessSSOQA =
-    'http://iam-qa.cht.com.tw/auth/realms/B2E/protocol/openid-connect/token';
-export const accessSSOOL = 'http://iam.cht.com.tw/auth/realms/B2E/protocol/openid-connect/token';
+    'https://iam-qa.cht.com.tw/auth/realms/B2E/protocol/openid-connect/token';
+export const accessSSOOL = 'https://iam.cht.com.tw/auth/realms/B2E/protocol/openid-connect/token';
 
 // Login
 export const generatetoken = `${httpEnv}://${env}/api/v1/generatetoken`;
