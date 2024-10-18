@@ -36,7 +36,7 @@ import {
     deleteLiability,
     addLiabilityapi,
     submarineCableInfoList,
-    getPartiesInfoList,
+    dropdownmenuParties,
 } from 'components/apis.jsx';
 
 // redux
@@ -108,6 +108,20 @@ const LiabilityAdd = ({
     };
 
     const infoCheck = () => {
+        const lBRatioSum = listInfo.reduce((acc, obj) => acc + parseInt(obj.LBRatio), 0);
+        if (lBRatioSum === 100) {
+            dispatch(
+                setMessageStateOpen({
+                    messageStateOpen: {
+                        isOpen: true,
+                        severity: 'error',
+                        message: '攤分比例已到達100',
+                    },
+                }),
+            );
+            return false;
+        }
+
         if (partyName.length === 0) {
             dispatch(
                 setMessageStateOpen({
@@ -312,7 +326,7 @@ const LiabilityAdd = ({
                 );
             });
         //會員名稱
-        fetch(getPartiesInfoList, { method: 'GET' })
+        fetch(dropdownmenuParties, { method: 'GET' })
             .then((res) => res.json())
             .then((data) => {
                 setPartiesList(data);
@@ -359,15 +373,7 @@ const LiabilityAdd = ({
                         </Typography>
                     </Grid>
                     {dialogAction === 'Split' ? (
-                        <Grid
-                            item
-                            xs={2}
-                            sm={2}
-                            md={2}
-                            lg={2}
-                            display="flex"
-                            justifyContent="center"
-                        >
+                        <Grid item sm={2} md={2} lg={2} display="flex" justifyContent="center">
                             <TextField
                                 fullWidth
                                 variant="outlined"
@@ -389,15 +395,7 @@ const LiabilityAdd = ({
                             />
                         </Grid>
                     ) : (
-                        <Grid
-                            item
-                            xs={2}
-                            sm={2}
-                            md={2}
-                            lg={2}
-                            display="flex"
-                            justifyContent="center"
-                        >
+                        <Grid item sm={2} md={2} lg={2} display="flex" justifyContent="center">
                             <TextField
                                 fullWidth
                                 variant="outlined"
@@ -588,7 +586,6 @@ const LiabilityAdd = ({
                     </Grid>
                     <Grid
                         item
-                        xs={1}
                         sm={1}
                         md={1}
                         lg={1}

@@ -17,7 +17,7 @@ import { setMessageStateOpen } from 'store/reducers/dropdown';
 
 // api
 import {
-    getPartiesInfoList,
+    dropdownmenuParties,
     submarineCableInfoList,
     getBillMasterBillDetail,
 } from 'components/apis';
@@ -123,7 +123,7 @@ const WriteOffQuery = ({ setListInfo, value }) => {
                 );
             });
         //會員名稱
-        fetch(getPartiesInfoList, { method: 'GET' })
+        fetch(dropdownmenuParties, { method: 'GET' })
             .then((res) => res.json())
             .then((data) => {
                 setPartiesList(data);

@@ -2,13 +2,13 @@ import { useState, useRef } from 'react';
 
 // project import
 import { handleNumber, BootstrapDialogTitle } from 'components/commonFunction';
+import Decimal from 'decimal.js';
 // material-ui
 import {
     Button,
     Table,
     Dialog,
     DialogContent,
-    DialogContentText,
     DialogActions,
     TableFooter,
     Box,
@@ -86,7 +86,6 @@ const ToBillDataList = ({ listInfo, page, setPage }) => {
         })
             .then((res) => res.json())
             .then((data) => {
-                // totalAmount.current = data[0].TotalAmount;
                 fetch(tmpQueryDetail, {
                     method: 'GET',
                     Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
@@ -108,10 +107,16 @@ const ToBillDataList = ({ listInfo, page, setPage }) => {
                             }, []),
                         );
                         data2.forEach((i) => {
-                            tmpFeeAmountPost = tmpFeeAmountPost + i.FeeAmountPost;
-                            tmpDifferAmount = tmpDifferAmount + i.Difference;
-                            tmpAfterDiffAmount =
-                                tmpAfterDiffAmount + (i.FeeAmountPost + i.Difference - i.WHTAmount);
+                            tmpFeeAmountPost = new Decimal(tmpFeeAmountPost).add(
+                                new Decimal(i.FeeAmountPost),
+                            );
+                            tmpDifferAmount = new Decimal(tmpDifferAmount).add(
+                                new Decimal(i.Difference),
+                            );
+                            tmpAfterDiffAmount = new Decimal(tmpAfterDiffAmount)
+                                .add(new Decimal(i.FeeAmountPost))
+                                .add(new Decimal(i.Difference))
+                                .minus(new Decimal(i.WHTAmount));
                             codeType.current = i.ToCode;
                         });
                         totalAmount.current = tmpFeeAmountPost;
@@ -294,7 +299,7 @@ const ToBillDataList = ({ listInfo, page, setPage }) => {
                                                                 : null,
                                                     }}
                                                 >
-                                                    {handleNumber(afterDiff.toFixed(2))}
+                                                    {handleNumber(afterDiff)}
                                                 </TableCell>
                                             </TableRow>
                                         );
@@ -312,22 +317,19 @@ const ToBillDataList = ({ listInfo, page, setPage }) => {
                                     <StyledTableCell className="totalAmount"></StyledTableCell>
                                     <StyledTableCell className="totalAmount"></StyledTableCell>
                                     <StyledTableCell className="totalAmount" align="center">
-                                        {handleNumber(totalAmount.current.toFixed(2))}
+                                        {handleNumber(totalAmount.current)}
                                     </StyledTableCell>
                                     <StyledTableCell className="totalAmount"></StyledTableCell>
                                     <StyledTableCell className="totalAmount" align="center">
-                                        {handleNumber(differAmount.current.toFixed(2))}
+                                        {handleNumber(differAmount.current)}
                                     </StyledTableCell>
                                     <StyledTableCell className="totalAmount" align="center">
-                                        {handleNumber(afterDiffAmount.current.toFixed(2))}
+                                        {handleNumber(afterDiffAmount.current)}
                                     </StyledTableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>
                     </TableContainer>
-                    {/* <DialogContentText sx={{ fontSize: '20px', mt: '0.5rem' }}>
-                        發票總金額：${handleNumber(totalAmount.current)}
-                    </DialogContentText> */}
                 </DialogContent>
                 <Box display="flex" justifyContent="end" sx={{ marginRight: '2rem' }}>
                     幣別：{codeType.current}

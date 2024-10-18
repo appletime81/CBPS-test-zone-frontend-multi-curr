@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useState } from 'react';
 import {
     Typography,
     Grid,
@@ -7,34 +7,16 @@ import {
     InputLabel,
     Select,
     MenuItem,
-    Box,
     TextField,
-    Checkbox,
-    Autocomplete,
-    Table,
 } from '@mui/material';
 
 // project
 import { BootstrapDialogTitle } from 'components/commonFunction';
-import { handleNumber } from 'components/commonFunction';
-
+import NumericFormatCustom from 'components/numericFormatCustom';
 // day
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-
-// autocomplete
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-
-// table
-import TableBody from '@mui/material/TableBody';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import Paper from '@mui/material/Paper';
-import { styled } from '@mui/material/styles';
 
 // api
 import { queryCB } from 'components/apis.jsx';
@@ -47,6 +29,7 @@ const CreditBalanceAdd = ({
     isDialogOpen,
     partiesList,
     submarineCableList,
+    currencyListInfo,
     queryApi,
     setListInfo,
 }) => {
@@ -60,6 +43,7 @@ const CreditBalanceAdd = ({
     const [submarineCable, setSubmarineCable] = useState(''); // 海纜名稱
     const [workTitle, setWorkTitle] = useState(''); // 海纜作業
     const [billMilestone, setBillMilestone] = useState(''); // 計帳段號
+    const [code, setCode] = useState('');
 
     const infoInitial = () => {
         setCBType('');
@@ -70,6 +54,7 @@ const CreditBalanceAdd = ({
         setBillingNo('');
         setSubmarineCable('');
         setWorkTitle('');
+        setCode('');
     };
 
     const creditBalanceQuery = () => {
@@ -150,6 +135,17 @@ const CreditBalanceAdd = ({
             );
             return false;
         }
+        if (code === '') {
+            dispatch(
+                setMessageStateOpen({
+                    messageStateOpen: {
+                        isOpen: true,
+                        severity: 'error',
+                        message: '請輸入幣別',
+                    },
+                }),
+            );
+        }
         return true;
     };
 
@@ -165,6 +161,7 @@ const CreditBalanceAdd = ({
                 BillMilestone: billMilestone ? billMilestone : null,
                 CurrAmount: currAmount ? Number(currAmount.replaceAll(',', '')) : null,
                 Note: note ? note : null,
+                Code: code ? code : null,
             };
             console.log('tmpArray=>>', tmpArray);
             fetch(queryCB, {
@@ -205,7 +202,7 @@ const CreditBalanceAdd = ({
     };
 
     return (
-        <Dialog maxWidth="md" fullWidth open={isDialogOpen}>
+        <Dialog maxWidth="sm" fullWidth open={isDialogOpen}>
             <BootstrapDialogTitle>新增Credit Balance</BootstrapDialogTitle>
             <DialogContent dividers>
                 <Grid
@@ -215,18 +212,18 @@ const CreditBalanceAdd = ({
                     justifyContent="center"
                     alignItems="center"
                 >
-                    <Grid item xs={2} sm={2} md={2} lg={2} display="flex" justifyContent="center">
+                    <Grid item xs={3} sm={3} md={3} lg={3} display="flex" justifyContent="center">
                         <Typography
                             variant="h5"
                             sx={{
-                                fontSize: { lg: '0.7rem', xl: '0.88rem' },
+                                fontSize: { xl: '0.88rem' },
                                 ml: { lg: '0.5rem', xl: '1.5rem' },
                             }}
                         >
                             CB種類：
                         </Typography>
                     </Grid>
-                    <Grid item xs={2} sm={2} md={2} lg={2}>
+                    <Grid item xs={3} sm={3} md={3} lg={3}>
                         <FormControl fullWidth size="small">
                             <InputLabel>選擇CB種類</InputLabel>
                             <Select
@@ -242,18 +239,18 @@ const CreditBalanceAdd = ({
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={2} sm={2} md={2} lg={2} display="flex" justifyContent="center">
+                    <Grid item xs={3} sm={3} md={3} lg={3} display="flex" justifyContent="center">
                         <Typography
                             variant="h5"
                             sx={{
-                                fontSize: { lg: '0.7rem', xl: '0.88rem' },
+                                fontSize: { xl: '0.88rem' },
                                 ml: { lg: '0.5rem', xl: '1.5rem' },
                             }}
                         >
                             摘要：
                         </Typography>
                     </Grid>
-                    <Grid item xs={2} sm={2} md={2} lg={2}>
+                    <Grid item xs={3} sm={3} md={3} lg={3}>
                         <TextField
                             fullWidth
                             variant="outlined"
@@ -263,18 +260,18 @@ const CreditBalanceAdd = ({
                             onChange={(e) => setNote(e.target.value)}
                         />
                     </Grid>
-                    <Grid item xs={2} sm={2} md={2} lg={2} display="flex" justifyContent="center">
+                    <Grid item xs={3} sm={3} md={3} lg={3} display="flex" justifyContent="center">
                         <Typography
                             variant="h5"
                             sx={{
-                                fontSize: { lg: '0.7rem', xl: '0.88rem' },
+                                fontSize: { xl: '0.88rem' },
                                 ml: { lg: '0.5rem', xl: '1.5rem' },
                             }}
                         >
                             會員名稱：
                         </Typography>
                     </Grid>
-                    <Grid item xs={2} sm={2} md={2} lg={2}>
+                    <Grid item xs={3} sm={3} md={3} lg={3}>
                         <FormControl fullWidth size="small">
                             <InputLabel>選擇會員</InputLabel>
                             <Select
@@ -290,40 +287,43 @@ const CreditBalanceAdd = ({
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={2} sm={2} md={2} lg={2} display="flex" justifyContent="center">
+                    <Grid item xs={3} sm={3} md={3} lg={3} display="flex" justifyContent="center">
                         <Typography
                             variant="h5"
                             sx={{
-                                fontSize: { lg: '0.7rem', xl: '0.88rem' },
+                                fontSize: { xl: '0.88rem' },
                                 ml: { lg: '0.5rem', xl: '1.5rem' },
                             }}
                         >
                             金額：
                         </Typography>
                     </Grid>
-                    <Grid item xs={2} sm={2} md={2} lg={2}>
+                    <Grid item xs={3} sm={3} md={3} lg={3}>
                         <TextField
                             fullWidth
                             variant="outlined"
-                            value={handleNumber(currAmount)}
+                            value={currAmount}
+                            InputProps={{
+                                inputComponent: NumericFormatCustom,
+                            }}
                             size="small"
                             label="填寫金額(限制16位數)"
                             onChange={(e) => setCurrAmount(e.target.value)}
                         />
                     </Grid>
-                    {/* <Grid item xs={2} sm={2} md={2} lg={2} xl={6} /> */}
-                    <Grid item xs={2} sm={2} md={2} lg={2} display="flex" justifyContent="center">
+                    {/* <Grid item xs={3} sm={3} md={3} lg={3} xl={6} /> */}
+                    <Grid item xs={3} sm={3} md={3} lg={3} display="flex" justifyContent="center">
                         <Typography
                             variant="h5"
                             sx={{
-                                fontSize: { lg: '0.7rem', xl: '0.88rem' },
+                                fontSize: { xl: '0.88rem' },
                                 ml: { lg: '0.5rem', xl: '1.5rem' },
                             }}
                         >
                             發票號碼：
                         </Typography>
                     </Grid>
-                    <Grid item xs={2} sm={2} md={2} lg={2}>
+                    <Grid item xs={3} sm={3} md={3} lg={3}>
                         <TextField
                             fullWidth
                             variant="outlined"
@@ -333,18 +333,18 @@ const CreditBalanceAdd = ({
                             onChange={(e) => setInvoiceNo(e.target.value)}
                         />
                     </Grid>
-                    <Grid item xs={2} sm={2} md={2} lg={2} display="flex" justifyContent="center">
+                    <Grid item xs={3} sm={3} md={3} lg={3} display="flex" justifyContent="center">
                         <Typography
                             variant="h5"
                             sx={{
-                                fontSize: { lg: '0.7rem', xl: '0.88rem' },
+                                fontSize: { xl: '0.88rem' },
                                 ml: { lg: '0.5rem', xl: '1.5rem' },
                             }}
                         >
                             帳單號碼：
                         </Typography>
                     </Grid>
-                    <Grid item xs={2} sm={2} md={2} lg={2}>
+                    <Grid item xs={3} sm={3} md={3} lg={3}>
                         <TextField
                             fullWidth
                             variant="outlined"
@@ -354,19 +354,19 @@ const CreditBalanceAdd = ({
                             onChange={(e) => setBillingNo(e.target.value)}
                         />
                     </Grid>
-                    {/* <Grid item xs={2} sm={2} md={2} lg={2} xl={6} /> */}
-                    <Grid item xs={2} sm={2} md={2} lg={2} display="flex" justifyContent="center">
+                    {/* <Grid item xs={3} sm={3} md={3} lg={3} xl={6} /> */}
+                    <Grid item xs={3} sm={3} md={3} lg={3} display="flex" justifyContent="center">
                         <Typography
                             variant="h5"
                             sx={{
-                                fontSize: { lg: '0.7rem', xl: '0.88rem' },
+                                fontSize: { xl: '0.88rem' },
                                 ml: { lg: '0.5rem', xl: '1.5rem' },
                             }}
                         >
                             海纜名稱：
                         </Typography>
                     </Grid>
-                    <Grid item xs={2} sm={2} md={2} lg={2}>
+                    <Grid item xs={3} sm={3} md={3} lg={3}>
                         <FormControl fullWidth size="small">
                             <InputLabel>選擇海纜名稱</InputLabel>
                             <Select
@@ -382,18 +382,18 @@ const CreditBalanceAdd = ({
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={2} sm={2} md={2} lg={2} display="flex" justifyContent="center">
+                    <Grid item xs={3} sm={3} md={3} lg={3} display="flex" justifyContent="center">
                         <Typography
                             variant="h5"
                             sx={{
-                                fontSize: { lg: '0.7rem', xl: '0.88rem' },
+                                fontSize: { xl: '0.88rem' },
                                 ml: { lg: '0.5rem', xl: '1.5rem' },
                             }}
                         >
                             海纜作業：
                         </Typography>
                     </Grid>
-                    <Grid item xs={2} sm={2} md={2} lg={2}>
+                    <Grid item xs={3} sm={3} md={3} lg={3}>
                         <FormControl fullWidth size="small">
                             <InputLabel id="billMilestone">選擇海纜作業</InputLabel>
                             <Select
@@ -407,18 +407,18 @@ const CreditBalanceAdd = ({
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={2} sm={2} md={2} lg={2} display="flex" justifyContent="center">
+                    <Grid item xs={3} sm={3} md={3} lg={3} display="flex" justifyContent="center">
                         <Typography
                             variant="h5"
                             sx={{
-                                fontSize: { lg: '0.7rem', xl: '0.88rem' },
+                                fontSize: { xl: '0.88rem' },
                                 ml: { lg: '0.5rem', xl: '1.5rem' },
                             }}
                         >
                             計帳段號：
                         </Typography>
                     </Grid>
-                    <Grid item xs={2} sm={2} md={2} lg={2}>
+                    <Grid item xs={3} sm={3} md={3} lg={3}>
                         <TextField
                             fullWidth
                             variant="outlined"
@@ -427,6 +427,33 @@ const CreditBalanceAdd = ({
                             label="填寫計帳段號"
                             onChange={(e) => setBillMilestone(e.target.value)}
                         />
+                    </Grid>
+                    <Grid item xs={3} sm={3} md={3} lg={3} display="flex" justifyContent="center">
+                        <Typography
+                            variant="h5"
+                            sx={{
+                                fontSize: { xl: '0.88rem' },
+                                ml: { lg: '0.5rem', xl: '1.5rem' },
+                            }}
+                        >
+                            幣別：
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={3} sm={3} md={3} lg={3}>
+                        <FormControl fullWidth size="small">
+                            <InputLabel>選擇幣別</InputLabel>
+                            <Select
+                                value={code}
+                                label="幣別"
+                                onChange={(e) => setCode(e.target.value)}
+                            >
+                                {currencyListInfo.map((i) => (
+                                    <MenuItem key={i.Code} value={i.Code}>
+                                        {i.CName}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
                     </Grid>
                 </Grid>
             </DialogContent>

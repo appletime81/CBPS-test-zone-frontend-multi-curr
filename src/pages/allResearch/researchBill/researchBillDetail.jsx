@@ -10,6 +10,7 @@ import dayjs from 'dayjs';
 // project import
 import { BootstrapDialogTitle } from 'components/commonFunction';
 import { handleNumber } from 'components/commonFunction';
+import Decimal from 'decimal.js';
 // table
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
@@ -45,7 +46,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     },
 }));
 
-const ResearchBillDetail = ({ datailInfo }) => {
+const ResearchBillDetail = ({ detailInfo }) => {
     const dispatch = useDispatch();
     const [isDialogOpen, setIsDialogOpen] = useState(false); //檢視
     const [billMasterInfo, setBillMasterInfo] = useState({});
@@ -69,11 +70,10 @@ const ResearchBillDetail = ({ datailInfo }) => {
                 if (Array.isArray(data)) {
                     let tmpAmount = 0;
                     data.forEach((i) => {
-                        console.log('i=>>', i);
                         setBillMasterInfo(i.BillMaster);
                         setBillDetailInfo(i.BillDetail);
                         i.BillDetail.forEach((row) => {
-                            tmpAmount = tmpAmount + row.PaidAmount;
+                            tmpAmount = new Decimal(tmpAmount).add(new Decimal(row.PaidAmount));
                         });
                     });
                     totalPaidAmount.current = tmpAmount;
@@ -125,13 +125,13 @@ const ResearchBillDetail = ({ datailInfo }) => {
                                 帳單號碼：
                             </Typography>
                         </Grid>
-                        <Grid item sm={3} md={3} lg={3}>
+                        <Grid item sm={2} md={2} lg={2}>
                             <TextField
                                 value={billMasterInfo.BillingNo}
                                 fullWidth
                                 variant="outlined"
                                 size="small"
-                                disabled
+                                readyOnly
                             />
                         </Grid>
                         <Grid
@@ -149,15 +149,16 @@ const ResearchBillDetail = ({ datailInfo }) => {
                                 帳單到期日：
                             </Typography>
                         </Grid>
-                        <Grid item sm={3} md={3} lg={3}>
+                        <Grid item sm={2} md={2} lg={2}>
                             <TextField
                                 value={dayjs(billMasterInfo.DueDate).format('YYYY/MM/DD')}
                                 fullWidth
-                                disabled={true}
+                                readyOnly
                                 variant="outlined"
                                 size="small"
                             />
                         </Grid>
+                        <Grid item sm={4} md={4} lg={4} />
                         <Grid item xs={12} sm={12} md={12} lg={12}>
                             <TableContainer component={Paper} sx={{ maxHeight: 350 }}>
                                 <Table sx={{ minWidth: 300 }} stickyHeader>
@@ -205,16 +206,13 @@ const ResearchBillDetail = ({ datailInfo }) => {
                                                         {row.PartyName}
                                                     </TableCell>
                                                     <TableCell align="center">
-                                                        ${handleNumber(row.OrgFeeAmount.toFixed(2))}
+                                                        {handleNumber(row.OrgFeeAmount)}
                                                     </TableCell>
                                                     <TableCell align="center">
-                                                        $
-                                                        {handleNumber(
-                                                            row.ReceivedAmount.toFixed(2),
-                                                        )}
+                                                        {handleNumber(row.ReceivedAmount)}
                                                     </TableCell>
                                                     <TableCell align="center">
-                                                        ${handleNumber(row.PaidAmount.toFixed(2))}
+                                                        {handleNumber(row.PaidAmount)}
                                                     </TableCell>
                                                     <TableCell align="center">{row.Note}</TableCell>
                                                 </TableRow>
@@ -237,19 +235,13 @@ const ResearchBillDetail = ({ datailInfo }) => {
                                                 align="center"
                                             />
                                             <StyledTableCell className="totalAmount" align="center">
-                                                $
-                                                {handleNumber(
-                                                    billMasterInfo.FeeAmountSum?.toFixed(2),
-                                                )}
+                                                {handleNumber(billMasterInfo.FeeAmountSum)}
                                             </StyledTableCell>
                                             <StyledTableCell className="totalAmount" align="center">
-                                                $
-                                                {handleNumber(
-                                                    billMasterInfo.ReceivedAmountSum?.toFixed(2),
-                                                )}
+                                                {handleNumber(billMasterInfo.ReceivedAmountSum)}
                                             </StyledTableCell>
                                             <StyledTableCell className="totalAmount" align="center">
-                                                ${handleNumber(totalPaidAmount.current?.toFixed(2))}
+                                                {handleNumber(totalPaidAmount.current)}
                                             </StyledTableCell>
                                             <StyledTableCell
                                                 className="totalAmount"
@@ -288,7 +280,7 @@ const ResearchBillDetail = ({ datailInfo }) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {datailInfo?.map((row, id) => {
+                        {detailInfo?.map((row, id) => {
                             return (
                                 <TableRow
                                     key={row?.BillingNo + row?.BillMilestone + id}

@@ -118,15 +118,13 @@ const WriteOffedDataList = ({ listInfo }) => {
                                         {row.BillDetail?.length}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        {handleNumber(row.BillMaster?.BankFees?.toFixed(2))}
+                                        {handleNumber(row.BillMaster?.BankFees)}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        {handleNumber(
-                                            row.BillMaster?.ReceivedAmountSum?.toFixed(2),
-                                        )}
+                                        {handleNumber(row.BillMaster?.ReceivedAmountSum)}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        {handleNumber(row.BillMaster?.FeeAmountSum?.toFixed(2))}
+                                        {handleNumber(row.BillMaster?.FeeAmountSum)}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Box

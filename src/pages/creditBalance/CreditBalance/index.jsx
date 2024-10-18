@@ -9,7 +9,7 @@ import CreditBalanceDataList from './creditBalanceDataList';
 import CreditBalanceAdd from './creditBalanceAdd';
 
 // api
-import { getPartiesInfoList, submarineCableInfoList } from 'components/apis';
+import { dropdownmenuParties, submarineCableInfoList, getCurrencyData } from 'components/apis';
 
 // redux
 import { useDispatch } from 'react-redux';
@@ -22,6 +22,7 @@ const CreditBalance = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [submarineCableList, setSubmarineCableList] = useState([]); //海纜名稱下拉選單
     const [partiesList, setPartiesList] = useState([]); //會員下拉選單
+    const [currencyListInfo, setCurrencyListInfo] = useState([]); //幣別下拉選單
 
     const handleDialogOpen = () => {
         setIsDialogOpen(true);
@@ -52,10 +53,31 @@ const CreditBalance = () => {
                 );
             });
         //會員名稱
-        fetch(getPartiesInfoList, { method: 'GET' })
+        fetch(dropdownmenuParties, { method: 'GET' })
             .then((res) => res.json())
             .then((data) => {
                 setPartiesList(data);
+            })
+            .catch(() => {
+                dispatch(
+                    setMessageStateOpen({
+                        messageStateOpen: {
+                            isOpen: true,
+                            severity: 'error',
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
+                        },
+                    }),
+                );
+            });
+        fetch(getCurrencyData, {
+            method: 'GET',
+            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (Array.isArray(data)) {
+                    setCurrencyListInfo(data);
+                }
             })
             .catch(() => {
                 dispatch(
@@ -81,6 +103,7 @@ const CreditBalance = () => {
                     isDialogOpen={isDialogOpen}
                     partiesList={partiesList}
                     submarineCableList={submarineCableList}
+                    currencyListInfo={currencyListInfo}
                     queryApi={queryApi.current}
                     setListInfo={setListInfo}
                 />

@@ -145,7 +145,7 @@ const CreditBalanceQuery = ({ setListInfo, partiesList, submarineCableList, quer
                         會員：
                     </Typography>
                 </Grid>
-                <Grid item xs={2} sm={2} md={2} lg={2}>
+                <Grid item sm={3} md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇會員</InputLabel>
                         <Select
@@ -167,7 +167,7 @@ const CreditBalanceQuery = ({ setListInfo, partiesList, submarineCableList, quer
                         CB種類：
                     </Typography>
                 </Grid>
-                <Grid item xs={2} sm={2} md={2} lg={2}>
+                <Grid item sm={3} md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇CB種類</InputLabel>
                         <Select
@@ -189,7 +189,7 @@ const CreditBalanceQuery = ({ setListInfo, partiesList, submarineCableList, quer
                         海纜名稱：
                     </Typography>
                 </Grid>
-                <Grid item xs={2} sm={2} md={2} lg={2}>
+                <Grid item sm={3} md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇海纜名稱</InputLabel>
                         <Select
@@ -211,7 +211,7 @@ const CreditBalanceQuery = ({ setListInfo, partiesList, submarineCableList, quer
                         海纜作業：
                     </Typography>
                 </Grid>
-                <Grid item xs={2} sm={2} md={2} lg={2}>
+                <Grid item sm={3} md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇海纜作業</InputLabel>
                         <Select
@@ -227,7 +227,7 @@ const CreditBalanceQuery = ({ setListInfo, partiesList, submarineCableList, quer
                     </FormControl>
                 </Grid>
                 {/* row2 */}
-                <Grid item xs={2} sm={2} md={1} lg={1} display="flex">
+                <Grid item sm={1} md={1} lg={1} display="flex">
                     <Typography
                         variant="h5"
                         sx={{
@@ -238,7 +238,7 @@ const CreditBalanceQuery = ({ setListInfo, partiesList, submarineCableList, quer
                         剩餘金額：
                     </Typography>
                 </Grid>
-                <Grid item xs={2} sm={2} md={2} lg={2}>
+                <Grid item sm={3} md={2} lg={2}>
                     <FormControl size="small">
                         <FormGroup row size="small" value={currAmount}>
                             <FormControlLabel
@@ -270,12 +270,12 @@ const CreditBalanceQuery = ({ setListInfo, partiesList, submarineCableList, quer
                         </FormGroup>
                     </FormControl>
                 </Grid>
-                <Grid item xs={2} sm={2} md={1} lg={1}>
+                <Grid item sm={1} md={1} lg={1}>
                     <Typography variant="h5" sx={{ fontSize: { lg: '0.7rem', xl: '0.88rem' } }}>
                         建立日期：
                     </Typography>
                 </Grid>
-                <Grid item xs={4} sm={4} md={4} lg={4}>
+                <Grid item sm={4} md={4} lg={4}>
                     <LocalizationProvider
                         dateAdapter={AdapterDayjs}
                         localeText={{ start: '起始日', end: '結束日' }}
@@ -298,7 +298,6 @@ const CreditBalanceQuery = ({ setListInfo, partiesList, submarineCableList, quer
                 </Grid>
                 <Grid
                     item
-                    xs={6}
                     sm={6}
                     md={4}
                     lg={4}

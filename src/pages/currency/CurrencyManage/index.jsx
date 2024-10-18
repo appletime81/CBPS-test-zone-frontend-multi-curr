@@ -12,7 +12,7 @@ import CurrencyManage from './currencyManage';
 import {
     billMilestoneLiabilityList,
     dropdownmenuSubmarineCable,
-    partiesLiabilityList,
+    dropdownmenuParties,
     queryLiability,
     compareLiability,
     addLiabilityapi,
@@ -137,7 +137,7 @@ const LiabilityManage = () => {
                 setSubmarineCableList(data);
             })
             .catch((e) => console.log('e1=>', e));
-        fetch(partiesLiabilityList, { method: 'GET' })
+        fetch(dropdownmenuParties, { method: 'GET' })
             .then((res) => res.json())
             .then((data) => {
                 setPartyList(data);

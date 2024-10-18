@@ -298,7 +298,8 @@ const IsSendDataList = ({ listInfo }) => {
                                         {row.BillDetail ? row.BillDetail.length : 0}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        {handleNumber(row.BillMaster.FeeAmountSum)}
+                                        {handleNumber(row.BillMaster.FeeAmountSum)}{' '}
+                                        {row.BillMaster.Code}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">是</StyledTableCell>
                                     <StyledTableCell align="center">

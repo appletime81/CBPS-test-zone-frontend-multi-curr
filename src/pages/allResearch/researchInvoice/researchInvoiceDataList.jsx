@@ -3,7 +3,7 @@ import { useRef, useState } from 'react';
 // project import
 import { handleNumber } from 'components/commonFunction';
 import { BootstrapDialogTitle } from 'components/commonFunction';
-
+import Decimal from 'decimal.js';
 // material-ui
 import { Typography, Button, Table, Box, Grid, TextField } from '@mui/material';
 import TableBody from '@mui/material/TableBody';
@@ -75,11 +75,10 @@ const ResearchBillDataList = ({ listInfo, setDetailInfo }) => {
                 if (Array.isArray(data)) {
                     let tmpAmount = 0;
                     data.forEach((i) => {
-                        console.log('i=>>', i);
                         setBillMasterInfo(i.BillMaster);
                         setBillDetailInfo(i.BillDetail);
                         i.BillDetail.forEach((row) => {
-                            tmpAmount = tmpAmount + row.PaidAmount;
+                            tmpAmount = new Decimal(tmpAmount).add(new Decimal(row.PaidAmount));
                         });
                     });
                     totalPaidAmount.current = tmpAmount;
@@ -113,7 +112,6 @@ const ResearchBillDataList = ({ listInfo, setDetailInfo }) => {
                     >
                         <Grid
                             item
-                            xs={2}
                             sm={2}
                             md={2}
                             lg={2}
@@ -139,7 +137,6 @@ const ResearchBillDataList = ({ listInfo, setDetailInfo }) => {
                         </Grid>
                         <Grid
                             item
-                            xs={2}
                             sm={2}
                             md={2}
                             lg={2}
@@ -163,7 +160,7 @@ const ResearchBillDataList = ({ listInfo, setDetailInfo }) => {
                                 size="small"
                             />
                         </Grid>
-                        <Grid item xs={12} sm={12} md={12} lg={12}>
+                        <Grid item sm={12} md={12} lg={12}>
                             <TableContainer component={Paper} sx={{ maxHeight: 350 }}>
                                 <Table sx={{ minWidth: 300 }} stickyHeader>
                                     <TableHead>
@@ -215,16 +212,13 @@ const ResearchBillDataList = ({ listInfo, setDetailInfo }) => {
                                                         {row.PartyName}
                                                     </TableCell>
                                                     <TableCell align="center">
-                                                        ${handleNumber(row.OrgFeeAmount.toFixed(2))}
+                                                        {handleNumber(row.OrgFeeAmount)}
                                                     </TableCell>
                                                     <TableCell align="center">
-                                                        $
-                                                        {handleNumber(
-                                                            row.ReceivedAmount.toFixed(2),
-                                                        )}
+                                                        {handleNumber(row.ReceivedAmount)}
                                                     </TableCell>
                                                     <TableCell align="center">
-                                                        ${handleNumber(row.PaidAmount.toFixed(2))}
+                                                        {handleNumber(row.PaidAmount)}
                                                     </TableCell>
                                                     <TableCell align="center">{row.Note}</TableCell>
                                                 </TableRow>
@@ -247,19 +241,13 @@ const ResearchBillDataList = ({ listInfo, setDetailInfo }) => {
                                                 align="center"
                                             />
                                             <StyledTableCell className="totalAmount" align="center">
-                                                $
-                                                {handleNumber(
-                                                    billMasterInfo.FeeAmountSum?.toFixed(2),
-                                                )}
+                                                {handleNumber(billMasterInfo.FeeAmountSum)}
                                             </StyledTableCell>
                                             <StyledTableCell className="totalAmount" align="center">
-                                                $
-                                                {handleNumber(
-                                                    billMasterInfo.ReceivedAmountSum?.toFixed(2),
-                                                )}
+                                                {handleNumber(billMasterInfo.ReceivedAmountSum)}
                                             </StyledTableCell>
                                             <StyledTableCell className="totalAmount" align="center">
-                                                ${handleNumber(totalPaidAmount.current?.toFixed(2))}
+                                                {handleNumber(totalPaidAmount.current)}
                                             </StyledTableCell>
                                             <StyledTableCell
                                                 className="totalAmount"
@@ -328,10 +316,10 @@ const ResearchBillDataList = ({ listInfo, setDetailInfo }) => {
                                         {dayjs(row.BillMaster.DueDate).format('YYYY/MM/DD')}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        ${handleNumber(row.BillMaster.FeeAmountSum)}
+                                        {handleNumber(row.BillMaster.FeeAmountSum)}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        ${handleNumber(row.BillMaster.ReceivedAmountSum)}
+                                        {handleNumber(row.BillMaster.ReceivedAmountSum)}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
                                         {row.BillMaster.Status === 'COMPLETE'

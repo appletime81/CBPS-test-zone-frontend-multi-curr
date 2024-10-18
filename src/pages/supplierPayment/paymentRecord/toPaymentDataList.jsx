@@ -61,10 +61,7 @@ const ToPaymentDataList = ({ listInfo }) => {
             <TableContainer
                 component={Paper}
                 sx={{
-                    maxHeight:
-                        window.screen.height < 1000
-                            ? window.screen.height * 0.45
-                            : window.screen.height * 0.45,
+                    maxHeight: window.screen.height * 0.45,
                 }}
             >
                 <Table sx={{ minWidth: 300 }} stickyHeader>
@@ -85,7 +82,7 @@ const ToPaymentDataList = ({ listInfo }) => {
                         {toPaymentList?.map((row, id) => {
                             return (
                                 <TableRow
-                                    key={row?.InvoiceWKMaster?.WKMasterID + id}
+                                    key={row?.PayMaster?.PayMID + id}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                 >
                                     <StyledTableCell align="center">{id + 1}</StyledTableCell>

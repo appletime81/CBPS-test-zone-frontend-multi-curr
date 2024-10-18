@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import React from 'react';
-
+import Decimal from 'decimal.js';
 // project import
 import { handleNumber, BootstrapDialogTitle } from 'components/commonFunction';
 // material-ui
@@ -46,7 +46,9 @@ const InvoiceDetail = ({ toCodeType, isDetailOpen, isDetailClose, modifyItem }) 
         if (isDetailOpen) {
             let tmpData = modifyItem.map((i) => i);
             tmpData.forEach((row1) => {
-                feeAmount.current = feeAmount.current + row1.FeeAmount;
+                feeAmount.current = new Decimal(feeAmount.current)
+                    .add(new Decimal(row1.FeeAmount))
+                    .toNumber();
             });
             setDataList(tmpData);
         }
@@ -94,7 +96,7 @@ const InvoiceDetail = ({ toCodeType, isDetailOpen, isDetailClose, modifyItem }) 
                                                     {row.BillMilestone}
                                                 </TableCell>
                                                 <TableCell align="center">
-                                                    {handleNumber(row.FeeAmount.toFixed(2))}
+                                                    {handleNumber(row.FeeAmount)}
                                                 </TableCell>
                                                 <StyledTableCell align="center">
                                                     {row.Note}
@@ -113,7 +115,7 @@ const InvoiceDetail = ({ toCodeType, isDetailOpen, isDetailClose, modifyItem }) 
                                             align="center"
                                         ></StyledTableCell>
                                         <StyledTableCell className="totalAmount" align="center">
-                                            {handleNumber(feeAmount.current.toFixed(2))}
+                                            {handleNumber(feeAmount.current)}
                                         </StyledTableCell>
                                         <StyledTableCell
                                             className="totalAmount"

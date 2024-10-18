@@ -23,7 +23,7 @@ import {
     billMilestoneList,
     returnToValidated,
     afterBilled,
-    supplierNameDropDownUnique,
+    supplierNameListForInvoice,
     submarineCableInfoList,
     billMilestoneLiabilityList,
     getCurrencyData,
@@ -245,6 +245,28 @@ const InvoiceWorkManage = () => {
 
     const handleDialogClose = () => {
         setIsPurposeDialogOpen(false);
+    };
+
+    const getBmStoneList = (api) => {
+        fetch(api, { method: 'GET' })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log('1111=>', data, api);
+                if (Array.isArray(data)) {
+                    setBmStoneList(data);
+                }
+            })
+            .catch(() => {
+                dispatch(
+                    setMessageStateOpen({
+                        messageStateOpen: {
+                            isOpen: true,
+                            severity: 'error',
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
+                        },
+                    }),
+                );
+            });
     };
 
     useEffect(() => {
@@ -717,44 +739,22 @@ const InvoiceWorkManage = () => {
         rateInfo.current = {};
         setCurrencyExgID(null);
         if (workTitle && submarineCable) {
-            let bmApi =
-                billMilestoneList +
+            console.log('5=>>>>');
+            let snApi =
+                supplierNameListForInvoice +
                 'SubmarineCable=' +
                 submarineCable +
                 '&WorkTitle=' +
-                workTitle +
-                '&End=false';
-            fetch(bmApi, { method: 'GET' })
-                .then((res) => res.json())
-                .then((data) => {
-                    setBmStoneList(data);
-                })
-                .catch(() => {
-                    dispatch(
-                        setMessageStateOpen({
-                            messageStateOpen: {
-                                isOpen: true,
-                                severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
-                    );
-                });
-            fetch(dropdownmenuParties, {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-                },
-                body: JSON.stringify({
-                    SubmarineCable: submarineCable,
-                    WorkTitle: workTitle,
-                }),
+                workTitle;
+            fetch(snApi, {
+                method: 'GET',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
             })
                 .then((res) => res.json())
                 .then((data) => {
-                    console.log('data=>>', data);
-                    setPartyNameList(data);
+                    if (Array.isArray(data)) {
+                        setSupNmList(data);
+                    }
                 })
                 .catch(() => {
                     dispatch(
@@ -768,37 +768,176 @@ const InvoiceWorkManage = () => {
                     );
                 });
         } else {
-            setBmStoneList([]);
             setSupNmList([]);
         }
+        // rateInfo.current = {};
+        // setCurrencyExgID(null);
+        // if (workTitle && submarineCable) {
+        //     let bmApi =
+        //         billMilestoneList +
+        //         'SubmarineCable=' +
+        //         submarineCable +
+        //         '&WorkTitle=' +
+        //         workTitle +
+        //         '&End=false';
+        //     fetch(bmApi, { method: 'GET' })
+        //         .then((res) => res.json())
+        //         .then((data) => {
+        //             setBmStoneList(data);
+        //         })
+        //         .catch(() => {
+        //             dispatch(
+        //                 setMessageStateOpen({
+        //                     messageStateOpen: {
+        //                         isOpen: true,
+        //                         severity: 'error',
+        //                         message: '網路異常，請檢查網路連線或與系統窗口聯絡',
+        //                     },
+        //                 }),
+        //             );
+        //         });
+        //     fetch(dropdownmenuParties, {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-type': 'application/json',
+        //             Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+        //         },
+        //         body: JSON.stringify({
+        //             SubmarineCable: submarineCable,
+        //             WorkTitle: workTitle,
+        //         }),
+        //     })
+        //         .then((res) => res.json())
+        //         .then((data) => {
+        //             console.log('data=>>', data);
+        //             setPartyNameList(data);
+        //         })
+        //         .catch(() => {
+        //             dispatch(
+        //                 setMessageStateOpen({
+        //                     messageStateOpen: {
+        //                         isOpen: true,
+        //                         severity: 'error',
+        //                         message: '網路異常，請檢查網路連線或與系統窗口聯絡',
+        //                     },
+        //                 }),
+        //             );
+        //         });
+        // } else {
+        //     setBmStoneList([]);
+        //     setSupNmList([]);
+        // }
     }, [workTitle, submarineCable]);
+
+    useEffect(() => {
+        rateInfo.current = {};
+        setCurrencyExgID(null);
+        console.log(
+            "workTitle && submarineCable && isLiability === 'true'",
+            workTitle && submarineCable && isLiability === 'true',
+            isLiability === 'true',
+            isLiability,
+        );
+        if (workTitle && submarineCable && isLiability !== 'false') {
+            let bmStone =
+                billMilestoneList +
+                'SubmarineCable=' +
+                submarineCable +
+                '&WorkTitle=' +
+                workTitle +
+                '&End=false&IsLiability=' +
+                isLiability;
+            getBmStoneList(bmStone);
+        } else if (workTitle && submarineCable && isLiability === 'false' && !partyName) {
+            fetch(dropdownmenuParties, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                },
+                body: JSON.stringify({
+                    SubmarineCable: submarineCable,
+                    WorkTitle: workTitle,
+                    IsLiability: isLiability,
+                }),
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (Array.isArray(data)) {
+                        setPartyNameList(data);
+                    } else {
+                        setPartyNameList([]);
+                        dispatch(
+                            setMessageStateOpen({
+                                messageStateOpen: {
+                                    isOpen: true,
+                                    severity: 'error',
+                                    message: data.alert_msg,
+                                },
+                            }),
+                        );
+                    }
+                })
+                .catch(() => {
+                    dispatch(
+                        setMessageStateOpen({
+                            messageStateOpen: {
+                                isOpen: true,
+                                severity: 'error',
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
+                            },
+                        }),
+                    );
+                });
+            setBmStoneList([]);
+        } else {
+            setBmStoneList([]);
+            setPartyNameList([]);
+        }
+    }, [workTitle, submarineCable, isLiability]);
+
+    useEffect(() => {
+        if (workTitle && submarineCable && isLiability === 'false' && partyName) {
+            let bmStone =
+                billMilestoneList +
+                'SubmarineCable=' +
+                submarineCable +
+                '&WorkTitle=' +
+                workTitle +
+                '&End=false&IsLiability=' +
+                isLiability +
+                '&PartyName=' +
+                partyName;
+            getBmStoneList(bmStone);
+        }
+    }, [workTitle, submarineCable, isLiability, partyName]);
 
     useEffect(() => {
         itemInfoInitial();
         setAction('');
         setModifyItem('');
         firstQueryInit();
-        fetch(supplierNameDropDownUnique, {
-            method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                if (Array.isArray(data)) {
-                    setSupNmList(data);
-                }
-            })
-            .catch(() => {
-                dispatch(
-                    setMessageStateOpen({
-                        messageStateOpen: {
-                            isOpen: true,
-                            severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
-                );
-            });
+        // fetch(supplierNameDropDownUnique, {
+        //     method: 'GET',
+        //     Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+        // })
+        //     .then((res) => res.json())
+        //     .then((data) => {
+        //         if (Array.isArray(data)) {
+        //             setSupNmList(data);
+        //         }
+        //     })
+        //     .catch(() => {
+        //         dispatch(
+        //             setMessageStateOpen({
+        //                 messageStateOpen: {
+        //                     isOpen: true,
+        //                     severity: 'error',
+        //                     message: '網路異常，請檢查網路連線或與系統窗口聯絡',
+        //                 },
+        //             }),
+        //         );
+        //     });
         //海纜名稱
         fetch(submarineCableInfoList, { method: 'GET' })
             .then((res) => res.json())

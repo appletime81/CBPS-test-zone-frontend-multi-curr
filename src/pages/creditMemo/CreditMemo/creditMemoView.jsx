@@ -130,7 +130,7 @@ const CreditBalanceView = ({ cbView, handleViewClose, listInfo }) => {
             fullWidth
             open={cbView}
         >
-            <BootstrapDialogTitle>檢視Credit Balance明細</BootstrapDialogTitle>
+            <BootstrapDialogTitle>檢視Credit Memo明細</BootstrapDialogTitle>
             <DialogContent dividers>
                 <Grid container spacing={1}>
                     <Grid item xs={12} sm={12} md={12} lg={12}>

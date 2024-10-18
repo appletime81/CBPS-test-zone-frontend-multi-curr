@@ -13,7 +13,7 @@ import {
     Autocomplete,
     Table,
     Tabs,
-    Tab
+    Tab,
 } from '@mui/material';
 
 // day
@@ -101,19 +101,19 @@ const CreditBalanceView = ({ cbView, handleViewClose, listInfo }) => {
             // backgroundColor: theme.palette.common.gary,
             color: theme.palette.common.black,
             paddingTop: '0.2rem',
-            paddingBottom: '0.2rem'
+            paddingBottom: '0.2rem',
         },
         [`&.${tableCellClasses.body}`]: {
             fontSize: 14,
             paddingTop: '0.2rem',
-            paddingBottom: '0.2rem'
-        }
+            paddingBottom: '0.2rem',
+        },
     }));
 
     const a11yProps = (index) => {
         return {
             id: `simple-tab-${index}`,
-            'aria-controls': `simple-tabpanel-${index}`
+            'aria-controls': `simple-tabpanel-${index}`,
         };
     };
 
@@ -131,16 +131,27 @@ const CreditBalanceView = ({ cbView, handleViewClose, listInfo }) => {
             fullWidth
             open={cbView}
         >
-            <BootstrapDialogTitle>檢視Credit Balance明細</BootstrapDialogTitle>
+            <BootstrapDialogTitle>檢視Credit Note明細</BootstrapDialogTitle>
             <DialogContent dividers>
                 <Grid container spacing={1}>
                     <Grid item xs={12} sm={12} md={12} lg={12}>
                         <MainCard title="Credit Balance" sx={{ width: '100%' }}>
                             <Grid container spacing={1}>
-                                <Grid item xs={3} sm={3} md={3} lg={3} display="flex" justifyContent="center">
+                                <Grid
+                                    item
+                                    xs={3}
+                                    sm={3}
+                                    md={3}
+                                    lg={3}
+                                    display="flex"
+                                    justifyContent="center"
+                                >
                                     <Typography
                                         variant="h5"
-                                        sx={{ fontSize: { lg: '0.5rem', xl: '0.88rem' }, ml: { lg: '0.5rem', xl: '1.5rem' } }}
+                                        sx={{
+                                            fontSize: { lg: '0.5rem', xl: '0.88rem' },
+                                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                                        }}
                                     >
                                         會員名稱：
                                     </Typography>
@@ -158,10 +169,21 @@ const CreditBalanceView = ({ cbView, handleViewClose, listInfo }) => {
                                         />
                                     </FormControl>
                                 </Grid>
-                                <Grid item xs={3} sm={3} md={3} lg={3} display="flex" justifyContent="center">
+                                <Grid
+                                    item
+                                    xs={3}
+                                    sm={3}
+                                    md={3}
+                                    lg={3}
+                                    display="flex"
+                                    justifyContent="center"
+                                >
                                     <Typography
                                         variant="h5"
-                                        sx={{ fontSize: { lg: '0.5rem', xl: '0.88rem' }, ml: { lg: '0.5rem', xl: '1.5rem' } }}
+                                        sx={{
+                                            fontSize: { lg: '0.5rem', xl: '0.88rem' },
+                                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                                        }}
                                     >
                                         CB種類：
                                     </Typography>
@@ -177,10 +199,21 @@ const CreditBalanceView = ({ cbView, handleViewClose, listInfo }) => {
                                     />
                                 </Grid>
                                 {/* <Grid item xs={3} sm={3} md={3} lg={3} xl={6} /> */}
-                                <Grid item xs={3} sm={3} md={3} lg={3} display="flex" justifyContent="center">
+                                <Grid
+                                    item
+                                    xs={3}
+                                    sm={3}
+                                    md={3}
+                                    lg={3}
+                                    display="flex"
+                                    justifyContent="center"
+                                >
                                     <Typography
                                         variant="h5"
-                                        sx={{ fontSize: { lg: '0.5rem', xl: '0.88rem' }, ml: { lg: '0.5rem', xl: '1.5rem' } }}
+                                        sx={{
+                                            fontSize: { lg: '0.5rem', xl: '0.88rem' },
+                                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                                        }}
                                     >
                                         剩餘金額：
                                     </Typography>
@@ -195,10 +228,21 @@ const CreditBalanceView = ({ cbView, handleViewClose, listInfo }) => {
                                         // onChange={(e) => setLBRatio(e.target.value)}
                                     />
                                 </Grid>
-                                <Grid item xs={3} sm={3} md={3} lg={3} display="flex" justifyContent="center">
+                                <Grid
+                                    item
+                                    xs={3}
+                                    sm={3}
+                                    md={3}
+                                    lg={3}
+                                    display="flex"
+                                    justifyContent="center"
+                                >
                                     <Typography
                                         variant="h5"
-                                        sx={{ fontSize: { lg: '0.5rem', xl: '0.88rem' }, ml: { lg: '0.5rem', xl: '1.5rem' } }}
+                                        sx={{
+                                            fontSize: { lg: '0.5rem', xl: '0.88rem' },
+                                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                                        }}
                                     >
                                         摘要：
                                     </Typography>
@@ -219,7 +263,7 @@ const CreditBalanceView = ({ cbView, handleViewClose, listInfo }) => {
                     <Grid item xs={12} sm={12} md={12} lg={12}>
                         <MainCard title="Credit Balance" sx={{ width: '100%' }}>
                             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                                <Tabs value={value} onChange={handleChange} >
+                                <Tabs value={value} onChange={handleChange}>
                                     <Tab label="CB抵扣紀錄" {...a11yProps(0)} />
                                     <Tab label="退費紀錄" {...a11yProps(1)} />
                                 </Tabs>

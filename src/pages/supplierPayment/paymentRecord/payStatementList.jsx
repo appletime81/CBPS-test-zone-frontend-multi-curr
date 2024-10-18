@@ -115,7 +115,7 @@ const PayStatementList = ({ isDetailOpen, isDetailClose, modifyItem }) => {
                                                     {row.Note}
                                                 </StyledTableCell>
                                                 <StyledTableCell align="center">
-                                                    {row.state}
+                                                    {row.Status}
                                                 </StyledTableCell>
                                             </TableRow>
                                         );

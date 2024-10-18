@@ -91,6 +91,18 @@ const SupplierPaymentQuery = ({ setListInfo, queryApi, value }) => {
                 if (Array.isArray(data)) {
                     setListInfo(data);
                 }
+                if (data.length === 0) {
+                    dispatch(
+                        setMessageStateOpen({
+                            messageStateOpen: {
+                                isOpen: true,
+                                severity: 'info',
+                                message: '查無資料',
+                            },
+                        }),
+                    );
+                    setListInfo([]);
+                }
             })
             .catch((e) => {
                 console.log('e1=>', e);

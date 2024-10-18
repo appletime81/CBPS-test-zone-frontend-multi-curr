@@ -606,7 +606,6 @@ const ToDeductWork = ({
                                                                 });
                                                             }
                                                         });
-                                                        // otherItemsDeducted = otherItemsDeducted.toFixed(2);
                                                         //其他項目目前折抵金額-結束
                                                         //當前項目目前折抵金額-開始
                                                         let tmpArray = tmpCBArray.filter(

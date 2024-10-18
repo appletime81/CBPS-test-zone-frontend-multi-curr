@@ -488,12 +488,6 @@ const InvoiceQuery = ({ setListInfo }) => {
 
 InvoiceQuery.propTypes = {
     setListInfo: PropTypes.func,
-    queryApi: PropTypes.object,
-    supNmList: PropTypes.array,
-    submarineCableList: PropTypes.array,
-    bmsList: PropTypes.array,
-    setAction: PropTypes.func,
-    setPage: PropTypes.func,
 };
 
 export default InvoiceQuery;

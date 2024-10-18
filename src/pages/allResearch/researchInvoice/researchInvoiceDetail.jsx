@@ -9,7 +9,7 @@ import dayjs from 'dayjs';
 // project import
 import { BootstrapDialogTitle } from 'components/commonFunction';
 import { handleNumber } from 'components/commonFunction';
-
+import Decimal from 'decimal.js';
 // table
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
@@ -46,7 +46,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     },
 }));
 
-const ResearchBillDetail = ({ datailInfo }) => {
+const ResearchBillDetail = ({ detailInfo }) => {
     const dispatch = useDispatch();
     const [listDetailInfo, setListDetailInfo] = useState([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false); //檢視
@@ -74,7 +74,10 @@ const ResearchBillDetail = ({ datailInfo }) => {
                     setListDetailInfo(data);
                     let tmpAmount = 0;
                     data.forEach((i) => {
-                        tmpAmount = tmpAmount + i.FeeAmountPost;
+                        // tmpAmount = tmpAmount + i.FeeAmountPost;
+                        i.BillDetail.forEach((row) => {
+                            tmpAmount = new Decimal(tmpAmount).add(new Decimal(row.FeeAmountPost));
+                        });
                     });
                     totalPaidAmount.current = tmpAmount;
                     setIsDialogOpen(true);
@@ -147,8 +150,7 @@ const ResearchBillDetail = ({ datailInfo }) => {
                                                         {row.BillMilestone}
                                                     </TableCell>
                                                     <TableCell align="center">
-                                                        $
-                                                        {handleNumber(row.FeeAmountPost.toFixed(2))}
+                                                        {handleNumber(row.FeeAmountPost)}
                                                     </TableCell>
                                                     <TableCell align="center">{row.Note}</TableCell>
                                                 </TableRow>
@@ -167,7 +169,7 @@ const ResearchBillDetail = ({ datailInfo }) => {
                                                 align="center"
                                             />
                                             <StyledTableCell className="totalAmount" align="center">
-                                                ${handleNumber(totalPaidAmount.current?.toFixed(2))}
+                                                {handleNumber(totalPaidAmount.current)}
                                             </StyledTableCell>
                                             <StyledTableCell
                                                 className="totalAmount"
@@ -207,7 +209,7 @@ const ResearchBillDetail = ({ datailInfo }) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {datailInfo?.map((row, id) => {
+                        {detailInfo?.map((row, id) => {
                             return (
                                 <TableRow
                                     key={row.InvoiceNo + id}
@@ -226,13 +228,13 @@ const ResearchBillDetail = ({ datailInfo }) => {
                                         {dayjs(row.DueDate).format('YYYY/MM/DD')}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        ${handleNumber(row.TotalAmount)}
+                                        {handleNumber(row.TotalAmount)}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        ${handleNumber(row.DedAmount)}
+                                        {handleNumber(row.DedAmount)}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        ${handleNumber(row.PaidAmount)}
+                                        {handleNumber(row.PaidAmount)}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Box

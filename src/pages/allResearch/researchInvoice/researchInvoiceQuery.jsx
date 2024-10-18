@@ -15,7 +15,7 @@ import { TextField } from '@mui/material/index';
 import {
     searchInvoiceWKMasterByBillMaster,
     submarineCableInfoList,
-    getPartiesInfoList,
+    dropdownmenuParties,
 } from 'components/apis.jsx';
 
 // redux
@@ -113,7 +113,7 @@ const ResearchBillQuery = ({ setListInfo, setDetailInfo }) => {
                 );
             });
         //會員名稱
-        fetch(getPartiesInfoList, { method: 'GET' })
+        fetch(dropdownmenuParties, { method: 'GET' })
             .then((res) => res.json())
             .then((data) => {
                 setPartiesList(data);

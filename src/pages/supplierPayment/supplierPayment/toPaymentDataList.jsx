@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import PaymentWork from './paymentWork';
 import { handleNumber } from 'components/commonFunction';
 import { BootstrapDialogTitle } from 'components/commonFunction';
+import Decimal from 'decimal.js';
 
 // material-ui
 import {
@@ -100,7 +101,6 @@ const ToPaymentDataList = ({
     };
 
     const handleDialogOpen = (info, invoiceNo, dueDate) => {
-        // let tmpArray = info.BillDetail.map((i) => i);
         editPaymentInfo.current = info;
         invoiceNoEdit.current = invoiceNo;
         dueDateEdit.current = dueDate;
@@ -139,7 +139,6 @@ const ToPaymentDataList = ({
     const handleIsSendDialogClose = () => {
         setIsSendDialogOpen(false);
         paidAmount.current = 0;
-        // totalAmount.current = 0;
         setTotalAmount(0);
         payAmount.current = 0;
     };
@@ -212,9 +211,13 @@ const ToPaymentDataList = ({
         if (isSendDialogOpen) {
             let tmpTotal = 0;
             paymentInfo.forEach((i) => {
-                paidAmount.current = paidAmount.current + i?.InvoiceWKMaster?.PaidAmount;
-                tmpTotal = tmpTotal + i.InvoiceWKMaster.TotalAmount;
-                payAmount.current = payAmount.current + i.PayAmount;
+                paidAmount.current = new Decimal(paidAmount.current).add(
+                    new Decimal(i?.InvoiceWKMaster?.PaidAmount),
+                );
+                tmpTotal = new Decimal(tmpTotal).add(new Decimal(i.InvoiceWKMaster.TotalAmount));
+                payAmount.current = new Decimal(payAmount.current)
+                    .add(new Decimal(i.PayAmount))
+                    .toNumber();
             });
             setTotalAmount(tmpTotal);
         }
@@ -304,19 +307,19 @@ const ToPaymentDataList = ({
                                                             row.InvoiceWKMaster.IssueDate,
                                                         ).format('YYYY/MM/DD')}
                                                     </TableCell>
-                                                    <TableCell align="center">{`$${handleNumber(
-                                                        row.InvoiceWKMaster?.TotalAmount?.toFixed(
-                                                            2,
-                                                        ),
-                                                    )}`}</TableCell>
-                                                    <TableCell align="center">{`$${handleNumber(
-                                                        row?.InvoiceWKMaster?.PaidAmount?.toFixed(
-                                                            2,
-                                                        ),
-                                                    )}`}</TableCell>
-                                                    <TableCell align="center">{`$${handleNumber(
-                                                        row?.PayAmount?.toFixed(2),
-                                                    )}`}</TableCell>
+                                                    <TableCell align="center">
+                                                        {handleNumber(
+                                                            row.InvoiceWKMaster?.TotalAmount,
+                                                        )}
+                                                    </TableCell>
+                                                    <TableCell align="center">
+                                                        {handleNumber(
+                                                            row?.InvoiceWKMaster?.PaidAmount,
+                                                        )}
+                                                    </TableCell>
+                                                    <TableCell align="center">
+                                                        {handleNumber(row?.PayAmount)}
+                                                    </TableCell>
                                                     <TableCell align="center">
                                                         <Checkbox
                                                             value={row.InvoiceWKMaster.InvoiceNo}
@@ -360,25 +363,16 @@ const ToPaymentDataList = ({
                                                 className="totalAmount"
                                                 align="center"
                                             ></StyledTableCell>
-                                            <StyledTableCell
-                                                className="totalAmount"
-                                                align="center"
-                                            >{`$${handleNumber(
-                                                totalAmount?.toFixed(2),
-                                            )}`}</StyledTableCell>
-                                            <StyledTableCell
-                                                className="totalAmount"
-                                                align="center"
-                                            >{`$${handleNumber(
-                                                paidAmount.current?.toFixed(2),
-                                            )}`}</StyledTableCell>
+                                            <StyledTableCell className="totalAmount" align="center">
+                                                {handleNumber(totalAmount)}
+                                            </StyledTableCell>
+                                            <StyledTableCell className="totalAmount" align="center">
+                                                {handleNumber(paidAmount.current)}
+                                            </StyledTableCell>
 
-                                            <StyledTableCell
-                                                className="totalAmount"
-                                                align="center"
-                                            >{`$${handleNumber(
-                                                payAmount.current?.toFixed(2),
-                                            )}`}</StyledTableCell>
+                                            <StyledTableCell className="totalAmount" align="center">
+                                                {handleNumber(payAmount.current)}
+                                            </StyledTableCell>
                                             <StyledTableCell
                                                 className="totalAmount"
                                                 align="center"
@@ -426,7 +420,9 @@ const ToPaymentDataList = ({
                         {toPaymentList?.map((row, id) => {
                             row.PayAmount = 0;
                             row.BillDetailList.forEach((i) => {
-                                row.PayAmount = row.PayAmount + (i.PayAmount ? i.PayAmount : 0);
+                                row.PayAmount = new Decimal(row.PayAmount)
+                                    .add(new Decimal(i.PayAmount ? i.PayAmount : 0))
+                                    .toNumber();
                             });
                             return (
                                 <TableRow
@@ -461,17 +457,16 @@ const ToPaymentDataList = ({
                                         {dayjs(row?.InvoiceWKMaster?.DueDate).format('YYYY/MM/DD')}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        {handleNumber(row?.InvoiceWKMaster?.TotalAmount.toFixed(2))}
+                                        {handleNumber(row?.InvoiceWKMaster?.TotalAmount)}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        {handleNumber(row?.ReceivedAmountSum.toFixed(2))}
+                                        {handleNumber(row?.ReceivedAmountSum)}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        {handleNumber(row?.InvoiceWKMaster?.PaidAmount.toFixed(2))}
+                                        {handleNumber(row?.InvoiceWKMaster?.PaidAmount)}
                                     </StyledTableCell>
-                                    {/* <StyledTableCell align="center">{handleNumber(tmpPayAmount.toFixed(2))}</StyledTableCell> */}
                                     <StyledTableCell align="center">
-                                        {handleNumber(row.PayAmount.toFixed(2))}
+                                        {handleNumber(row.PayAmount)}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Box

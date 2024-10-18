@@ -1,6 +1,5 @@
-import { useState, useRef } from 'react';
-import { Grid, Button } from '@mui/material';
-// import { styled } from '@mui/material/styles';
+import { useState } from 'react';
+import { Grid } from '@mui/material';
 
 // project import
 import MainCard from 'components/MainCard';
@@ -8,13 +7,9 @@ import ResearchInvoiceQuery from './researchInvoiceQuery';
 import ResearchInvoiceDataList from './researchInvoiceDataList';
 import ResearchInvoiceDetail from './researchInvoiceDetail';
 
-// redux
-import { useSelector } from 'react-redux';
-
 const ResearchInvoice = () => {
-    const queryApi = useRef('/all');
     const [listInfo, setListInfo] = useState([]);
-    const [datailInfo, setDetailInfo] = useState([]);
+    const [detailInfo, setDetailInfo] = useState([]);
 
     return (
         <Grid container spacing={1}>
@@ -28,7 +23,7 @@ const ResearchInvoice = () => {
             </Grid>
             <Grid item xs={12}>
                 <MainCard title="發票列表">
-                    <ResearchInvoiceDetail datailInfo={datailInfo} />
+                    <ResearchInvoiceDetail detailInfo={detailInfo} />
                 </MainCard>
             </Grid>
         </Grid>

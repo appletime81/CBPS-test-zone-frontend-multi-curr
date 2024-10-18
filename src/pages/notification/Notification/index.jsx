@@ -14,7 +14,7 @@ import NotificationQuery from './notificationQuery';
 // api
 import {
     dropdownmenuSubmarineCable,
-    partiesLiabilityList,
+    dropdownmenuParties,
     getSysInvNotifyRule,
 } from 'components/apis.jsx';
 
@@ -97,7 +97,7 @@ const Information = () => {
                     }),
                 );
             });
-        fetch(partiesLiabilityList, { method: 'GET' })
+        fetch(dropdownmenuParties, { method: 'GET' })
             .then((res) => res.json())
             .then((data) => {
                 setPartiesList(data);

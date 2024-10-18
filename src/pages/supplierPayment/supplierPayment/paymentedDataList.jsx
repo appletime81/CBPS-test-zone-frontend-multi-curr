@@ -1,32 +1,17 @@
 import { useState, useRef } from 'react';
 
 // project import
-import { handleNumber, BootstrapDialogTitle } from 'components/commonFunction';
+import { handleNumber } from 'components/commonFunction';
 import PaymentWork from './paymentWork';
-import GenerateFeeTerminate from './generateFeeTerminate';
 // material-ui
-import {
-    Typography,
-    Button,
-    Table,
-    Dialog,
-    DialogContent,
-    DialogContentText,
-    Grid,
-    FormControl,
-    InputLabel,
-    Select,
-    DialogActions,
-    TextField,
-    Box,
-} from '@mui/material';
+import { Button, Table, Box } from '@mui/material';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { alpha, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 
 import dayjs from 'dayjs';
 
@@ -121,13 +106,13 @@ const PaymentedDataList = ({ listInfo }) => {
                                         {dayjs(row?.InvoiceWKMaster?.DueDate).format('YYYY/MM/DD')}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        {handleNumber(row?.InvoiceWKMaster?.TotalAmount.toFixed(2))}
+                                        {handleNumber(row?.InvoiceWKMaster?.TotalAmount)}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        {handleNumber(row?.ReceivedAmountSum.toFixed(2))}
+                                        {handleNumber(row?.ReceivedAmountSum)}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        {handleNumber(row?.InvoiceWKMaster?.PaidAmount.toFixed(2))}
+                                        {handleNumber(row?.InvoiceWKMaster?.PaidAmount)}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Box

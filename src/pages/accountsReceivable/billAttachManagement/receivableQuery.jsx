@@ -12,7 +12,7 @@ import {
 
 // project import
 import MainCard from 'components/MainCard';
-import { queryToDecutBill, getPartiesInfoList, submarineCableInfoList } from 'components/apis';
+import { queryToDecutBill, dropdownmenuParties, submarineCableInfoList } from 'components/apis';
 // day
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -113,7 +113,7 @@ const ReceivableQuery = ({ setListInfo }) => {
                 );
             });
         //會員名稱
-        fetch(getPartiesInfoList, { method: 'GET' })
+        fetch(dropdownmenuParties, { method: 'GET' })
             .then((res) => res.json())
             .then((data) => {
                 setPartiesList(data);

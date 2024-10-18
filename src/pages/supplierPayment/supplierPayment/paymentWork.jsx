@@ -4,7 +4,9 @@ import PropTypes from 'prop-types';
 
 // project import
 import { handleNumber, BootstrapDialogTitle } from 'components/commonFunction';
+import Decimal from 'decimal.js';
 import MainCard from 'components/MainCard';
+import NumericFormatCustom from 'components/numericFormatCustom';
 // material-ui
 import {
     Typography,
@@ -78,19 +80,31 @@ const PaymentWork = ({
     };
 
     const changePayAmount = (payment, billMasterID, billDetailID) => {
+        console.log(payment, typeof new Decimal(payment));
         payAmountTotal.current = 0;
         let tmpArray = toPaymentDetailInfo.map((i) => i);
-        tmpArray.forEach((i) => {
+        console.log('toPaymentDetailInfo=>>', toPaymentDetailInfo);
+        tmpArray.forEach((i, index) => {
             if (i.BillMasterID === billMasterID && i.BillDetailID === billDetailID) {
                 i.PayAmount = Number(payment);
             }
-            payAmountTotal.current =
-                payAmountTotal.current +
-                (i.PayAmount
-                    ? i.PayAmount
-                    : Number(i.ReceivedAmount - i.PaidAmount) > 0
-                    ? Number(i.ReceivedAmount - i.PaidAmount)
-                    : 0);
+            console.log(
+                'index=>>',
+                index,
+                payAmountTotal.current,
+                i.PayAmount,
+                i.ReceivedAmount,
+                i.PaidAmount,
+            );
+            payAmountTotal.current = new Decimal(payAmountTotal.current)
+                .add(
+                    i.PayAmount
+                        ? new Decimal(i.PayAmount)
+                        : Number(i.ReceivedAmount - i.PaidAmount) > 0
+                        ? new Decimal(i.ReceivedAmount).minus(new Decimal(i.PaidAmount))
+                        : new Decimal(0),
+                )
+                .toNumber();
         });
         setToPaymentDetailInfo(tmpArray);
     };
@@ -115,11 +129,9 @@ const PaymentWork = ({
                         isOpen: true,
                         severity: 'info',
                         message: `已實付金額+此次付款金額超出已實收金額${handleNumber(
-                            (
-                                payAmountTotal.current +
-                                paidAmountTotal.current -
-                                receivedAmountTotal.current
-                            ).toFixed(2),
+                            new Decimal(payAmountTotal.current)
+                                .add(new Decimal(paidAmountTotal.current))
+                                .minus(new Decimal(receivedAmountTotal.current)),
                         )}`,
                     },
                 }),
@@ -130,16 +142,25 @@ const PaymentWork = ({
     useEffect(() => {
         let tmpArray = JSON.parse(JSON.stringify(editPaymentInfo));
         tmpArray.forEach((i) => {
-            // i.PayAmount = i.PayAmount ? i.PayAmount : Number(i.ReceivedAmount - i.PaidAmount);
-            orgfeeAmountTotal.current = orgfeeAmountTotal.current + i.OrgFeeAmount;
-            receivedAmountTotal.current = receivedAmountTotal.current + i.ReceivedAmount;
-            paidAmountTotal.current = paidAmountTotal.current + i.PaidAmount;
-            toPaymentAmountTotal.current =
-                toPaymentAmountTotal.current +
-                (i.OrgFeeAmount - i.PaidAmount > 0 ? i.OrgFeeAmount - i.PaidAmount : 0);
-            payAmountTotal.current =
-                payAmountTotal.current +
-                (i.PayAmount ? i.PayAmount : Number(i.ReceivedAmount - i.PaidAmount));
+            orgfeeAmountTotal.current = new Decimal(orgfeeAmountTotal.current).add(
+                new Decimal(i.OrgFeeAmount),
+            );
+            receivedAmountTotal.current = new Decimal(receivedAmountTotal.current).add(
+                new Decimal(i.ReceivedAmount),
+            );
+            paidAmountTotal.current = new Decimal(paidAmountTotal.current).add(
+                new Decimal(i.PaidAmount),
+            );
+            toPaymentAmountTotal.current = new Decimal(toPaymentAmountTotal.current).add(
+                i.OrgFeeAmount - i.PaidAmount > 0
+                    ? new Decimal(i.OrgFeeAmount).minus(new Decimal(i.PaidAmount))
+                    : 0,
+            );
+            payAmountTotal.current = new Decimal(payAmountTotal.current).add(
+                i.PayAmount
+                    ? i.PayAmount
+                    : new Decimal(i.ReceivedAmount).minus(new Decimal(i.PaidAmount)),
+            );
         });
         if (isDialogOpen) {
             setToPaymentDetailInfo(tmpArray);
@@ -184,10 +205,9 @@ const PaymentWork = ({
                                 <TextField
                                     value={invoiceNo}
                                     fullWidth
-                                    disabled={true}
+                                    readyOnly
                                     variant="outlined"
                                     size="small"
-                                    // type="number"
                                 />
                             </Grid>
                             <Grid item xs={2} sm={2} md={2} lg={2}>
@@ -205,10 +225,9 @@ const PaymentWork = ({
                                 <TextField
                                     value={dayjs(dueDate).format('YYYY/MM/DD')}
                                     fullWidth
-                                    disabled={true}
+                                    readyOnly
                                     variant="outlined"
                                     size="small"
-                                    // type="number"
                                 />
                             </Grid>
                             <Grid item xs={5} sm={5} md={5} lg={5} />
@@ -253,13 +272,18 @@ const PaymentWork = ({
                                                 <StyledTableCell align="center">
                                                     此次付款金額
                                                 </StyledTableCell>
-                                            ) : (
-                                                ''
-                                            )}
+                                            ) : null}
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
                                         {toPaymentDetailInfo?.map((row) => {
+                                            console.log(
+                                                'row=>>',
+                                                row.PayAmount === 0,
+                                                row.PayAmount === -0,
+                                                row.ReceivedAmount,
+                                                row.PaidAmount,
+                                            );
                                             let toPayment = row.OrgFeeAmount - row.PaidAmount;
                                             return (
                                                 <TableRow
@@ -286,20 +310,20 @@ const PaymentWork = ({
                                                     <TableCell align="center">
                                                         {row.PartyName}
                                                     </TableCell>
-                                                    <TableCell align="center">{`$${handleNumber(
-                                                        row.OrgFeeAmount.toFixed(2),
-                                                    )}`}</TableCell>
-                                                    <TableCell align="center">{`$${handleNumber(
-                                                        row.ReceivedAmount.toFixed(2),
-                                                    )}`}</TableCell>
-                                                    <TableCell align="center">{`$${handleNumber(
-                                                        row.PaidAmount.toFixed(2),
-                                                    )}`}</TableCell>
+                                                    <TableCell align="center">
+                                                        {handleNumber(row.OrgFeeAmount)}
+                                                    </TableCell>
+                                                    {/* 已實收金額 */}
+                                                    <TableCell align="center">
+                                                        {handleNumber(row.ReceivedAmount)}
+                                                    </TableCell>
+                                                    {/* 已實付金額 */}
+                                                    <TableCell align="center">
+                                                        {handleNumber(row.PaidAmount)}
+                                                    </TableCell>
                                                     <TableCell align="center">
                                                         {toPayment > 0
-                                                            ? `$${handleNumber(
-                                                                  toPayment.toFixed(2),
-                                                              )}`
+                                                            ? handleNumber(toPayment)
                                                             : 0}
                                                     </TableCell>
                                                     {actionName === 'toPayment' ? (
@@ -324,21 +348,32 @@ const PaymentWork = ({
                                                             </TableCell>
                                                         </TableCell>
                                                     )}
+                                                    {/* 此次付款金額 */}
                                                     {actionName === 'toPayment' ? (
                                                         <TableCell align="center">
                                                             <TextField
                                                                 size="small"
-                                                                inputProps={{ step: '.01' }}
+                                                                inputProps={{ step: '.000001' }}
                                                                 sx={{ minWidth: 75 }}
+                                                                InputProps={{
+                                                                    inputComponent:
+                                                                        NumericFormatCustom,
+                                                                }}
                                                                 value={
-                                                                    row.PayAmount
+                                                                    row.PayAmount ||
+                                                                    row.PayAmount === 0
                                                                         ? row.PayAmount
-                                                                        : Number(
-                                                                              row.ReceivedAmount -
-                                                                                  row.PaidAmount,
+                                                                        : new Decimal(
+                                                                              row.ReceivedAmount,
                                                                           )
+                                                                              .minus(
+                                                                                  new Decimal(
+                                                                                      row.PaidAmount,
+                                                                                  ),
+                                                                              )
+                                                                              .toNumber()
                                                                 }
-                                                                type="number"
+                                                                // type="number"
                                                                 onChange={(e) => {
                                                                     changePayAmount(
                                                                         e.target.value,
@@ -348,9 +383,7 @@ const PaymentWork = ({
                                                                 }}
                                                             />
                                                         </TableCell>
-                                                    ) : (
-                                                        ''
-                                                    )}
+                                                    ) : null}
                                                 </TableRow>
                                             );
                                         })}
@@ -375,20 +408,16 @@ const PaymentWork = ({
                                                 align="center"
                                             />
                                             <StyledTableCell className="totalAmount" align="center">
-                                                {handleNumber(orgfeeAmountTotal.current.toFixed(2))}
+                                                {handleNumber(orgfeeAmountTotal.current)}
                                             </StyledTableCell>
                                             <StyledTableCell className="totalAmount" align="center">
-                                                {handleNumber(
-                                                    receivedAmountTotal.current.toFixed(2),
-                                                )}
+                                                {handleNumber(receivedAmountTotal.current)}
                                             </StyledTableCell>
                                             <StyledTableCell className="totalAmount" align="center">
-                                                {handleNumber(paidAmountTotal.current.toFixed(2))}
+                                                {handleNumber(paidAmountTotal.current)}
                                             </StyledTableCell>
                                             <StyledTableCell className="totalAmount" align="center">
-                                                {handleNumber(
-                                                    toPaymentAmountTotal.current.toFixed(2),
-                                                )}
+                                                {handleNumber(toPaymentAmountTotal.current)}
                                             </StyledTableCell>
                                             <StyledTableCell
                                                 className="totalAmount"
@@ -399,13 +428,9 @@ const PaymentWork = ({
                                                     className="totalAmount"
                                                     align="center"
                                                 >
-                                                    {handleNumber(
-                                                        payAmountTotal.current.toFixed(2),
-                                                    )}
+                                                    {handleNumber(payAmountTotal.current)}
                                                 </StyledTableCell>
-                                            ) : (
-                                                ''
-                                            )}
+                                            ) : null}
                                         </TableRow>
                                     </TableBody>
                                 </Table>

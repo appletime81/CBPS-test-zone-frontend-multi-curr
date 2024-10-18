@@ -16,7 +16,7 @@ import {
     queryToCombineInvo,
     queryToDecutBill,
     quertDeductedData,
-    getPartiesInfoList,
+    dropdownmenuParties,
     submarineCableInfoList,
 } from 'components/apis';
 // day
@@ -234,7 +234,7 @@ const ReceivableQuery = ({ value, setListInfo, queryApi }) => {
                 );
             });
         //會員名稱
-        fetch(getPartiesInfoList, { method: 'GET' })
+        fetch(dropdownmenuParties, { method: 'GET' })
             .then((res) => res.json())
             .then((data) => {
                 setPartiesList(data);

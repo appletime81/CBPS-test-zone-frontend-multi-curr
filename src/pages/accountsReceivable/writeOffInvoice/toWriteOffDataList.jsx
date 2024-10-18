@@ -227,13 +227,16 @@ const ToWriteOffDataList = ({ listInfo, writeOffInitQuery }) => {
                                         {row.BillDetail?.length}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        {handleNumber(row?.BillMaster?.FeeAmountSum)}
+                                        {handleNumber(row?.BillMaster?.FeeAmountSum)}{' '}
+                                        {row.BillMaster.Code}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        {handleNumber(row?.BillMaster?.ReceivedAmountSum)}
+                                        {handleNumber(row?.BillMaster?.ReceivedAmountSum)}{' '}
+                                        {row.BillMaster.Code}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        {handleNumber(row?.BillMaster?.BankFees)}
+                                        {handleNumber(row?.BillMaster?.BankFees)}{' '}
+                                        {row.BillMaster.Code}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Box

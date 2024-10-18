@@ -26,7 +26,7 @@ import {
     supplierNameDropDownUnique,
     submarineCables,
     suppliers,
-    getPartiesInfoList,
+    dropdownmenuParties,
     parties,
     corporates,
 } from 'components/apis.jsx';
@@ -247,7 +247,7 @@ const Information = () => {
                 );
             });
         //會員名稱
-        fetch(getPartiesInfoList, { method: 'GET' })
+        fetch(dropdownmenuParties, { method: 'GET' })
             .then((res) => res.json())
             .then((data) => {
                 setPartiesList(data);

@@ -1,9 +1,7 @@
-// import { useState } from 'react';
-
 // project import
 import { handleNumber } from 'components/commonFunction';
 // material-ui
-import { Typography, Button, Table, Box } from '@mui/material';
+import { Button, Table, Box } from '@mui/material';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
@@ -13,39 +11,41 @@ import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 
 import CreditBalanceView from './creditBalanceView';
-import CreditBalanceTerminate from './creditBalanceTerminate';
 import dayjs from 'dayjs';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+        // backgroundColor: theme.palette.common.gary,
+        color: theme.palette.common.black,
+        paddingTop: '0.2rem',
+        paddingBottom: '0.2rem',
+    },
+    [`&.${tableCellClasses.body}`]: {
+        fontSize: 14,
+        paddingTop: '0.2rem',
+        paddingBottom: '0.2rem',
+    },
+}));
 
 const CreditBalanceDataList = ({ listInfo }) => {
     const [cbView, setCbview] = useState(false);
-    const [cbTerminal, setCbTerminal] = useState(false);
     const viewId = useRef(-1);
-    const StyledTableCell = styled(TableCell)(({ theme }) => ({
-        [`&.${tableCellClasses.head}`]: {
-            // backgroundColor: theme.palette.common.gary,
-            color: theme.palette.common.black,
-            paddingTop: '0.2rem',
-            paddingBottom: '0.2rem',
-        },
-        [`&.${tableCellClasses.body}`]: {
-            fontSize: 14,
-            paddingTop: '0.2rem',
-            paddingBottom: '0.2rem',
-        },
-    }));
+    const codeType = useRef('');
 
     const handleViewClose = () => {
         setCbview(false);
         viewId.current = -1;
     };
 
-    const handleTerminalClose = () => {
-        setCbTerminal(false);
-    };
-
     return (
         <>
+            <CreditBalanceView
+                cbView={cbView}
+                handleViewClose={handleViewClose}
+                viewId={viewId.current}
+                codeType={codeType.current}
+            />
             <TableContainer component={Paper} sx={{ maxHeight: window.screen.height * 0.5 }}>
                 <Table sx={{ minWidth: 300 }} stickyHeader>
                     <TableHead>
@@ -91,9 +91,9 @@ const CreditBalanceDataList = ({ listInfo }) => {
                                     <StyledTableCell align="center">
                                         {row.WorkTitle}
                                     </StyledTableCell>
-                                    <StyledTableCell align="center">{`$${handleNumber(
-                                        row.CurrAmount,
-                                    )}`}</StyledTableCell>
+                                    <StyledTableCell align="center">
+                                        {handleNumber(row.CurrAmount)} {row.Code}
+                                    </StyledTableCell>
                                     <StyledTableCell align="center">
                                         {dayjs(row.CreateDate).format('YYYY/MM/DD')}
                                     </StyledTableCell>
@@ -115,6 +115,7 @@ const CreditBalanceDataList = ({ listInfo }) => {
                                                 onClick={() => {
                                                     setCbview(true);
                                                     viewId.current = row.CBID;
+                                                    codeType.current = row.Code;
                                                 }}
                                             >
                                                 檢視
@@ -136,15 +137,6 @@ const CreditBalanceDataList = ({ listInfo }) => {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <CreditBalanceView
-                cbView={cbView}
-                handleViewClose={handleViewClose}
-                viewId={viewId.current}
-            />
-            <CreditBalanceTerminate
-                cbTerminal={cbTerminal}
-                handleTerminalClose={handleTerminalClose}
-            />
         </>
     );
 };

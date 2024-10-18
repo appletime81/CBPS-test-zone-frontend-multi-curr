@@ -471,41 +471,39 @@ const InvoiceWorkManage = () => {
         setIsPurposeDialogOpen(false);
     };
 
+    const getBmStoneList = (api) => {
+        fetch(api, { method: 'GET' })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log('1111=>', data, api);
+                if (Array.isArray(data)) {
+                    setBmStoneList(data);
+                }
+            })
+            .catch(() => {
+                dispatch(
+                    setMessageStateOpen({
+                        messageStateOpen: {
+                            isOpen: true,
+                            severity: 'error',
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
+                        },
+                    }),
+                );
+            });
+    };
+
     useEffect(() => {
         rateInfo.current = {};
         setCurrencyExgID(null);
         if (workTitle && submarineCable) {
-            let bmApi =
-                billMilestoneList +
-                'SubmarineCable=' +
-                submarineCable +
-                '&WorkTitle=' +
-                workTitle +
-                '&End=false';
+            console.log('5=>>>>');
             let snApi =
                 supplierNameListForInvoice +
                 'SubmarineCable=' +
                 submarineCable +
                 '&WorkTitle=' +
                 workTitle;
-            fetch(bmApi, { method: 'GET' })
-                .then((res) => res.json())
-                .then((data) => {
-                    if (Array.isArray(data)) {
-                        setBmStoneList(data);
-                    }
-                })
-                .catch(() => {
-                    dispatch(
-                        setMessageStateOpen({
-                            messageStateOpen: {
-                                isOpen: true,
-                                severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
-                    );
-                });
             fetch(snApi, {
                 method: 'GET',
                 Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
@@ -527,6 +525,31 @@ const InvoiceWorkManage = () => {
                         }),
                     );
                 });
+        } else {
+            setSupNmList([]);
+        }
+    }, [workTitle, submarineCable]);
+
+    useEffect(() => {
+        rateInfo.current = {};
+        setCurrencyExgID(null);
+        console.log(
+            "workTitle && submarineCable && isLiability === 'true'",
+            workTitle && submarineCable && isLiability === 'true',
+            isLiability === 'true',
+            isLiability,
+        );
+        if (workTitle && submarineCable && isLiability !== 'false') {
+            let bmStone =
+                billMilestoneList +
+                'SubmarineCable=' +
+                submarineCable +
+                '&WorkTitle=' +
+                workTitle +
+                '&End=false&IsLiability=' +
+                isLiability;
+            getBmStoneList(bmStone);
+        } else if (workTitle && submarineCable && isLiability === 'false' && !partyName) {
             fetch(dropdownmenuParties, {
                 method: 'POST',
                 headers: {
@@ -536,12 +559,25 @@ const InvoiceWorkManage = () => {
                 body: JSON.stringify({
                     SubmarineCable: submarineCable,
                     WorkTitle: workTitle,
+                    IsLiability: isLiability,
                 }),
             })
                 .then((res) => res.json())
                 .then((data) => {
-                    console.log('data=>>', data);
-                    setPartyNameList(data);
+                    if (Array.isArray(data)) {
+                        setPartyNameList(data);
+                    } else {
+                        setPartyNameList([]);
+                        dispatch(
+                            setMessageStateOpen({
+                                messageStateOpen: {
+                                    isOpen: true,
+                                    severity: 'error',
+                                    message: data.alert_msg,
+                                },
+                            }),
+                        );
+                    }
                 })
                 .catch(() => {
                     dispatch(
@@ -554,38 +590,34 @@ const InvoiceWorkManage = () => {
                         }),
                     );
                 });
+            setBmStoneList([]);
         } else {
             setBmStoneList([]);
-            setSupNmList([]);
+            setPartyNameList([]);
         }
-    }, [workTitle, submarineCable]);
+    }, [workTitle, submarineCable, isLiability]);
+
+    useEffect(() => {
+        if (workTitle && submarineCable && isLiability === 'false' && partyName) {
+            let bmStone =
+                billMilestoneList +
+                'SubmarineCable=' +
+                submarineCable +
+                '&WorkTitle=' +
+                workTitle +
+                '&End=false&IsLiability=' +
+                isLiability +
+                '&PartyName=' +
+                partyName;
+            getBmStoneList(bmStone);
+        }
+    }, [workTitle, submarineCable, isLiability, partyName]);
 
     useEffect(() => {
         fetch(submarineCableInfoList, { method: 'GET' })
             .then((res) => res.json())
             .then((data) => {
                 setSubmarineCableList(data);
-            })
-            .catch(() => {
-                dispatch(
-                    setMessageStateOpen({
-                        messageStateOpen: {
-                            isOpen: true,
-                            severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
-                );
-            });
-        fetch(supplierNameDropDownUnique, {
-            method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                if (Array.isArray(data)) {
-                    setSupNmList(data);
-                }
             })
             .catch(() => {
                 dispatch(

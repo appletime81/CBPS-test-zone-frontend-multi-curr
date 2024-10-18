@@ -21,7 +21,7 @@ import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { TextField } from '@mui/material/index';
 
 // api
-import { creditMemoView, submarineCableInfoList, getPartiesInfoList } from 'components/apis.jsx';
+import { creditMemoView, submarineCableInfoList, dropdownmenuParties } from 'components/apis.jsx';
 
 // redux
 import { useDispatch } from 'react-redux';
@@ -116,7 +116,7 @@ const CreditMemoQuery = ({ setListInfo }) => {
                 );
             });
         //會員名稱
-        fetch(getPartiesInfoList, { method: 'GET' })
+        fetch(dropdownmenuParties, { method: 'GET' })
             .then((res) => res.json())
             .then((data) => {
                 setPartiesList(data);

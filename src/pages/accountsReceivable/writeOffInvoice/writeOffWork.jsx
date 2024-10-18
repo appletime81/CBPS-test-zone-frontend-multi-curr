@@ -794,7 +794,6 @@ const WriteOffWork = ({
                                                         {action === 'view' ? null : (
                                                             <TableCell align="center">
                                                                 <TextField
-                                                                    // inputProps={{ step: '.01' }}
                                                                     sx={{ minWidth: 80 }}
                                                                     size="small"
                                                                     fullWidth

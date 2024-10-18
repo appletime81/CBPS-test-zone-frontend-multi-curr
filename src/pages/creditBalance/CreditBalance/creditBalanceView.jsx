@@ -18,7 +18,7 @@ import { generateReport } from 'components/apis.jsx';
 import { useDispatch } from 'react-redux';
 import { setMessageStateOpen } from 'store/reducers/dropdown';
 
-const CreditBalanceView = ({ cbView, handleViewClose, viewId }) => {
+const CreditBalanceView = ({ cbView, handleViewClose, viewId, codeType }) => {
     const dispatch = useDispatch();
     const [listInfo, setListInfo] = useState([]);
     const [value, setValue] = useState(0);
@@ -117,15 +117,10 @@ const CreditBalanceView = ({ cbView, handleViewClose, viewId }) => {
             <DialogContent dividers>
                 <Grid container spacing={1}>
                     <Grid item xs={12} sm={12} md={12} lg={12}>
-                        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                            <Tabs value={value} onChange={handleChange}>
-                                <Tab label="CB抵扣紀錄" {...a11yProps(0)} />
-                                {/* <Tab label="退費紀錄" {...a11yProps(1)} /> */}
-                            </Tabs>
+                        <Box display="flex" justifyContent="end" sx={{ fontSize: '1rem' }}>
+                            幣別：{codeType}
                         </Box>
-                        <CustomTabPanel value={value} index={0}>
-                            <CreditBalanceDeduct cblistInfo={listInfo} />
-                        </CustomTabPanel>
+                        <CreditBalanceDeduct cblistInfo={listInfo} />
                     </Grid>
                 </Grid>
             </DialogContent>

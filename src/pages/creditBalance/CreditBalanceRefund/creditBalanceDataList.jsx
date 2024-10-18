@@ -109,9 +109,9 @@ const CreditBalanceDataList = ({ listInfo, cbToCn, setCbToCn, cbRefundData, setC
                                     <StyledTableCell align="center">
                                         {row.WorkTitle}
                                     </StyledTableCell>
-                                    <StyledTableCell align="center">{`$${handleNumber(
-                                        row.CurrAmount,
-                                    )}`}</StyledTableCell>
+                                    <StyledTableCell align="center">
+                                        {handleNumber(row.CurrAmount)} {row.Code}
+                                    </StyledTableCell>
                                     <StyledTableCell align="center">
                                         {dayjs(row.CreateDate).format('YYYY/MM/DD')}
                                     </StyledTableCell>

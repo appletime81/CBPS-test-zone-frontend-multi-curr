@@ -15,7 +15,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 
 // api
-import { getPartiesInfoList, submarineCableInfoList, refundView, cBRefund } from 'components/apis';
+import { dropdownmenuParties, submarineCableInfoList, refundView, cBRefund } from 'components/apis';
 
 // redux
 import { useDispatch } from 'react-redux';
@@ -142,7 +142,7 @@ const CreditBalance = () => {
                 );
             });
         //會員名稱
-        fetch(getPartiesInfoList, { method: 'GET' })
+        fetch(dropdownmenuParties, { method: 'GET' })
             .then((res) => res.json())
             .then((data) => {
                 setPartiesList(data);
