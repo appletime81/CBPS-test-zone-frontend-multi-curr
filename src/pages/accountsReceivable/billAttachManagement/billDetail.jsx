@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { handleNumber, BootstrapDialogTitle } from 'components/commonFunction';
 import Decimal from 'decimal.js';
 // material-ui
-import { Button, Table, Dialog, DialogContent, Grid, DialogActions } from '@mui/material';
+import { Button, Table, Dialog, DialogContent, Grid, DialogActions, Box } from '@mui/material';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
@@ -35,7 +35,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     },
 }));
 
-const BillDetail = ({ isDetailOpen, isDetailClose, modifyItem }) => {
+const BillDetail = ({ isDetailOpen, isDetailClose, modifyItem, codeType }) => {
     let feeAmount = useRef(0); // 總費用金額加總(上)
     const [dataList, setDataList] = useState([]);
 
@@ -58,15 +58,11 @@ const BillDetail = ({ isDetailOpen, isDetailClose, modifyItem }) => {
         <Dialog maxWidth="sm" open={isDetailOpen}>
             <BootstrapDialogTitle>發票列表</BootstrapDialogTitle>
             <DialogContent>
-                <Grid
-                    container
-                    spacing={1}
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                    sx={{ fontSize: 10 }}
-                >
+                <Grid container spacing={1}>
                     <Grid item xs={12} sm={12} md={12} lg={12}>
+                        <Box display="flex" justifyContent="end" sx={{ fontSize: '1rem' }}>
+                            幣別：{codeType}
+                        </Box>
                         <TableContainer component={Paper} sx={{ maxHeight: 350 }}>
                             <Table sx={{ minWidth: 300 }} stickyHeader>
                                 <TableHead>
@@ -105,21 +101,11 @@ const BillDetail = ({ isDetailOpen, isDetailClose, modifyItem }) => {
                                         <StyledTableCell className="totalAmount" align="center">
                                             Total
                                         </StyledTableCell>
-                                        <StyledTableCell
-                                            className="totalAmount"
-                                            align="center"
-                                        ></StyledTableCell>
-                                        <StyledTableCell
-                                            className="totalAmount"
-                                            align="center"
-                                        ></StyledTableCell>
+                                        <StyledTableCell className="totalAmount"></StyledTableCell>
+                                        <StyledTableCell className="totalAmount"></StyledTableCell>
                                         <StyledTableCell className="totalAmount" align="center">
                                             {handleNumber(feeAmount.current)}
                                         </StyledTableCell>
-                                        <StyledTableCell
-                                            className="totalAmount"
-                                            align="center"
-                                        ></StyledTableCell>
                                     </TableRow>
                                 </TableBody>
                             </Table>

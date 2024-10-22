@@ -57,19 +57,12 @@ const InvoiceDetail = ({ toCodeType, isDetailOpen, isDetailClose, modifyItem }) 
     return (
         <Dialog maxWidth="md" open={isDetailOpen}>
             <BootstrapDialogTitle>發票明細</BootstrapDialogTitle>
-            <Box display="flex" justifyContent="end" sx={{ marginRight: '2rem' }}>
-                幣別：{toCodeType}
-            </Box>
             <DialogContent>
-                <Grid
-                    container
-                    spacing={1}
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                    sx={{ fontSize: 10 }}
-                >
+                <Grid container spacing={1}>
                     <Grid item xs={12} sm={12} md={12} lg={12}>
+                        <Box display="flex" justifyContent="end">
+                            幣別：{toCodeType}
+                        </Box>
                         <TableContainer component={Paper} sx={{ maxHeight: 350 }}>
                             <Table sx={{ minWidth: 300 }} stickyHeader>
                                 <TableHead>
@@ -110,21 +103,11 @@ const InvoiceDetail = ({ toCodeType, isDetailOpen, isDetailClose, modifyItem }) 
                                         <StyledTableCell className="totalAmount" align="center">
                                             Total
                                         </StyledTableCell>
-                                        <StyledTableCell
-                                            className="totalAmount"
-                                            align="center"
-                                        ></StyledTableCell>
-                                        <StyledTableCell className="totalAmount" align="center">
+                                        <StyledTableCell className="totalAmount"></StyledTableCell>
+                                        <StyledTableCell className="totalAmount">
                                             {handleNumber(feeAmount.current)}
                                         </StyledTableCell>
-                                        <StyledTableCell
-                                            className="totalAmount"
-                                            align="center"
-                                        ></StyledTableCell>
-                                        <StyledTableCell
-                                            className="totalAmount"
-                                            align="center"
-                                        ></StyledTableCell>
+                                        <StyledTableCell className="totalAmount"></StyledTableCell>
                                     </TableRow>
                                 </TableBody>
                             </Table>

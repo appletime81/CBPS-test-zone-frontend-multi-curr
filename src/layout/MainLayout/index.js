@@ -385,7 +385,10 @@ const MainLayout = () => {
             {/* Side Bar */}
             <Drawer open={open} handleDrawerToggle={handleDrawerToggle} />
             {/* Content */}
-            <Box component="main" sx={{ width: '100%', flexGrow: 1, p: { xs: 2, sm: 3 } }}>
+            <Box
+                component="main"
+                sx={{ width: '100%', flexGrow: 1, p: { xs: 1, sm: 2, md: 3 }, overflowX: 'auto' }}
+            >
                 {/* <Breadcrumbs navigation={navigation} title titleBottom card={false} divider={false} /> */}
                 <Breadcrumbs navigation={navigation} title divider={false} />
                 <Outlet sx={{ width: '100%' }} />

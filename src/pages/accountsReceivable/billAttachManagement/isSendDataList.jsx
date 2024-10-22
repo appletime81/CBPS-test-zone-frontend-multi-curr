@@ -47,6 +47,7 @@ const IsSendDataList = ({ listInfo }) => {
     const [isUploadOpen, setIsUploadOpen] = useState(false);
     const [modifyItem, setModifyItem] = useState([]);
     const [isDetailOpen, setIsDetailOpen] = useState(false);
+    const codeType = useRef('');
 
     const isDetailClose = () => {
         setIsDetailOpen(false);
@@ -86,7 +87,6 @@ const IsSendDataList = ({ listInfo }) => {
                     throw new Error('Network response was not ok');
                 }
 
-                // 解析 content-disposition 来获取文件名
                 const contentDisposition = res.headers.get('content-disposition');
                 let filename = 'default.pdf'; // 默认文件名
                 if (contentDisposition.includes("filename*=utf-8''")) {
@@ -235,6 +235,7 @@ const IsSendDataList = ({ listInfo }) => {
                 modifyItem={modifyItem}
                 isDetailOpen={isDetailOpen}
                 isDetailClose={isDetailClose}
+                codeType={codeType.current}
             />
             <BillUpload
                 isUploadOpen={isUploadOpen}
@@ -333,6 +334,7 @@ const IsSendDataList = ({ listInfo }) => {
                                                 variant="outlined"
                                                 onClick={() => {
                                                     setModifyItem(row.BillDetail);
+                                                    codeType.current = row.BillMaster.Code;
                                                     setIsDetailOpen(true);
                                                 }}
                                             >

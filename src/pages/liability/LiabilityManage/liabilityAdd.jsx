@@ -189,7 +189,6 @@ const LiabilityAdd = ({
     const addList = () => {
         if (infoCheck()) {
             let tmpArray = listInfo.map((i) => i);
-            console.log('', tmpArray);
             let partyArray = partyName;
             partyArray.forEach((e) => {
                 tmpArray.push({

@@ -43,7 +43,6 @@ const LiabilityManage = () => {
     const [partyList, setPartyList] = useState([]); //會員名稱下拉選單
     const [submarineCableList, setSubmarineCableList] = useState([]); //海纜名稱下拉選單
     const lBRawID = useRef(0); //LBRawID
-
     const queryApi = useRef(queryLiability + '/all');
 
     const handleDialogOpen = () => {

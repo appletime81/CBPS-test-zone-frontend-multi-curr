@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { handleNumber, BootstrapDialogTitle } from 'components/commonFunction';
 import Decimal from 'decimal.js';
 // material-ui
-import { Button, Table, Dialog, DialogContent, Grid, DialogActions } from '@mui/material';
+import { Button, Table, Dialog, DialogContent, Grid, DialogActions, Box } from '@mui/material';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
@@ -33,7 +33,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     },
 }));
 
-const SignedDataWork = ({ isViewOpen, handleDeductedClose, billDetailInfo }) => {
+const SignedDataWork = ({ isViewOpen, codeType, handleDeductedClose, billDetailInfo }) => {
     let feeAmount = useRef(0); // 總費用金額加總(上)
     let dedAmount = useRef(0); //總折抵資料加總(上)
     let wHTAmountTotal = useRef(0); //預付稅款加總
@@ -75,6 +75,9 @@ const SignedDataWork = ({ isViewOpen, handleDeductedClose, billDetailInfo }) => 
                     sx={{ fontSize: 10 }}
                 >
                     <Grid item xs={12} sm={12} md={12} lg={12}>
+                        <Box display="flex" justifyContent="end" sx={{ fontSize: '1rem' }}>
+                            幣別：{codeType}
+                        </Box>
                         <TableContainer component={Paper} sx={{ maxHeight: 350 }}>
                             <Table sx={{ minWidth: 300 }} stickyHeader>
                                 <TableHead>

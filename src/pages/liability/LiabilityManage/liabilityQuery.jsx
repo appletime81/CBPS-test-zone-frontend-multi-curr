@@ -382,7 +382,7 @@ LiabilityQuery.propTypes = {
     partyList: PropTypes.array,
     submarineCableList: PropTypes.array,
     workTitleList: PropTypes.array,
-    queryApi: PropTypes.string,
+    queryApi: PropTypes.object,
 };
 
 export default LiabilityQuery;

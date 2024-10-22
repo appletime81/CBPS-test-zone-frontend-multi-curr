@@ -44,6 +44,7 @@ const SignedDataList = ({ dataList, receivableQuery }) => {
     const [isViewOpen, setIsViewOpen] = useState(false); //產製帳單
     const [isUploadOpen, setIsUploadOpen] = useState(false); //簽核
     const billDetailInfo = useRef([]);
+    const codeType = useRef('');
     const editBillingNo = useRef('');
     const editBillMasterID = useRef('');
     const billMasterID = useRef(-1);
@@ -91,8 +92,9 @@ const SignedDataList = ({ dataList, receivableQuery }) => {
         setIsViewOpen(false);
     };
 
-    const handleViewOpen = (data) => {
+    const handleViewOpen = (data, code) => {
         billDetailInfo.current = data;
+        codeType.current = code;
         setIsViewOpen(true);
     };
 
@@ -122,6 +124,7 @@ const SignedDataList = ({ dataList, receivableQuery }) => {
             />
             <SignedDataWork
                 isViewOpen={isViewOpen}
+                codeType={codeType.current}
                 handleDeductedClose={handleDeductedClose}
                 billDetailInfo={billDetailInfo.current}
             />
@@ -181,7 +184,8 @@ const SignedDataList = ({ dataList, receivableQuery }) => {
                                         {row.BillDetail ? row.BillDetail.length : 0}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        {handleNumber(row.BillMaster.FeeAmountSum)}
+                                        {handleNumber(row.BillMaster.FeeAmountSum)}{' '}
+                                        {row.BillMaster.Code}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Box
@@ -199,7 +203,10 @@ const SignedDataList = ({ dataList, receivableQuery }) => {
                                                 size="small"
                                                 variant="outlined"
                                                 onClick={() => {
-                                                    handleViewOpen(row.BillDetail);
+                                                    handleViewOpen(
+                                                        row.BillDetail,
+                                                        row.BillMaster.Code,
+                                                    );
                                                 }}
                                             >
                                                 檢視
@@ -224,16 +231,6 @@ const SignedDataList = ({ dataList, receivableQuery }) => {
                                                     進待銷帳
                                                 </Button>
                                             )}
-                                            <Button
-                                                color="warning"
-                                                size="small"
-                                                variant="outlined"
-                                                onClick={() => {
-                                                    setInfoTerminal(true);
-                                                }}
-                                            >
-                                                退回
-                                            </Button>
                                             <Button
                                                 color="error"
                                                 size="small"

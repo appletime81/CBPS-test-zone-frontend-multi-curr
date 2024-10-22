@@ -19,7 +19,7 @@ const Setting = {
             id: 'item111',
             title: '基本資料設定',
             type: 'collapse',
-            url: '/Setting/Data',
+            url: '/Setting/Liability',
             icon: icons.SettingOutlined,
             breadcrumbs: true,
             children: [
