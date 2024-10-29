@@ -97,6 +97,7 @@ const ToDeductWork = ({
                 data.PartyName +
                 '&Code=' +
                 data.Code;
+            console.log('=>>>', 123, tmpQuery);
             fetch(tmpQuery, {
                 method: 'GET',
                 Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',

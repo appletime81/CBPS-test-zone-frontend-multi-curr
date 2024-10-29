@@ -65,8 +65,9 @@ const InvoiceWorkManage = ({
     currencyListInfo,
     purpose,
     partyNameList,
+    supNmList,
 }) => {
-    const [supNmList, setSupNmList] = useState([]); //供應商下拉選單
+    // const [supNmList, setSupNmList] = useState([]); //供應商下拉選單
     const dispatch = useDispatch();
     const invoiceNoCheck = () => {
         if (action !== '檢視') {
@@ -120,35 +121,35 @@ const InvoiceWorkManage = ({
         }
     };
 
-    useEffect(() => {
-        if (workTitle && submarineCable) {
-            let snApi =
-                supplierNameListForInvoice +
-                'SubmarineCable=' +
-                submarineCable +
-                '&WorkTitle=' +
-                workTitle;
-            fetch(snApi, {
-                method: 'GET',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-            })
-                .then((res) => res.json())
-                .then((data) => {
-                    setSupNmList(data);
-                })
-                .catch(() => {
-                    dispatch(
-                        setMessageStateOpen({
-                            messageStateOpen: {
-                                isOpen: true,
-                                severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
-                    );
-                });
-        }
-    }, [workTitle, submarineCable]);
+    // useEffect(() => {
+    //     if (workTitle && submarineCable) {
+    //         let snApi =
+    //             supplierNameListForInvoice +
+    //             'SubmarineCable=' +
+    //             submarineCable +
+    //             '&WorkTitle=' +
+    //             workTitle;
+    //         fetch(snApi, {
+    //             method: 'GET',
+    //             Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+    //         })
+    //             .then((res) => res.json())
+    //             .then((data) => {
+    //                 setSupNmList(data);
+    //             })
+    //             .catch(() => {
+    //                 dispatch(
+    //                     setMessageStateOpen({
+    //                         messageStateOpen: {
+    //                             isOpen: true,
+    //                             severity: 'error',
+    //                             message: '網路異常，請檢查網路連線或與系統窗口聯絡',
+    //                         },
+    //                     }),
+    //                 );
+    //             });
+    //     }
+    // }, [workTitle, submarineCable]);
 
     return (
         <MainCard title="發票工作主檔" sx={{ height: '100%' }}>

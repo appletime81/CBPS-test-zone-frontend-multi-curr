@@ -121,9 +121,9 @@ const InvoiceWorkManage = ({
                 <Grid item xs={12} sm={6} md={3} lg={2}>
                     <Typography
                         variant="h5"
+                        align="center"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0rem', xl: '1.5rem' },
                         }}
                     >
                         {t('Submarine Cable')}：
@@ -148,9 +148,9 @@ const InvoiceWorkManage = ({
                 <Grid item xs={12} sm={6} md={3} lg={2}>
                     <Typography
                         variant="h5"
+                        align="center"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0rem', xl: '1.5rem' },
                         }}
                     >
                         {t('Work Title')}：
@@ -174,9 +174,9 @@ const InvoiceWorkManage = ({
                 <Grid item xs={12} sm={6} md={3} lg={2}>
                     <Typography
                         variant="h5"
+                        align="center"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0rem', xl: '1.5rem' },
                         }}
                     >
                         {/* 供應商： */}
@@ -202,9 +202,9 @@ const InvoiceWorkManage = ({
                 <Grid item xs={12} sm={6} md={3} lg={2}>
                     <Typography
                         variant="h5"
+                        align="center"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0rem', xl: '1.5rem' },
                         }}
                     >
                         {t('Invoice No')}：
@@ -229,9 +229,9 @@ const InvoiceWorkManage = ({
                 <Grid item xs={12} sm={6} md={3} lg={2}>
                     <Typography
                         variant="h5"
+                        align="center"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0rem', xl: '1.5rem' },
                         }}
                     >
                         {t('Contract Type')}：
@@ -252,9 +252,9 @@ const InvoiceWorkManage = ({
                 <Grid item xs={12} sm={6} md={3} lg={2}>
                     <Typography
                         variant="h5"
+                        align="center"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0rem', xl: '1.5rem' },
                         }}
                     >
                         {t('Issue Date')}：
@@ -278,9 +278,9 @@ const InvoiceWorkManage = ({
                 <Grid item xs={12} sm={6} md={3} lg={2}>
                     <Typography
                         variant="h5"
+                        align="center"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0rem', xl: '1.5rem' },
                         }}
                     >
                         {t('Total Amount')}：
@@ -306,9 +306,9 @@ const InvoiceWorkManage = ({
                 <Grid item xs={12} sm={6} md={3} lg={2}>
                     <Typography
                         variant="h5"
+                        align="center"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0rem', xl: '1.5rem' },
                         }}
                     >
                         {t('Due Date')}：
@@ -330,9 +330,9 @@ const InvoiceWorkManage = ({
                 <Grid item xs={12} sm={6} md={3} lg={2}>
                     <Typography
                         variant="h5"
+                        align="center"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0rem', xl: '1.5rem' },
                         }}
                     >
                         原始幣別：
@@ -357,9 +357,9 @@ const InvoiceWorkManage = ({
                 <Grid item xs={12} sm={6} md={3} lg={2}>
                     <Typography
                         variant="h5"
+                        align="center"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0rem', xl: '1.5rem' },
                         }}
                     >
                         匯率資料：
@@ -378,18 +378,18 @@ const InvoiceWorkManage = ({
                     </FormControl>
                 </Grid>
                 {/* row6 */}
-                <Grid item xs={12} sm={6} md={3} lg={3}>
+                <Grid item xs={12} sm={6} md={2} lg={2}>
                     <Typography
                         variant="h5"
+                        align="center"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0rem', xl: '1.5rem' },
                         }}
                     >
                         {t('Is Pro Forma')}：
                     </Typography>
                 </Grid>
-                <Grid item xs={12} sm={6} md={3} lg={3}>
+                <Grid item xs={12} sm={6} md={4} lg={4}>
                     <FormControl>
                         <RadioGroup row value={isPro} onChange={(e) => setIsPro(e.target.value)}>
                             <FormControlLabel
@@ -422,18 +422,18 @@ const InvoiceWorkManage = ({
                     </FormControl>
                 </Grid>
                 {/* row7 */}
-                <Grid item xs={12} sm={6} md={3} lg={3}>
+                <Grid item xs={12} sm={6} md={2} lg={2}>
                     <Typography
                         variant="h5"
+                        align="center"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0rem', xl: '1.5rem' },
                         }}
                     >
                         {t('Is Recharge')}：
                     </Typography>
                 </Grid>
-                <Grid item xs={12} sm={6} md={3} lg={3}>
+                <Grid item xs={12} sm={6} md={4} lg={4}>
                     <FormControl>
                         <RadioGroup
                             row
@@ -472,9 +472,9 @@ const InvoiceWorkManage = ({
                 <Grid item xs={12} sm={6} md={2} lg={2}>
                     <Typography
                         variant="h5"
+                        align="center"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0rem', xl: '1.5rem' },
                         }}
                     >
                         {t('Is Liability')}：
@@ -523,9 +523,9 @@ const InvoiceWorkManage = ({
                 <Grid item xs={12} sm={6} md={2} lg={2}>
                     <Typography
                         variant="h5"
+                        align="center"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0rem', xl: '1.5rem' },
                         }}
                     >
                         {isLiability === false || isLiability === 'false' ? '會員名稱：' : null}

@@ -9,7 +9,6 @@ import LiabilityAdd from './liabilityAdd';
 
 // api
 import {
-    billMilestoneLiabilityList,
     dropdownmenuSubmarineCable,
     dropdownmenuParties,
     queryLiability,
@@ -138,17 +137,30 @@ const LiabilityManage = () => {
                             body: JSON.stringify(list),
                         })
                             .then((res) => res.json())
-                            .then(() => {
-                                dispatch(
-                                    setMessageStateOpen({
-                                        messageStateOpen: {
-                                            isOpen: true,
-                                            severity: 'success',
-                                            message: '新增成功',
-                                        },
-                                    }),
-                                );
-                                setAdd([]);
+                            .then((data) => {
+                                if (data.message === 'No same data') {
+                                    dispatch(
+                                        setMessageStateOpen({
+                                            messageStateOpen: {
+                                                isOpen: true,
+                                                severity: 'success',
+                                                message: '新增成功',
+                                            },
+                                        }),
+                                    );
+                                    setAdd([]);
+                                    handleDialogClose();
+                                } else {
+                                    dispatch(
+                                        setMessageStateOpen({
+                                            messageStateOpen: {
+                                                isOpen: true,
+                                                severity: 'error',
+                                                message: data.message,
+                                            },
+                                        }),
+                                    );
+                                }
                             })
                             .catch(() => {
                                 dispatch(

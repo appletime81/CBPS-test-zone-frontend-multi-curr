@@ -173,10 +173,8 @@ const ChosePurpose = ({
                     justifyContent="center"
                     alignItems="center"
                 >
-                    <Grid item md={2} display="flex" justifyContent="end" alignItems="center">
-                        <Typography variant="h5" sx={{ fontSize: { lg: '0.7rem', xl: '0.88rem' } }}>
-                            帳單到期：
-                        </Typography>
+                    <Grid item md={2} display="flex" justifyContent="center" alignItems="center">
+                        <Typography variant="h5">帳單到期：</Typography>
                     </Grid>
                     <Grid item md={2}>
                         <FormControl>
@@ -193,10 +191,8 @@ const ChosePurpose = ({
                             </LocalizationProvider>
                         </FormControl>
                     </Grid>
-                    <Grid item md={2} display="flex" justifyContent="end" alignItems="center">
-                        <Typography variant="h5" sx={{ fontSize: { lg: '0.7rem', xl: '0.88rem' } }}>
-                            兌換幣別代碼：
-                        </Typography>
+                    <Grid item md={2} display="flex" justifyContent="center" alignItems="center">
+                        <Typography variant="h5">兌換幣別代碼：</Typography>
                     </Grid>
                     <Grid item md={2}>
                         <FormControl fullWidth size="small">

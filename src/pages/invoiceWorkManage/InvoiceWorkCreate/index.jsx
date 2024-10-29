@@ -18,7 +18,6 @@ import {
     submarineCableInfoList,
     billMilestoneList,
     generateInvoice,
-    supplierNameDropDownUnique,
     getCurrencyData,
     dropdownmenuParties,
 } from 'components/apis.jsx';
@@ -479,6 +478,18 @@ const InvoiceWorkManage = () => {
                 if (Array.isArray(data)) {
                     setBmStoneList(data);
                 }
+                if (data.alert_msg) {
+                    setBmStoneList([]);
+                    dispatch(
+                        setMessageStateOpen({
+                            messageStateOpen: {
+                                isOpen: true,
+                                severity: 'error',
+                                message: data.alert_msg,
+                            },
+                        }),
+                    );
+                }
             })
             .catch(() => {
                 dispatch(
@@ -566,7 +577,8 @@ const InvoiceWorkManage = () => {
                 .then((data) => {
                     if (Array.isArray(data)) {
                         setPartyNameList(data);
-                    } else {
+                    }
+                    if (data.alert_msg) {
                         setPartyNameList([]);
                         dispatch(
                             setMessageStateOpen({

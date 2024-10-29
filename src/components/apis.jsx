@@ -1,6 +1,6 @@
 //let env = 'internal-cbpsAlb-1176080923.ap-northeast-1.elb.amazonaws.com'
 // let env = '10.193.130.75:8000';
-let env = '172.28.124.164:8000';
+let env = '127.0.0.1:8000';
 let httpEnv = 'http';
 
 if (process.env.REACT_APP_ENV_FLAGE === 'qa') {

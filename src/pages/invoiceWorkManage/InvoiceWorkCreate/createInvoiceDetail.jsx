@@ -186,9 +186,9 @@ const CreateInvoiceDetail = ({
                 <Grid item sm={6} md={2} lg={2}>
                     <Typography
                         variant="h5"
+                        align="center"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0rem', xl: '1.5rem' },
                         }}
                     >
                         計帳段號：
@@ -216,9 +216,9 @@ const CreateInvoiceDetail = ({
                 <Grid item sm={6} md={2} lg={2}>
                     <Typography
                         variant="h5"
+                        align="center"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0rem', xl: '1.5rem' },
                         }}
                     >
                         費用金額：
@@ -246,9 +246,9 @@ const CreateInvoiceDetail = ({
                     <Typography
                         variant="h5"
                         size="small"
+                        align="center"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0rem', xl: '1.5rem' },
                         }}
                     >
                         費用項目：

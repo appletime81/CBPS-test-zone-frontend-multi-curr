@@ -299,7 +299,7 @@ const BillDraftMake = ({
         totalAmount.current = tmpAmount;
     }, [detailInfo]);
 
-    console.log('contactList=>>', contactList);
+    console.log('detailInfo=>>', detailInfo);
 
     return (
         <Dialog maxWidth="xxl" fullWidth open={isDialogOpen}>
@@ -603,7 +603,6 @@ const BillDraftMake = ({
                                         </TableHead>
                                         <TableBody>
                                             {detailInfo?.map((row, id) => {
-                                                console.log('row.isTax=>>', row);
                                                 return (
                                                     <TableRow key={id}>
                                                         <StyledTableCell
@@ -655,7 +654,7 @@ const BillDraftMake = ({
                                                                   )}
                                                         </StyledTableCell>
                                                         <StyledTableCell
-                                                            align="left"
+                                                            align="right"
                                                             className="theSecond"
                                                         >
                                                             {row.IsTax
@@ -665,7 +664,7 @@ const BillDraftMake = ({
                                                                 : null}
                                                         </StyledTableCell>
                                                         <StyledTableCell
-                                                            align="left"
+                                                            align="right"
                                                             className="theSecondFinal"
                                                         >
                                                             {handleNumber(

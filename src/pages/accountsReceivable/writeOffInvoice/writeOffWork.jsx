@@ -37,7 +37,6 @@ import { saveWriteOff } from 'components/apis.jsx';
 // redux
 import { useDispatch } from 'react-redux';
 import { setMessageStateOpen } from 'store/reducers/dropdown';
-import { number } from 'prop-types';
 
 // api
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -630,6 +629,10 @@ const WriteOffWork = ({
                             </Grid>
                         </Grid>
                         <Grid item md={12} lg={12}>
+                            <Box display="flex" justifyContent="end" sx={{ fontSize: '1rem' }}>
+                                幣別：{writeOffInfo.Code}
+                                {/* 幣別：123456 */}
+                            </Box>
                             <MainCard title="帳單明細列表">
                                 <TableContainer
                                     component={Paper}

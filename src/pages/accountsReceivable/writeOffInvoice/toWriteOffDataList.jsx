@@ -27,6 +27,11 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
         paddingTop: '0.2rem',
         paddingBottom: '0.2rem',
     },
+    [`&.${tableCellClasses.body}`]: {
+        fontSize: 14,
+        paddingTop: '0.2rem',
+        paddingBottom: '0.2rem',
+    },
     [`&.${tableCellClasses.body}.totalAmount`]: {
         fontSize: 14,
         paddingTop: '0.2rem',
@@ -243,14 +248,16 @@ const ToWriteOffDataList = ({ listInfo, writeOffInitQuery }) => {
                                             sx={{
                                                 display: 'flex',
                                                 justifyContent: 'center',
-                                                '& button': { mx: 1, p: 0 },
+                                                '& button': {
+                                                    mx: { sm: 0.3, md: 0.3, lg: 0.6, xl: 1.5 },
+                                                    p: 0,
+                                                },
                                             }}
                                         >
                                             <Button
                                                 color="primary"
                                                 size="small"
                                                 variant="outlined"
-                                                sx={{ fontSize: '12px' }}
                                                 onClick={() => {
                                                     handleWriteOff(row.BillMaster);
                                                 }}

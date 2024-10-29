@@ -14,6 +14,7 @@ import {
     Grid,
     DialogActions,
     TextField,
+    Box,
 } from '@mui/material';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
@@ -96,7 +97,9 @@ const ToDeductWork = ({
                 '&WorkTitle=' +
                 writeOffInfo.WorkTitle +
                 '&PartyName=' +
-                writeOffInfo.PartyName;
+                writeOffInfo.PartyName +
+                '&Code=' +
+                writeOffInfo.Code;
             console.log('tmpQuery=>>', tmpQuery);
             fetch(tmpQuery, {
                 method: 'GET',
@@ -236,6 +239,14 @@ const ToDeductWork = ({
                     justifyContent="center"
                     alignItems="center"
                 >
+                    <Box
+                        display="flex"
+                        justifyContent="end"
+                        sx={{ fontSize: '1.4rem', width: '100%' }}
+                    >
+                        幣別：{writeOffInfo.Code}
+                        {/* 幣別：123456 */}
+                    </Box>
                     <Grid item md={12} lg={12}>
                         <MainCard title="帳單明細列表">
                             <TableContainer component={Paper} sx={{ maxHeight: 350 }}>
@@ -273,10 +284,10 @@ const ToDeductWork = ({
                                                 {cbData.current?.FeeItem}
                                             </TableCell>
                                             <TableCell align="center">
-                                                ${handleNumber(cbData.current?.ReceivedAmount)}
+                                                {handleNumber(cbData.current?.ReceivedAmount)}
                                             </TableCell>
                                             <TableCell align="center">
-                                                ${handleNumber(cbData.current?.CBWriteOffAmount)}
+                                                {handleNumber(cbData.current?.CBWriteOffAmount)}
                                             </TableCell>
                                             <TableCell
                                                 align="center"
@@ -289,7 +300,6 @@ const ToDeductWork = ({
                                                             : 'red',
                                                 }}
                                             >
-                                                $
                                                 {handleNumber(
                                                     new Decimal(cbData.current?.OrgFeeAmount || 0)
                                                         .minus(
@@ -420,7 +430,6 @@ const ToDeductWork = ({
                                                                 </TableCell>
                                                                 <TableCell align="center">
                                                                     <TextField
-                                                                        label="$"
                                                                         size="small"
                                                                         type="number"
                                                                         inputProps={{
@@ -439,7 +448,7 @@ const ToDeductWork = ({
                                                                     />
                                                                 </TableCell>
                                                                 <TableCell align="center">
-                                                                    ${handleNumber(afterDiff)}
+                                                                    {handleNumber(afterDiff)}
                                                                 </TableCell>
                                                             </TableRow>
                                                         );

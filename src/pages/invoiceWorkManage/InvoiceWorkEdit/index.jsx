@@ -248,25 +248,44 @@ const InvoiceWorkManage = () => {
     };
 
     const getBmStoneList = (api) => {
-        fetch(api, { method: 'GET' })
-            .then((res) => res.json())
-            .then((data) => {
-                console.log('1111=>', data, api);
-                if (Array.isArray(data)) {
-                    setBmStoneList(data);
-                }
-            })
-            .catch(() => {
-                dispatch(
-                    setMessageStateOpen({
-                        messageStateOpen: {
-                            isOpen: true,
-                            severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
-                );
-            });
+        console.log('test=>>', action);
+        if (action === '編輯') {
+            fetch(api, { method: 'GET' })
+                .then((res) => res.json())
+                .then((data) => {
+                    console.log('1111=>', data, api);
+                    if (Array.isArray(data)) {
+                        setBmStoneList(data);
+                    }
+                    if (data.alert_msg) {
+                        setBmStoneList([]);
+                        dispatch(
+                            setMessageStateOpen({
+                                messageStateOpen: {
+                                    isOpen: true,
+                                    severity: 'error',
+                                    message: data.alert_msg,
+                                },
+                            }),
+                        );
+                    }
+                })
+                .catch(() => {
+                    setBmStoneList([]);
+                    dispatch(
+                        setMessageStateOpen({
+                            messageStateOpen: {
+                                isOpen: true,
+                                severity: 'error',
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
+                            },
+                        }),
+                    );
+                });
+        }
+        // if (action === '檢視') {
+        //     setBmStoneList([billMilestone]);
+        // }
     };
 
     useEffect(() => {
@@ -738,7 +757,8 @@ const InvoiceWorkManage = () => {
     useEffect(() => {
         rateInfo.current = {};
         setCurrencyExgID(null);
-        if (workTitle && submarineCable) {
+        console.log('action=>>', action);
+        if (workTitle && submarineCable && action === '編輯') {
             console.log('5=>>>>');
             let snApi =
                 supplierNameListForInvoice +
@@ -754,6 +774,8 @@ const InvoiceWorkManage = () => {
                 .then((data) => {
                     if (Array.isArray(data)) {
                         setSupNmList(data);
+                    } else {
+                        setSupNmList([]);
                     }
                 })
                 .catch(() => {
@@ -766,10 +788,14 @@ const InvoiceWorkManage = () => {
                             },
                         }),
                     );
+                    setSupNmList([]);
                 });
-        } else {
-            setSupNmList([]);
         }
+        if (workTitle && submarineCable && action === '檢視') {
+            console.log('supplierName5=>>>>', supplierName);
+            setSupNmList([{ SupplierName: supplierName }]);
+        }
+
         // rateInfo.current = {};
         // setCurrencyExgID(null);
         // if (workTitle && submarineCable) {
@@ -865,7 +891,8 @@ const InvoiceWorkManage = () => {
                 .then((data) => {
                     if (Array.isArray(data)) {
                         setPartyNameList(data);
-                    } else {
+                    }
+                    if (data.alert_msg) {
                         setPartyNameList([]);
                         dispatch(
                             setMessageStateOpen({
@@ -1089,6 +1116,7 @@ const InvoiceWorkManage = () => {
                                         currencyListInfo={currencyListInfo}
                                         purpose={rateInfo.current.Purpose}
                                         partyNameList={partyNameList}
+                                        supNmList={supNmList}
                                     />
                                 </Grid>
                                 {/* 右 */}

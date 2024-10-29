@@ -164,15 +164,9 @@ const ChosePurpose = ({
         <Dialog maxWidth="md" fullWidth open={isPurposeDialogOpen}>
             <BootstrapDialogTitle>選擇用途/主旨</BootstrapDialogTitle>
             <DialogContent dividers>
-                <Grid
-                    container
-                    spacing={1}
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                >
+                <Grid container display="flex" justifyContent="center" alignItems="center">
                     <Grid item md={2} display="flex" justifyContent="end" alignItems="center">
-                        <Typography variant="h5" sx={{ fontSize: { lg: '0.7rem', xl: '0.88rem' } }}>
+                        <Typography variant="h5" sx={{ fontSize: { lg: '0.7rem' } }}>
                             帳單到期：
                         </Typography>
                     </Grid>
@@ -192,7 +186,7 @@ const ChosePurpose = ({
                         </FormControl>
                     </Grid>
                     <Grid item md={2} display="flex" justifyContent="end" alignItems="center">
-                        <Typography variant="h5" sx={{ fontSize: { lg: '0.7rem', xl: '0.88rem' } }}>
+                        <Typography variant="h5" sx={{ fontSize: { lg: '0.7rem' } }}>
                             兌換幣別代碼：
                         </Typography>
                     </Grid>
