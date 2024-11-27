@@ -39,7 +39,7 @@ import { styled } from '@mui/material/styles';
 // print
 import './styles.css';
 
-import { generateBillData, contactUser } from 'components/apis.jsx';
+import { generateBillData, dropdownmenuUsers } from 'components/apis.jsx';
 import Logo1 from 'assets/images/logo1.gif';
 import Logo2 from 'assets/images/logo2.png';
 
@@ -258,7 +258,7 @@ const BillDraftMake = ({
                         }),
                     );
                 });
-            fetch(contactUser, {
+            fetch(dropdownmenuUsers, {
                 method: 'GET',
                 Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
             })
@@ -281,15 +281,15 @@ const BillDraftMake = ({
                 });
         }
     }, [billMasterID, isDialogOpen]);
-    useEffect(() => {
-        let arrayFiliter = [];
-        if (contact.length > 0) {
-            arrayFiliter = contactList.filter((i) => i.UserID === contact);
-        } else {
-            arrayFiliter = contactList.filter((i) => i.UserID === 'chang_ty');
-        }
-        setContactInfo(arrayFiliter[0]);
-    }, [contact]);
+    // useEffect(() => {
+    //     let arrayFiliter = [];
+    //     if (contact.length > 0) {
+    //         arrayFiliter = contactList.filter((i) => i.UserID === contact);
+    //     } else {
+    //         arrayFiliter = contactList.filter((i) => i.UserID === 'chang_ty');
+    //     }
+    //     setContactInfo(arrayFiliter[0]);
+    // }, [contact]);
 
     useEffect(() => {
         let tmpAmount = 0;

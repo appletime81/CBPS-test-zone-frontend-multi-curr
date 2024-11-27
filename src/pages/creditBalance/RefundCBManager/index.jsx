@@ -4,7 +4,7 @@ import { Grid, Button, Box, Tabs, Tab } from '@mui/material';
 
 // project import
 import MainCard from 'components/MainCard';
-import CreditBalanceQuery from './refundCBManagerQuery';
+import RefundCBManagerQuery from './refundCBManagerQuery';
 import RefundCBManagerDataList from './refundCBManagerDataList';
 import RefundDraftDataList from './refundDraftDataList';
 import CustomTabPanel from 'components/CustomTabPanel';
@@ -15,7 +15,13 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 
 // api
-import { dropdownmenuParties, submarineCableInfoList, refundView, cBRefund } from 'components/apis';
+import {
+    dropdownmenuParties,
+    submarineCableInfoList,
+    refundView,
+    cBRefund,
+    getWorkTitle,
+} from 'components/apis';
 
 // redux
 import { useDispatch } from 'react-redux';
@@ -27,6 +33,7 @@ const CreditBalance = () => {
     const [listInfo, setListInfo] = useState([]);
     const [submarineCableList, setSubmarineCableList] = useState([]); //海纜名稱下拉選單
     const [partiesList, setPartiesList] = useState([]); //會員下拉選單
+    const [workTitleList, setWorkTitleList] = useState([]); //海纜作業下拉選單
     const [cbToCn, setCbToCn] = useState({}); //勾選合併狀態
     const dispatch = useDispatch();
 
@@ -158,6 +165,34 @@ const CreditBalance = () => {
                     }),
                 );
             });
+        fetch(getWorkTitle, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            },
+            body: JSON.stringify({}),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (Array.isArray(data)) {
+                    setWorkTitleList(data);
+                } else {
+                    setWorkTitleList([]);
+                }
+            })
+            .catch(() => {
+                setWorkTitleList([]);
+                dispatch(
+                    setMessageStateOpen({
+                        messageStateOpen: {
+                            isOpen: true,
+                            severity: 'error',
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
+                        },
+                    }),
+                );
+            });
     }, []);
 
     return (
@@ -165,12 +200,13 @@ const CreditBalance = () => {
             <Grid container spacing={1}>
                 <Grid item xs={12} display="flex" justifyContent="right" />
                 <Grid item xs={12}>
-                    <CreditBalanceQuery
+                    <RefundCBManagerQuery
                         value={value}
                         setListInfo={setListInfo}
                         partiesList={partiesList}
                         submarineCableList={submarineCableList}
                         queryApi={queryApi}
+                        workTitleList={workTitleList}
                     />
                 </Grid>
                 <Grid item xs={12}>

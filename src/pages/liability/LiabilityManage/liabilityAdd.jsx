@@ -37,6 +37,7 @@ import {
     addLiabilityapi,
     submarineCableInfoList,
     dropdownmenuParties,
+    getWorkTitle,
 } from 'components/apis.jsx';
 
 // redux
@@ -86,6 +87,7 @@ const LiabilityAdd = ({
     const [splitNumber, setSplitNumber] = useState('');
     const [submarineCableList, setSubmarineCableList] = useState([]); //海纜名稱下拉選單
     const [partiesList, setPartiesList] = useState([]); //會員下拉選單
+    const [workTitleList, setWorkTitleList] = useState([]); //海纜作業下拉選單
 
     const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
     const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -232,7 +234,6 @@ const LiabilityAdd = ({
     };
 
     const excuteSplit = () => {
-        console.log(listInfo);
         if (listInfo.length > 0) {
             fetch(deleteLiability, {
                 method: 'POST',
@@ -341,7 +342,81 @@ const LiabilityAdd = ({
                     }),
                 );
             });
+        fetch(getWorkTitle, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            },
+            body: JSON.stringify({}),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (Array.isArray(data)) {
+                    setWorkTitleList(data);
+                } else {
+                    setWorkTitleList([]);
+                }
+            })
+            .catch(() => {
+                setWorkTitleList([]);
+                dispatch(
+                    setMessageStateOpen({
+                        messageStateOpen: {
+                            isOpen: true,
+                            severity: 'error',
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
+                        },
+                    }),
+                );
+            });
     }, []);
+
+    useEffect(() => {
+        if (submarineCable && workTitle) {
+            let tmpArray = {
+                SubmarineCable: submarineCable,
+                WorkTitle: workTitle,
+            };
+            //會員名稱
+            fetch(dropdownmenuParties, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                },
+                body: JSON.stringify(tmpArray),
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    console.log('data=>>', data);
+                    if (data.length === 0) {
+                        dispatch(
+                            setMessageStateOpen({
+                                messageStateOpen: {
+                                    isOpen: true,
+                                    severity: 'error',
+                                    message: '無會員資料',
+                                },
+                            }),
+                        );
+                    } else {
+                        setPartiesList(data);
+                    }
+                })
+                .catch(() => {
+                    dispatch(
+                        setMessageStateOpen({
+                            messageStateOpen: {
+                                isOpen: true,
+                                severity: 'error',
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
+                            },
+                        }),
+                    );
+                });
+        }
+    }, [submarineCable, workTitle]);
 
     return (
         <Dialog maxWidth="md" fullWidth open={isDialogOpen}>
@@ -469,9 +544,11 @@ const LiabilityAdd = ({
                                 label="填寫海纜作業"
                                 onChange={(e) => setWorkTitle(e.target.value)}
                             >
-                                <MenuItem value={'Construction'}>Construction</MenuItem>
-                                <MenuItem value={'Upgrade'}>Upgrade</MenuItem>
-                                <MenuItem value={'O&M'}>O&M</MenuItem>
+                                {workTitleList.map((i) => (
+                                    <MenuItem key={i.Title} value={i.Title}>
+                                        {i.Title}
+                                    </MenuItem>
+                                ))}
                             </Select>
                         </FormControl>
                     </Grid>
@@ -516,6 +593,7 @@ const LiabilityAdd = ({
                             disabled={dialogAction === 'Edit' || dialogAction === 'Split'}
                             size="small"
                             disableCloseOnSelect
+                            // haha
                             onChange={(event, newValue) => {
                                 setPartyName(newValue);
                             }}
@@ -533,7 +611,25 @@ const LiabilityAdd = ({
                                     </li>
                                 );
                             }}
-                            renderInput={(params) => <TextField {...params} label="選擇會員名稱" />}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="選擇會員名稱"
+                                    onClick={() => {
+                                        if (partiesList.length === 0) {
+                                            dispatch(
+                                                setMessageStateOpen({
+                                                    messageStateOpen: {
+                                                        isOpen: true,
+                                                        severity: 'warning',
+                                                        message: '請先選擇海纜名稱及海纜作業',
+                                                    },
+                                                }),
+                                            );
+                                        }
+                                    }}
+                                />
+                            )}
                         />
                     </Grid>
                     {/* row3 */}

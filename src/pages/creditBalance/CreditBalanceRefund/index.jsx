@@ -19,6 +19,7 @@ import {
     submarineCableInfoList,
     queryCB,
     creditBalanceRefund,
+    getWorkTitle,
 } from 'components/apis';
 
 // redux
@@ -29,6 +30,7 @@ const CreditBalance = () => {
     const queryApi = useRef('/all');
     const [listInfo, setListInfo] = useState([]);
     const [submarineCableList, setSubmarineCableList] = useState([]); //海纜名稱下拉選單
+    const [workTitleList, setWorkTitleList] = useState([]); //海纜作業下拉選單
     const [partiesList, setPartiesList] = useState([]); //會員下拉選單
     const [cbToCn, setCbToCn] = useState({}); //勾選合併狀態
     const [cbRefundData, setCbRefundData] = useState([]);
@@ -167,6 +169,34 @@ const CreditBalance = () => {
                     }),
                 );
             });
+        fetch(getWorkTitle, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            },
+            body: JSON.stringify({}),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (Array.isArray(data)) {
+                    setWorkTitleList(data);
+                } else {
+                    setWorkTitleList([]);
+                }
+            })
+            .catch(() => {
+                setWorkTitleList([]);
+                dispatch(
+                    setMessageStateOpen({
+                        messageStateOpen: {
+                            isOpen: true,
+                            severity: 'error',
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
+                        },
+                    }),
+                );
+            });
     }, []);
 
     return (
@@ -178,6 +208,7 @@ const CreditBalance = () => {
                         setListInfo={setListInfo}
                         partiesList={partiesList}
                         submarineCableList={submarineCableList}
+                        workTitleList={workTitleList}
                         queryApi={queryApi}
                     />
                 </Grid>

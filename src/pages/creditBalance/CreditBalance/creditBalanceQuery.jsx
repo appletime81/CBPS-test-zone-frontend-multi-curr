@@ -30,7 +30,13 @@ import { queryCB } from 'components/apis.jsx';
 import { useDispatch } from 'react-redux';
 import { setMessageStateOpen } from 'store/reducers/dropdown';
 
-const CreditBalanceQuery = ({ setListInfo, partiesList, submarineCableList, queryApi }) => {
+const CreditBalanceQuery = ({
+    setListInfo,
+    partiesList,
+    submarineCableList,
+    queryApi,
+    workTitleList,
+}) => {
     const dispatch = useDispatch();
     const [partyName, setPartyName] = useState('All'); //會員名稱
     const [cBType, setCBType] = useState('All'); //CB種類
@@ -220,9 +226,11 @@ const CreditBalanceQuery = ({ setListInfo, partiesList, submarineCableList, quer
                             onChange={(e) => setWorkTitle(e.target.value)}
                         >
                             <MenuItem value={'All'}>All</MenuItem>
-                            <MenuItem value={'Upgrade'}>Upgrade</MenuItem>
-                            <MenuItem value={'Construction'}>Construction</MenuItem>
-                            <MenuItem value={'O&M'}>O&M</MenuItem>
+                            {workTitleList.map((i) => (
+                                <MenuItem key={i.Title} value={i.Title}>
+                                    {i.Title}
+                                </MenuItem>
+                            ))}
                         </Select>
                     </FormControl>
                 </Grid>

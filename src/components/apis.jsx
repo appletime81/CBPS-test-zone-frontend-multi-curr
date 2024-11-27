@@ -1,6 +1,6 @@
 //let env = 'internal-cbpsAlb-1176080923.ap-northeast-1.elb.amazonaws.com'
 // let env = '10.193.130.75:8000';
-let env = '127.0.0.1:8000';
+let env = '172.28.124.164:8000';
 let httpEnv = 'http';
 
 if (process.env.REACT_APP_ENV_FLAGE === 'qa') {
@@ -98,9 +98,6 @@ export const generateBillData = `${httpEnv}://${env}/api/v1/getBillMasterDraftSt
 export const updateBM = `${httpEnv}://${env}/api/v1/updateBillMaster`;
 // export const downBM = `${httpEnv}://${env}/api/v1/BillMaster/signedDraft`;
 
-// 產製應收帳款-帳單與附件管理
-// export const attachment = `${httpEnv}://${env}/api/v1/BillMaster/attachment`;
-
 // 銷帳
 // export const sendToWriteOff = `${httpEnv}://${env}/api/v1/BillMaster&BillDetail/toWriteOff`;
 export const getWriteOffDetail = `${httpEnv}://${env}/api/v1/getWriteOffDetail`;
@@ -127,6 +124,12 @@ export const getPayDraftStreamCBRefund = `${httpEnv}://${env}/api/v1/getPayDraft
 export const searchBillMasterByInvoiceWKMaster = `${httpEnv}://${env}/api/v1/searchBillMasterByInvoiceWKMaster`;
 export const searchInvoiceWKMasterByBillMaster = `${httpEnv}://${env}/api/v1/searchInvoiceWKMasterByBillMaster`;
 export const searchInvoiceWKMasterIsBilled = `${httpEnv}://${env}/api/v1/searchInvoiceWKMasterIsBilled`;
+
+// 基本資料-workTitle
+export const getWorkTitle = `${httpEnv}://${env}/api/v1/getWorkTitle`;
+export const addWorkTitle = `${httpEnv}://${env}/api/v1/addWorkTitle`;
+export const deleteWorkTitle = `${httpEnv}://${env}/api/v1/deleteWorkTitle`;
+export const updateWorkTitle = `${httpEnv}://${env}/api/v1/updateWorkTitle`;
 
 // 基本資料-Suppliers
 export const suppliers = `${httpEnv}://${env}/api/v1/Suppliers`;
@@ -171,7 +174,8 @@ export const journalMasterView = `${httpEnv}://${env}/api/v1/InvoiceWKMaster`;
 export const queryToCombineInvo = `${httpEnv}://${env}/api/v1/getInvoiceMaster&InvoiceDetail`;
 export const queryToDecutBill = `${httpEnv}://${env}/api/v1/getBillMaster&BillDetail`;
 export const quertDeductedData = `${httpEnv}://${env}/api/v1/getBillMaster&BillDetailWithCBData`;
-export const contactUser = `${httpEnv}://${env}/api/v1/User/all`;
+// export const contactUser = `${httpEnv}://${env}/api/v1/User/all`;
+export const dropdownmenuUsers = `${httpEnv}://${env}/api/v1/dropdownmenuUsers`;
 export const querySupplierPayment = `${httpEnv}://${env}/api/v1/payment`;
 export const queryPaydraft = `${httpEnv}://${env}/api/v1/paydraft`;
 export const getPartiesAllInfo = `${httpEnv}://${env}/api/v1/Parties/all`; // 會員名稱

@@ -15,6 +15,7 @@ import {
     deleteParties,
     editParties,
     submarineCableInfoList,
+    getWorkTitle,
 } from 'components/apis.jsx';
 
 // redux
@@ -182,6 +183,7 @@ const PartyDataList = ({ infoList, setInfoList }) => {
     const [bankNameEdit, setBankNameEdit] = useState('');
     const [branchEdit, setBranchEdit] = useState('');
     const [bankAddressEdit, setBankAddressEdit] = useState('');
+    const [workTitleList, setWorkTitleList] = useState([]); //海纜作業下拉選單
 
     const [isColumn1Open, setIsColumn1Open] = useState(false);
     const [isColumn2Open, setIsColumn2Open] = useState(false);
@@ -611,6 +613,34 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                     }),
                 );
             });
+        fetch(getWorkTitle, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            },
+            body: JSON.stringify({}),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (Array.isArray(data)) {
+                    setWorkTitleList(data);
+                } else {
+                    setWorkTitleList([]);
+                }
+            })
+            .catch(() => {
+                setWorkTitleList([]);
+                dispatch(
+                    setMessageStateOpen({
+                        messageStateOpen: {
+                            isOpen: true,
+                            severity: 'error',
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
+                        },
+                    }),
+                );
+            });
     }, []);
 
     return (
@@ -805,9 +835,11 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                                         label="填寫海纜作業"
                                         onChange={(e) => setWorkTitle(e.target.value)}
                                     >
-                                        <MenuItem value={'Upgrade'}>Upgrade</MenuItem>
-                                        <MenuItem value={'Construction'}>Construction</MenuItem>
-                                        <MenuItem value={'O&M'}>O&M</MenuItem>
+                                        {workTitleList.map((i) => (
+                                            <MenuItem key={i.Title} value={i.Title}>
+                                                {i.Title}
+                                            </MenuItem>
+                                        ))}
                                     </Select>
                                 </TableCell>
                             </>

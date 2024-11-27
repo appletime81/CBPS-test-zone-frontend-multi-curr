@@ -28,6 +28,8 @@ import {
     billMilestoneLiabilityList,
     getCurrencyData,
     dropdownmenuParties,
+    getWorkTitle,
+    supplierNameDropDownUnique
 } from 'components/apis.jsx';
 
 // redux
@@ -60,9 +62,11 @@ const InvoiceWorkManage = () => {
     const wKMasterID = useRef(); //工作檔ID
     const [bmsList, setBmsList] = useState([]); //計帳段號下拉選單
     const [bmStoneList, setBmStoneList] = useState([]); //計帳段號下拉選單
+
     const [fromCode, setFromCode] = useState(''); //幣別
     const [currencyExgID, setCurrencyExgID] = useState(null);
     const isTax = useRef(0);
+    const [workTitleList, setWorkTitleList] = useState([]); //海纜作業下拉選單
     const [billMilestone, setBillMilestone] = useState(''); //計帳段號
     const [feeItem, setFeeItem] = useState(''); //費用項目
     const [feeAmount, setFeeAmount] = useState(''); //費用金額
@@ -283,10 +287,96 @@ const InvoiceWorkManage = () => {
                     );
                 });
         }
-        // if (action === '檢視') {
-        //     setBmStoneList([billMilestone]);
-        // }
-    };
+    }
+
+    useEffect(() => {
+        itemInfoInitial();
+        setAction('');
+        setModifyItem('');
+        firstQueryInit();
+        fetch(supplierNameDropDownUnique, {
+            method: 'GET',
+            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (Array.isArray(data)) {
+                    setSupNmList(data);
+                }
+            })
+            .catch(() => {
+                dispatch(
+                    setMessageStateOpen({
+                        messageStateOpen: {
+                            isOpen: true,
+                            severity: 'error',
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
+                        },
+                    }),
+                );
+            });
+        //海纜名稱
+        fetch(submarineCableInfoList, { method: 'GET' })
+            .then((res) => res.json())
+            .then((data) => {
+                setSubmarineCableList(data);
+            })
+            .catch(() => {
+                dispatch(
+                    setMessageStateOpen({
+                        messageStateOpen: {
+                            isOpen: true,
+                            severity: 'error',
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
+                        },
+                    }),
+                );
+            });
+        fetch(billMilestoneLiabilityList, { method: 'GET' })
+            .then((res) => res.json())
+            .then((data) => {
+                setBmsList(data);
+            })
+            .catch(() => {
+                dispatch(
+                    setMessageStateOpen({
+                        messageStateOpen: {
+                            isOpen: true,
+                            severity: 'error',
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
+                        },
+                    }),
+                );
+            });
+            fetch(getWorkTitle, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                },
+                body: JSON.stringify({}),
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (Array.isArray(data)) {
+                        setWorkTitleList(data);
+                    } else {
+                        setWorkTitleList([]);
+                    }
+                })
+                .catch(() => {
+                    setWorkTitleList([]);
+                    dispatch(
+                        setMessageStateOpen({
+                            messageStateOpen: {
+                                isOpen: true,
+                                severity: 'error',
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
+                            },
+                        }),
+                    );
+                });
+    }, []);
 
     useEffect(() => {
         if ((modifyItem !== '' && action === '編輯') || (modifyItem !== '' && action === '檢視')) {
@@ -757,9 +847,7 @@ const InvoiceWorkManage = () => {
     useEffect(() => {
         rateInfo.current = {};
         setCurrencyExgID(null);
-        console.log('action=>>', action);
         if (workTitle && submarineCable && action === '編輯') {
-            console.log('5=>>>>');
             let snApi =
                 supplierNameListForInvoice +
                 'SubmarineCable=' +
@@ -858,12 +946,6 @@ const InvoiceWorkManage = () => {
     useEffect(() => {
         rateInfo.current = {};
         setCurrencyExgID(null);
-        console.log(
-            "workTitle && submarineCable && isLiability === 'true'",
-            workTitle && submarineCable && isLiability === 'true',
-            isLiability === 'true',
-            isLiability,
-        );
         if (workTitle && submarineCable && isLiability !== 'false') {
             let bmStone =
                 billMilestoneList +
@@ -944,27 +1026,6 @@ const InvoiceWorkManage = () => {
         setAction('');
         setModifyItem('');
         firstQueryInit();
-        // fetch(supplierNameDropDownUnique, {
-        //     method: 'GET',
-        //     Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-        // })
-        //     .then((res) => res.json())
-        //     .then((data) => {
-        //         if (Array.isArray(data)) {
-        //             setSupNmList(data);
-        //         }
-        //     })
-        //     .catch(() => {
-        //         dispatch(
-        //             setMessageStateOpen({
-        //                 messageStateOpen: {
-        //                     isOpen: true,
-        //                     severity: 'error',
-        //                     message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-        //                 },
-        //             }),
-        //         );
-        //     });
         //海纜名稱
         fetch(submarineCableInfoList, { method: 'GET' })
             .then((res) => res.json())
@@ -1117,6 +1178,7 @@ const InvoiceWorkManage = () => {
                                         purpose={rateInfo.current.Purpose}
                                         partyNameList={partyNameList}
                                         supNmList={supNmList}
+                                        workTitleList={workTitleList}
                                     />
                                 </Grid>
                                 {/* 右 */}
@@ -1163,9 +1225,7 @@ const InvoiceWorkManage = () => {
                             </Grid>
                         </MainCard>
                     </Grid>
-                ) : (
-                    ''
-                )}
+                ) : null}
                 <Grid item xs={12} display="flex" justifyContent="center" alignItems="center">
                     <Link
                         to="/CreateJournal/CreateJournal"

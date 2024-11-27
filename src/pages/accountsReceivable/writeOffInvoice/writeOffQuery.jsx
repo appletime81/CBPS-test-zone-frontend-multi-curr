@@ -20,6 +20,7 @@ import {
     dropdownmenuParties,
     submarineCableInfoList,
     getBillMasterBillDetail,
+    getWorkTitle,
 } from 'components/apis';
 
 // ==============================|| SAMPLE PAGE ||============================== //
@@ -31,6 +32,7 @@ const WriteOffQuery = ({ setListInfo, value }) => {
     const [submarineCableList, setSubmarineCableList] = useState([]); //海纜名稱下拉選單
     const [partiesList, setPartiesList] = useState([]); //會員下拉選單
     const [billingNo, setBillingNo] = useState(''); //帳單號碼
+    const [workTitleList, setWorkTitleList] = useState([]); //海纜作業下拉選單
     const dispatch = useDispatch();
 
     const initQuery = () => {
@@ -139,6 +141,35 @@ const WriteOffQuery = ({ setListInfo, value }) => {
                     }),
                 );
             });
+        fetch(getWorkTitle, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            },
+            body: JSON.stringify({}),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log('data=>>', data);
+                if (Array.isArray(data)) {
+                    setWorkTitleList(data);
+                } else {
+                    setWorkTitleList([]);
+                }
+            })
+            .catch(() => {
+                setWorkTitleList([]);
+                dispatch(
+                    setMessageStateOpen({
+                        messageStateOpen: {
+                            isOpen: true,
+                            severity: 'error',
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
+                        },
+                    }),
+                );
+            });
     }, []);
 
     return (
@@ -222,9 +253,11 @@ const WriteOffQuery = ({ setListInfo, value }) => {
                             onChange={(e) => setWorkTitle(e.target.value)}
                         >
                             <MenuItem value={'All'}>All</MenuItem>
-                            <MenuItem value={'Upgrade'}>Upgrade</MenuItem>
-                            <MenuItem value={'Construction'}>Construction</MenuItem>
-                            <MenuItem value={'O&M'}>O&M</MenuItem>
+                            {workTitleList.map((i) => (
+                                <MenuItem key={i.Title} value={i.Title}>
+                                    {i.Title}
+                                </MenuItem>
+                            ))}
                         </Select>
                     </FormControl>
                 </Grid>

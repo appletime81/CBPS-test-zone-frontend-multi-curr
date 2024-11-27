@@ -61,6 +61,7 @@ const InvoiceWorkManage = ({
     codeList,
     purpose,
     partyNameList,
+    workTitleList,
 }) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
@@ -164,9 +165,11 @@ const InvoiceWorkManage = ({
                             label="填寫海纜作業"
                             onChange={(e) => setWorkTitle(e.target.value)}
                         >
-                            <MenuItem value={'Construction'}>Construction</MenuItem>
-                            <MenuItem value={'Upgrade'}>Upgrade</MenuItem>
-                            <MenuItem value={'O&M'}>O&M</MenuItem>
+                            {workTitleList.map((i) => (
+                                <MenuItem key={i.Title} value={i.Title}>
+                                    {i.Title}
+                                </MenuItem>
+                            ))}
                         </Select>
                     </FormControl>
                 </Grid>

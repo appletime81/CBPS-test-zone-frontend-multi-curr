@@ -18,10 +18,12 @@ import MainCard from 'components/MainCard';
 import SupplierDataList from './supplierDataList';
 import PartyDataList from './partyDataList';
 import SubmarineCableDataList from './submarineCableDataList';
+import WorkTitleDataList from './WorkTitleDataList';
 import CBPBankAccount from './cBPBankAccount';
 
 //api
 import {
+    getWorkTitle,
     submarineCableInfoList,
     supplierNameDropDownUnique,
     submarineCables,
@@ -45,6 +47,7 @@ const Information = () => {
     const [supplierName, setSupplierName] = useState('All'); //供應商
     const [partyName, setPartyName] = useState('All'); //會員
     const [partiesList, setPartiesList] = useState([]); //會員下拉選單
+    const [workTitleList, setWorkTitleList] = useState([]); //海纜作業下拉選單
     const [infoList, setInfoList] = useState();
     const handleChange = (event, newValue) => {
         setInfoList([]);
@@ -62,21 +65,56 @@ const Information = () => {
         let tmpQuery = '/view';
         let tmpObject = {};
         if (submarineCable && submarineCable !== 'All' && value === 0) {
+            tmpObject.Title = submarineCable;
+        }
+        if (submarineCable && submarineCable !== 'All' && value === 1) {
             tmpObject.CableName = submarineCable;
         }
-        if (submarineCable && submarineCable !== 'All' && value !== 0) {
+        if (submarineCable && submarineCable !== 'All' && value !== 1) {
             tmpObject.SubmarineCable = submarineCable;
         }
-        if (workTitle && workTitle !== 'All' && value !== 0) {
+        if (workTitle && workTitle !== 'All' && value !== 1) {
             tmpObject.WorkTitle = workTitle;
         }
-        if (supplierName && supplierName !== 'All' && value === 1) {
+        if (supplierName && supplierName !== 'All' && value === 2) {
             tmpObject.SupplierName = supplierName;
         }
-        if (partyName && partyName !== 'All' && value === 2) {
+        if (partyName && partyName !== 'All' && value === 3) {
             tmpObject.PartyName = partyName;
         }
         if (value === 0) {
+            tmpQuery = getWorkTitle;
+            fetch(tmpQuery, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                },
+                body: JSON.stringify(tmpObject),
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    console.log('data=>>', data);
+                    if (Array.isArray(data)) {
+                        setInfoList(data);
+                    } else {
+                        setInfoList([]);
+                    }
+                })
+                .catch(() => {
+                    setInfoList([]);
+                    dispatch(
+                        setMessageStateOpen({
+                            messageStateOpen: {
+                                isOpen: true,
+                                severity: 'error',
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
+                            },
+                        }),
+                    );
+                });
+        }
+        if (value === 1) {
             tmpQuery = submarineCables + tmpQuery;
             fetch(tmpQuery, {
                 method: 'POST',
@@ -106,7 +144,8 @@ const Information = () => {
                         }),
                     );
                 });
-        } else if (value === 1) {
+        }
+        if (value === 2) {
             tmpQuery = suppliers + tmpQuery;
             fetch(tmpQuery, {
                 method: 'POST',
@@ -136,7 +175,8 @@ const Information = () => {
                         }),
                     );
                 });
-        } else if (value === 2) {
+        }
+        if (value === 3) {
             tmpQuery = parties + tmpQuery;
             fetch(tmpQuery, {
                 method: 'POST',
@@ -166,7 +206,8 @@ const Information = () => {
                         }),
                     );
                 });
-        } else {
+        }
+        if (value === 4) {
             tmpQuery = corporates + tmpQuery;
             fetch(tmpQuery, {
                 method: 'POST',
@@ -263,6 +304,34 @@ const Information = () => {
                     }),
                 );
             });
+        fetch(getWorkTitle, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            },
+            body: JSON.stringify({}),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (Array.isArray(data)) {
+                    setWorkTitleList(data);
+                } else {
+                    setWorkTitleList([]);
+                }
+            })
+            .catch(() => {
+                setWorkTitleList([]);
+                dispatch(
+                    setMessageStateOpen({
+                        messageStateOpen: {
+                            isOpen: true,
+                            severity: 'error',
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
+                        },
+                    }),
+                );
+            });
     }, []);
 
     useEffect(() => {
@@ -280,7 +349,7 @@ const Information = () => {
                         alignItems="center"
                         spacing={2}
                     >
-                        <Grid item md={1} lg={1}>
+                        <Grid item sm={1} md={1} lg={1}>
                             <Typography
                                 sx={{
                                     fontWeight: 'bold',
@@ -309,9 +378,9 @@ const Information = () => {
                                 </Select>
                             </FormControl>
                         </Grid>
-                        {value === 1 || value === 2 || value === 3 ? (
+                        {value === 2 || value === 3 || value === 4 ? (
                             <>
-                                <Grid item md={1} lg={1}>
+                                <Grid item sm={1} md={1} lg={1}>
                                     <Typography
                                         sx={{
                                             fontWeight: 'bold',
@@ -331,9 +400,11 @@ const Information = () => {
                                             onChange={(e) => setWorkTitle(e.target.value)}
                                         >
                                             <MenuItem value={'All'}>All</MenuItem>
-                                            <MenuItem value={'Upgrade'}>Upgrade</MenuItem>
-                                            <MenuItem value={'Construction'}>Construction</MenuItem>
-                                            <MenuItem value={'O&M'}>O&M</MenuItem>
+                                            {workTitleList.map((i) => (
+                                                <MenuItem key={i.Title} value={i.Title}>
+                                                    {i.Title}
+                                                </MenuItem>
+                                            ))}
                                         </Select>
                                     </FormControl>
                                 </Grid>
@@ -341,9 +412,9 @@ const Information = () => {
                         ) : (
                             <Grid item xs={3} sm={3} md={3} lg={3} />
                         )}
-                        {value === 1 ? (
+                        {value === 2 ? (
                             <>
-                                <Grid item md={1} lg={1}>
+                                <Grid item sm={1} md={1} lg={1}>
                                     <Typography
                                         sx={{
                                             fontWeight: 'bold',
@@ -372,9 +443,9 @@ const Information = () => {
                                     </FormControl>
                                 </Grid>
                             </>
-                        ) : value === 2 ? (
+                        ) : value === 3 ? (
                             <>
-                                <Grid item md={1} lg={1}>
+                                <Grid item sm={1} md={1} lg={1}>
                                     <Typography
                                         sx={{
                                             fontWeight: 'bold',
@@ -385,7 +456,7 @@ const Information = () => {
                                         會員名稱：
                                     </Typography>
                                 </Grid>
-                                <Grid item lg={2}>
+                                <Grid item sm={2} md={2} lg={2}>
                                     <FormControl fullWidth size="small">
                                         <InputLabel>選擇會員名稱</InputLabel>
                                         <Select
@@ -404,7 +475,7 @@ const Information = () => {
                                 </Grid>
                             </>
                         ) : (
-                            <Grid item lg={3} />
+                            <Grid item sm={3} md={3} lg={3} />
                         )}
                         <Grid item lg={3} />
                         <Grid item lg={12} display="flex" justifyContent="end" alignItems="center">
@@ -424,22 +495,26 @@ const Information = () => {
                         sx={{ p: 0, borderBottom: 1, borderColor: 'divider', position: 'relative' }}
                     >
                         <Tabs value={value} onChange={handleChange}>
-                            <Tab sx={{ p: 0 }} label="海纜代號" {...a11yProps(0)} />
-                            <Tab sx={{ p: 0 }} label="供應商" {...a11yProps(1)} />
-                            <Tab sx={{ p: 0 }} label="會員" {...a11yProps(2)} />
-                            <Tab sx={{ p: 0 }} label="聯盟金融帳戶" {...a11yProps(3)} />
+                            <Tab sx={{ p: 0 }} label="海纜作業" {...a11yProps(0)} />
+                            <Tab sx={{ p: 0 }} label="海纜代號" {...a11yProps(1)} />
+                            <Tab sx={{ p: 0 }} label="供應商" {...a11yProps(2)} />
+                            <Tab sx={{ p: 0 }} label="會員" {...a11yProps(3)} />
+                            <Tab sx={{ p: 0 }} label="聯盟金融帳戶" {...a11yProps(4)} />
                         </Tabs>
                     </Box>
                     <CustomTabPanel value={value} index={0}>
-                        <SubmarineCableDataList infoList={infoList} setInfoList={setInfoList} />
+                        <WorkTitleDataList infoList={infoList} setInfoList={setInfoList} />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={1}>
-                        <SupplierDataList infoList={infoList} setInfoList={setInfoList} />
+                        <SubmarineCableDataList infoList={infoList} setInfoList={setInfoList} />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={2}>
-                        <PartyDataList infoList={infoList} setInfoList={setInfoList} />
+                        <SupplierDataList infoList={infoList} setInfoList={setInfoList} />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={3}>
+                        <PartyDataList infoList={infoList} setInfoList={setInfoList} />
+                    </CustomTabPanel>
+                    <CustomTabPanel value={value} index={4}>
                         <CBPBankAccount infoList={infoList} setInfoList={setInfoList} />
                     </CustomTabPanel>
                 </MainCard>

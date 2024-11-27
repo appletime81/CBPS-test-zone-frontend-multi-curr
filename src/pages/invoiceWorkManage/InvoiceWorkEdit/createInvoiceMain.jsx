@@ -66,6 +66,7 @@ const InvoiceWorkManage = ({
     purpose,
     partyNameList,
     supNmList,
+    workTitleList,
 }) => {
     // const [supNmList, setSupNmList] = useState([]); //供應商下拉選單
     const dispatch = useDispatch();
@@ -203,9 +204,11 @@ const InvoiceWorkManage = ({
                             inputProps={{ readOnly: action === '檢視' }}
                             onChange={(e) => setWorkTitle(e.target.value)}
                         >
-                            <MenuItem value={'Construction'}>Construction</MenuItem>
-                            <MenuItem value={'Upgrade'}>Upgrade</MenuItem>
-                            <MenuItem value={'O&M'}>O&M</MenuItem>
+                            {workTitleList.map((i) => (
+                                <MenuItem key={i.Title} value={i.Title}>
+                                    {i.Title}
+                                </MenuItem>
+                            ))}
                         </Select>
                     </FormControl>
                 </Grid>

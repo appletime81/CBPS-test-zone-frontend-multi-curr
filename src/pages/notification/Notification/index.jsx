@@ -16,6 +16,7 @@ import {
     dropdownmenuSubmarineCable,
     dropdownmenuParties,
     getSysInvNotifyRule,
+    getWorkTitle,
 } from 'components/apis.jsx';
 
 // redux
@@ -29,6 +30,7 @@ const Information = () => {
     const [partiesList, setPartiesList] = useState([]); //會員名稱下拉選單
     const [submarineCableList, setSubmarineCableList] = useState([]); //海纜名稱下拉選單
     const [value, setValue] = useState(0);
+    const [workTitleList, setWorkTitleList] = useState([]); //海纜作業下拉選單
 
     const handleAddRuleOpen = () => {
         setIsDialogOpen(true);
@@ -113,6 +115,62 @@ const Information = () => {
                     }),
                 );
             });
+        fetch(getWorkTitle, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            },
+            body: JSON.stringify({}),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (Array.isArray(data)) {
+                    setWorkTitleList(data);
+                } else {
+                    setWorkTitleList([]);
+                }
+            })
+            .catch(() => {
+                setWorkTitleList([]);
+                dispatch(
+                    setMessageStateOpen({
+                        messageStateOpen: {
+                            isOpen: true,
+                            severity: 'error',
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
+                        },
+                    }),
+                );
+            });
+        fetch(getWorkTitle, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            },
+            body: JSON.stringify({}),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (Array.isArray(data)) {
+                    setWorkTitleList(data);
+                } else {
+                    setWorkTitleList([]);
+                }
+            })
+            .catch(() => {
+                setWorkTitleList([]);
+                dispatch(
+                    setMessageStateOpen({
+                        messageStateOpen: {
+                            isOpen: true,
+                            severity: 'error',
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
+                        },
+                    }),
+                );
+            });
     }, []);
 
     return (
@@ -129,6 +187,7 @@ const Information = () => {
                     submarineCableList={submarineCableList}
                     action={'Add'}
                     initQuery={initQuery}
+                    workTitleList={workTitleList}
                 />
             </Grid>
             <Grid item xs={12}>
@@ -137,6 +196,7 @@ const Information = () => {
                     partiesList={partiesList}
                     submarineCableList={submarineCableList}
                     value={value}
+                    workTitleList={workTitleList}
                 />
             </Grid>
             <Grid item xs={12}>

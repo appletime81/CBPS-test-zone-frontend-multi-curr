@@ -16,7 +16,13 @@ import { setMessageStateOpen } from 'store/reducers/dropdown';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
-const NotificationQuery = ({ setListInfo, partiesList, submarineCableList, value }) => {
+const NotificationQuery = ({
+    setListInfo,
+    partiesList,
+    submarineCableList,
+    value,
+    workTitleList,
+}) => {
     const dispatch = useDispatch();
     const [submarineCable, setSubmarineCable] = useState('All'); //海纜名稱
     const [workTitle, setWorkTitle] = useState('All'); //海纜作業
@@ -139,9 +145,11 @@ const NotificationQuery = ({ setListInfo, partiesList, submarineCableList, value
                             onChange={(e) => setWorkTitle(e.target.value)}
                         >
                             <MenuItem value={'All'}>All</MenuItem>
-                            <MenuItem value={'Upgrade'}>Upgrade</MenuItem>
-                            <MenuItem value={'Construction'}>Construction</MenuItem>
-                            <MenuItem value={'O&M'}>O&M</MenuItem>
+                            {workTitleList.map((i) => (
+                                <MenuItem key={i.Title} value={i.Title}>
+                                    {i.Title}
+                                </MenuItem>
+                            ))}
                         </Select>
                     </FormControl>
                 </Grid>

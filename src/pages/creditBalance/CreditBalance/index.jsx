@@ -9,7 +9,12 @@ import CreditBalanceDataList from './creditBalanceDataList';
 import CreditBalanceAdd from './creditBalanceAdd';
 
 // api
-import { dropdownmenuParties, submarineCableInfoList, getCurrencyData } from 'components/apis';
+import {
+    dropdownmenuParties,
+    submarineCableInfoList,
+    getWorkTitle,
+    getCurrencyData,
+} from 'components/apis';
 
 // redux
 import { useDispatch } from 'react-redux';
@@ -23,6 +28,7 @@ const CreditBalance = () => {
     const [submarineCableList, setSubmarineCableList] = useState([]); //海纜名稱下拉選單
     const [partiesList, setPartiesList] = useState([]); //會員下拉選單
     const [currencyListInfo, setCurrencyListInfo] = useState([]); //幣別下拉選單
+    const [workTitleList, setWorkTitleList] = useState([]); //海纜作業下拉選單
 
     const handleDialogOpen = () => {
         setIsDialogOpen(true);
@@ -90,6 +96,34 @@ const CreditBalance = () => {
                     }),
                 );
             });
+        fetch(getWorkTitle, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            },
+            body: JSON.stringify({}),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (Array.isArray(data)) {
+                    setWorkTitleList(data);
+                } else {
+                    setWorkTitleList([]);
+                }
+            })
+            .catch(() => {
+                setWorkTitleList([]);
+                dispatch(
+                    setMessageStateOpen({
+                        messageStateOpen: {
+                            isOpen: true,
+                            severity: 'error',
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
+                        },
+                    }),
+                );
+            });
     }, []);
 
     return (
@@ -104,6 +138,7 @@ const CreditBalance = () => {
                     partiesList={partiesList}
                     submarineCableList={submarineCableList}
                     currencyListInfo={currencyListInfo}
+                    workTitleList={workTitleList}
                     queryApi={queryApi.current}
                     setListInfo={setListInfo}
                 />
@@ -113,6 +148,7 @@ const CreditBalance = () => {
                     setListInfo={setListInfo}
                     partiesList={partiesList}
                     submarineCableList={submarineCableList}
+                    workTitleList={workTitleList}
                     queryApi={queryApi}
                 />
             </Grid>

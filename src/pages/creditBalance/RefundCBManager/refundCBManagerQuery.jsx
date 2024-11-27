@@ -32,7 +32,14 @@ import { setMessageStateOpen } from 'store/reducers/dropdown';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
-const CreditBalanceQuery = ({ value, setListInfo, partiesList, submarineCableList, queryApi }) => {
+const RefundCBManagerQuery = ({
+    value,
+    setListInfo,
+    partiesList,
+    submarineCableList,
+    queryApi,
+    workTitleList,
+}) => {
     const dispatch = useDispatch();
     const [partyName, setPartyName] = useState('All'); //會員名稱
     const [cBType, setCBType] = useState('All'); //CB種類
@@ -220,9 +227,11 @@ const CreditBalanceQuery = ({ value, setListInfo, partiesList, submarineCableLis
                             onChange={(e) => setWorkTitle(e.target.value)}
                         >
                             <MenuItem value={'All'}>All</MenuItem>
-                            <MenuItem value={'Upgrade'}>Upgrade</MenuItem>
-                            <MenuItem value={'Construction'}>Construction</MenuItem>
-                            <MenuItem value={'O&M'}>O&M</MenuItem>
+                            {workTitleList.map((i) => (
+                                <MenuItem key={i.Title} value={i.Title}>
+                                    {i.Title}
+                                </MenuItem>
+                            ))}
                         </Select>
                     </FormControl>
                 </Grid>
@@ -348,4 +357,4 @@ const CreditBalanceQuery = ({ value, setListInfo, partiesList, submarineCableLis
     );
 };
 
-export default CreditBalanceQuery;
+export default RefundCBManagerQuery;

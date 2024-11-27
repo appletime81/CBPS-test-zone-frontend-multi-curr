@@ -31,7 +31,13 @@ import { queryLiability, dropdownmenuBillMilestone } from 'components/apis.jsx';
 import { useDispatch } from 'react-redux';
 import { setMessageStateOpen } from 'store/reducers/dropdown';
 
-const LiabilityQuery = ({ setListInfo, partyList, submarineCableList, queryApi }) => {
+const LiabilityQuery = ({
+    setListInfo,
+    partyList,
+    submarineCableList,
+    queryApi,
+    workTitleList,
+}) => {
     const dispatch = useDispatch();
     const [billMilestoneQuery, setBillMilestoneQuery] = useState('All'); //計帳段號
     const [partyNameQuery, setPartyNameQuery] = useState('All'); //會員名稱
@@ -231,9 +237,11 @@ const LiabilityQuery = ({ setListInfo, partyList, submarineCableList, queryApi }
                             onChange={(e) => setWorkTitle(e.target.value)}
                         >
                             <MenuItem value={'All'}>All</MenuItem>
-                            <MenuItem value={'Upgrade'}>Upgrade</MenuItem>
-                            <MenuItem value={'Construction'}>Construction</MenuItem>
-                            <MenuItem value={'O&M'}>O&M</MenuItem>
+                            {workTitleList.map((i) => (
+                                <MenuItem key={i.Title} value={i.Title}>
+                                    {i.Title}
+                                </MenuItem>
+                            ))}
                         </Select>
                     </FormControl>
                 </Grid>

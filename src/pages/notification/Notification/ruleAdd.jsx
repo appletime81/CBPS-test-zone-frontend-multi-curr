@@ -63,6 +63,7 @@ const RuleAdd = ({
     editData,
     action,
     initQuery,
+    workTitleList,
 }) => {
     const dispatch = useDispatch();
     const [ruleName, setRuleName] = useState('');
@@ -542,9 +543,11 @@ const RuleAdd = ({
                                 onChange={(e) => setWorkTitle(e.target.value)}
                                 disabled={action === 'View'}
                             >
-                                <MenuItem value={'Construction'}>Construction</MenuItem>
-                                <MenuItem value={'Upgrade'}>Upgrade</MenuItem>
-                                <MenuItem value={'O&M'}>O&M</MenuItem>
+                                {workTitleList.map((i) => (
+                                    <MenuItem key={i.Title} value={i.Title}>
+                                        {i.Title}
+                                    </MenuItem>
+                                ))}
                             </Select>
                         </FormControl>
                     </Grid>
