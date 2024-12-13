@@ -121,7 +121,7 @@ const RequireAuth = ({ children, item }) => {
                             },
                         }),
                     );
-                    localStorage.setItem('expireTimeCBP', dayjs().add(90, 'minute'));
+                    localStorage.setItem('expireTimeCBP', dayjs().add(480, 'minute'));
                     localStorage.setItem('accessToken', data.access_token);
                     // 傳送使用者資料取得權限
                     fetch(checktokenForLDAP, {

@@ -207,8 +207,8 @@ const LiabilityQuery = ({
                         >
                             <MenuItem value={'All'}>All</MenuItem>
                             {submarineCableList.map((i) => (
-                                <MenuItem key={i.CableName} value={i.CableName}>
-                                    {i.CableName}
+                                <MenuItem key={i} value={i}>
+                                    {i}
                                 </MenuItem>
                             ))}
                         </Select>

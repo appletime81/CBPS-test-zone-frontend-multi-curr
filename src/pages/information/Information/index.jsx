@@ -73,8 +73,11 @@ const Information = () => {
         if (submarineCable && submarineCable !== 'All' && value !== 1) {
             tmpObject.SubmarineCable = submarineCable;
         }
-        if (workTitle && workTitle !== 'All' && value !== 1) {
+        if (workTitle && workTitle !== 'All' && value !== 1 && value !== 0) {
             tmpObject.WorkTitle = workTitle;
+        }
+        if (workTitle && workTitle !== 'All' && value === 0) {
+            tmpObject.Title = workTitle;
         }
         if (supplierName && supplierName !== 'All' && value === 2) {
             tmpObject.SupplierName = supplierName;
@@ -99,6 +102,15 @@ const Information = () => {
                         setInfoList(data);
                     } else {
                         setInfoList([]);
+                        dispatch(
+                            setMessageStateOpen({
+                                messageStateOpen: {
+                                    isOpen: true,
+                                    severity: 'error',
+                                    message: data?.alert_msg,
+                                },
+                            }),
+                        );
                     }
                 })
                 .catch(() => {
@@ -247,6 +259,37 @@ const Information = () => {
         setPartyName('All');
     };
 
+    const getWorkTitleList = () => {
+        fetch(getWorkTitle, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            },
+            body: JSON.stringify({}),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (Array.isArray(data)) {
+                    setWorkTitleList(data);
+                } else {
+                    setWorkTitleList([]);
+                }
+            })
+            .catch(() => {
+                setWorkTitleList([]);
+                dispatch(
+                    setMessageStateOpen({
+                        messageStateOpen: {
+                            isOpen: true,
+                            severity: 'error',
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
+                        },
+                    }),
+                );
+            });
+    };
+
     useEffect(() => {
         fetch(supplierNameDropDownUnique, {
             method: 'GET',
@@ -254,7 +297,6 @@ const Information = () => {
         })
             .then((res) => res.json())
             .then((data) => {
-                console.log('data=>>', data);
                 if (Array.isArray(data)) {
                     setSupNmList(data);
                 }
@@ -304,34 +346,7 @@ const Information = () => {
                     }),
                 );
             });
-        fetch(getWorkTitle, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-            },
-            body: JSON.stringify({}),
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                if (Array.isArray(data)) {
-                    setWorkTitleList(data);
-                } else {
-                    setWorkTitleList([]);
-                }
-            })
-            .catch(() => {
-                setWorkTitleList([]);
-                dispatch(
-                    setMessageStateOpen({
-                        messageStateOpen: {
-                            isOpen: true,
-                            severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
-                );
-            });
+        getWorkTitleList();
     }, []);
 
     useEffect(() => {
@@ -349,35 +364,70 @@ const Information = () => {
                         alignItems="center"
                         spacing={2}
                     >
-                        <Grid item sm={1} md={1} lg={1}>
-                            <Typography
-                                sx={{
-                                    fontWeight: 'bold',
-                                    fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                    ml: { lg: '0.5rem', xl: '1.5rem' },
-                                }}
-                            >
-                                海纜名稱：
-                            </Typography>
-                        </Grid>
-                        <Grid item sm={2} md={2} lg={2}>
-                            <FormControl fullWidth size="small">
-                                <InputLabel>選擇海纜名稱</InputLabel>
-                                <Select
-                                    value={submarineCable}
-                                    label="海纜名稱"
-                                    size="small"
-                                    onChange={(e) => setSubmarineCable(e.target.value)}
-                                >
-                                    <MenuItem value={'All'}>All</MenuItem>
-                                    {submarineCableList.map((i) => (
-                                        <MenuItem key={i.CableName} value={i.CableName}>
-                                            {i.CableName}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
+                        {value !== 0 ? (
+                            <>
+                                <Grid item sm={1} md={1} lg={1}>
+                                    <Typography
+                                        sx={{
+                                            fontWeight: 'bold',
+                                            fontSize: { lg: '0.7rem', xl: '0.88rem' },
+                                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                                        }}
+                                    >
+                                        海纜名稱：
+                                    </Typography>
+                                </Grid>
+                                <Grid item sm={2} md={2} lg={2}>
+                                    <FormControl fullWidth size="small">
+                                        <InputLabel>選擇海纜名稱</InputLabel>
+                                        <Select
+                                            value={submarineCable}
+                                            label="海纜名稱"
+                                            size="small"
+                                            onChange={(e) => setSubmarineCable(e.target.value)}
+                                        >
+                                            <MenuItem value={'All'}>All</MenuItem>
+                                            {submarineCableList.map((i) => (
+                                                <MenuItem key={i.CableName} value={i.CableName}>
+                                                    {i.CableName}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                            </>
+                        ) : (
+                            <>
+                                <Grid item sm={1} md={1} lg={1}>
+                                    <Typography
+                                        sx={{
+                                            fontWeight: 'bold',
+                                            fontSize: { lg: '0.7rem', xl: '0.88rem' },
+                                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                                        }}
+                                    >
+                                        海纜作業：
+                                    </Typography>
+                                </Grid>
+                                <Grid item sm={2} md={2} lg={2}>
+                                    <FormControl fullWidth size="small">
+                                        <InputLabel>選擇海纜作業</InputLabel>
+                                        <Select
+                                            value={workTitle}
+                                            label="海纜作業"
+                                            onChange={(e) => setWorkTitle(e.target.value)}
+                                        >
+                                            <MenuItem value={'All'}>All</MenuItem>
+                                            {workTitleList.map((i) => (
+                                                <MenuItem key={i.Title} value={i.Title}>
+                                                    {i.Title}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                            </>
+                        )}
                         {value === 2 || value === 3 || value === 4 ? (
                             <>
                                 <Grid item sm={1} md={1} lg={1}>
@@ -503,7 +553,11 @@ const Information = () => {
                         </Tabs>
                     </Box>
                     <CustomTabPanel value={value} index={0}>
-                        <WorkTitleDataList infoList={infoList} setInfoList={setInfoList} />
+                        <WorkTitleDataList
+                            infoList={infoList}
+                            setInfoList={setInfoList}
+                            getWorkTitleList={getWorkTitleList}
+                        />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={1}>
                         <SubmarineCableDataList infoList={infoList} setInfoList={setInfoList} />

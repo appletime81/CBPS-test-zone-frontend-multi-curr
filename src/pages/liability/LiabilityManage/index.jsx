@@ -9,13 +9,12 @@ import LiabilityAdd from './liabilityAdd';
 
 // api
 import {
-    dropdownmenuSubmarineCable,
     dropdownmenuParties,
     queryLiability,
     compareLiability,
     addLiabilityapi,
     updateLiability,
-    submarineCableInfoList,
+    dropdownmenuSubmarineCable,
     getWorkTitle,
 } from 'components/apis.jsx';
 
@@ -269,17 +268,6 @@ const LiabilityManage = () => {
     }, [editItem]);
 
     useEffect(() => {
-        fetch(dropdownmenuSubmarineCable, { method: 'GET' }).catch(() => {
-            dispatch(
-                setMessageStateOpen({
-                    messageStateOpen: {
-                        isOpen: true,
-                        severity: 'error',
-                        message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                    },
-                }),
-            );
-        });
         fetch(dropdownmenuParties, { method: 'GET' })
             .then((res) => res.json())
             .then((data) => {
@@ -325,7 +313,7 @@ const LiabilityManage = () => {
                 );
             });
         //海纜名稱
-        fetch(submarineCableInfoList, {
+        fetch(dropdownmenuSubmarineCable, {
             method: 'GET',
         })
             .then((res) => res.json())
