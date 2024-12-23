@@ -26,7 +26,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
-
+import { paymentExchangeProcess } from 'components/apis.jsx';
 import dayjs from 'dayjs';
 
 // redux
@@ -58,148 +58,192 @@ const PaymentExchangeStart = ({
     handleDialogClose,
     editPaymentInfo,
     actionName,
-    dataList,
+    billDetailList,
     invoiceWKMasterInfo,
     savePaymentEdit,
+    queryApi,
+    setListInfo,
 }) => {
     const dispatch = useDispatch();
     const [isRateDialogOpen, setIsRateDialogOpen] = useState(false);
     const [toPaymentDetailInfo, setToPaymentDetailInfo] = useState([]); //帳單明細檔
-    const [rate, setRate] = useState('');
-    const currencyExgList = useRef([]);
-    const orgfeeAmountTotal = useRef(0); //應收金額
+    // const [rate, setRate] = useState('');
+    const toPaymentDetailInfoDetail = useRef({});
+    const rateInfo = useRef([]); //僅提供前端畫面秀出使用者是選擇哪筆匯率資料。
+    // const [currencyExgID, setCurrencyExgID] = useState(null);
+    const feeAmountTotal = useRef(0); //已實收金額
     const receivedAmountTotal = useRef(0); //已實收金額
-    const paidAmountTotal = useRef(0); //已實付金額
-    const toPaymentAmountTotal = useRef(0); //未付款金額
-    const payAmountTotal = useRef(0); //此次付款金額
+    const exgOriReceivedAmount = useRef(0); //原幣已換匯累計金額
+    const toExgAmount = useRef(0); //待換匯金額
+    const exgReceivedAmount = useRef(0); //換匯後已實收金額
+    const exgDiffAmount = useRef(0); //換匯匯差
+
+    const initData = () => {
+        // setCurrencyExgID(null);
+        rateInfo.current = [];
+        feeAmountTotal.current = 0;
+        receivedAmountTotal.current = 0;
+        exgOriReceivedAmount.current = 0;
+        toExgAmount.current = 0;
+        exgReceivedAmount.current = 0;
+        exgDiffAmount.current = 0;
+        toPaymentDetailInfoDetail.current = [];
+    };
 
     const handleRateDialogOpen = (info) => {
         setIsRateDialogOpen(true);
-        currencyExgList.current = info;
-        // let tmpArray = toPaymentDetailInfo.map((i) => i);
-        // tmpArray.forEach((i) => {
-        //     if (i.BillMasterID === billMasterID && i.BillDetailID === billDetailID) {
-        //         i.Note = note;
-        //     }
-        // });
-        // setToPaymentDetailInfo(tmpArray);
+        toPaymentDetailInfoDetail.current = info;
     };
 
     const handleRateDialogClose = () => {
         setIsRateDialogOpen(false);
     };
 
-    const changePayAmount = (payment, billMasterID, billDetailID) => {
-        console.log(payment, typeof new Decimal(payment));
-        payAmountTotal.current = 0;
-        let tmpArray = toPaymentDetailInfo.map((i) => i);
-        console.log('toPaymentDetailInfo=>>', toPaymentDetailInfo);
-        tmpArray.forEach((i, index) => {
-            if (i.BillMasterID === billMasterID && i.BillDetailID === billDetailID) {
-                i.PayAmount = Number(payment);
-            }
-            console.log(
-                'index=>>',
-                index,
-                payAmountTotal.current,
-                i.PayAmount,
-                i.ReceivedAmount,
-                i.PaidAmount,
-            );
-            payAmountTotal.current = new Decimal(payAmountTotal.current)
-                .add(
-                    i.PayAmount
-                        ? new Decimal(i.PayAmount)
-                        : Number(i.ReceivedAmount - i.PaidAmount) > 0
-                        ? new Decimal(i.ReceivedAmount).minus(new Decimal(i.PaidAmount))
-                        : new Decimal(0),
-                )
-                .toNumber();
-        });
-        setToPaymentDetailInfo(tmpArray);
-    };
-
-    const handleSaveEdit = () => {
-        let tmpArray = toPaymentDetailInfo.map((i) => i);
-        tmpArray.forEach((i) => {
-            i.PayAmount = i.PayAmount ? i.PayAmount : Number(i.ReceivedAmount - i.PaidAmount);
-        });
-        savePaymentEdit(tmpArray);
-    };
-
     const handleTmpSaveEdit = () => {
         savePaymentEdit(editPaymentInfo);
     };
 
-    const sendInfo = () => {
-        if (payAmountTotal.current + paidAmountTotal.current > receivedAmountTotal.current) {
+    const countTotal = (info) => {
+        info.forEach((i) => {
+            feeAmountTotal.current = new Decimal(feeAmountTotal.current).add(
+                new Decimal(i.FeeAmount),
+            );
+            receivedAmountTotal.current = new Decimal(receivedAmountTotal.current).add(
+                new Decimal(i.ReceivedAmount),
+            );
+            exgOriReceivedAmount.current = new Decimal(exgOriReceivedAmount.current).add(
+                new Decimal(i.ExgOriReceivedAmount),
+            );
+            toExgAmount.current = new Decimal(toExgAmount.current).add(new Decimal(i.ToExgAmount));
+            exgReceivedAmount.current = new Decimal(exgReceivedAmount.current).add(
+                new Decimal(i.ExgReceivedAmount),
+            );
+            exgDiffAmount.current = new Decimal(exgDiffAmount.current).add(
+                new Decimal(i.ExgDiffAmount),
+            );
+        });
+    };
+
+    const sendInfo = (billDetail) => {
+        if (billDetail.choseCurrencyExgID) {
+            console.log('invoiceWKMasterInfo=>>', invoiceWKMasterInfo);
+            console.log('billDetail=>>', billDetail);
+            console.log('billDetail=>>', billDetail.choseCurrencyExgID);
+
+            console.log(
+                'currencyExgID=>>',
+                billDetail.choseCurrencyExgID,
+                billDetail?.CurrencyExgList.find(
+                    (i) => i.CurrencyExgID === billDetail.choseCurrencyExgID,
+                ),
+            );
+            let currencyExg = billDetail?.CurrencyExgList.find(
+                (i) => i.CurrencyExgID === billDetail.choseCurrencyExgID,
+            );
+            fetch(paymentExchangeProcess, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                },
+                body: JSON.stringify({
+                    InvoiceWKMaster: invoiceWKMasterInfo,
+                    BillDetail: billDetail,
+                    CurrencyExg: currencyExg,
+                }),
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    console.log('yessss=>>', data);
+                    const changeIndexValue = toPaymentDetailInfo.findIndex(
+                        (i) =>
+                            i.BillDetailID === data.BillDetailID &&
+                            i.BillMasterID === data.BillMasterID,
+                    );
+                    if (changeIndexValue !== -1) {
+                        toPaymentDetailInfo[changeIndexValue] = data;
+                    }
+                    dispatch(
+                        setMessageStateOpen({
+                            messageStateOpen: {
+                                isOpen: true,
+                                severity: 'success',
+                                message: '換匯成功',
+                            },
+                        }),
+                    );
+                    countTotal(toPaymentDetailInfo);
+                    fetch(queryApi, {
+                        method: 'GET',
+                        Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                    })
+                        .then((res) => res.json())
+                        .then((data) => {
+                            console.log('data=>>', data);
+                            if (Array.isArray(data)) {
+                                setListInfo(data);
+                            }
+                            if (data.length === 0) {
+                                dispatch(
+                                    setMessageStateOpen({
+                                        messageStateOpen: {
+                                            isOpen: true,
+                                            severity: 'info',
+                                            message: '查無資料',
+                                        },
+                                    }),
+                                );
+                                setListInfo([]);
+                            }
+                        })
+                        .catch((e) => {
+                            console.log('e1=>', e);
+                        });
+                })
+                .catch(() => {
+                    dispatch(
+                        setMessageStateOpen({
+                            messageStateOpen: {
+                                isOpen: true,
+                                severity: 'error',
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
+                            },
+                        }),
+                    );
+                });
+        } else {
             dispatch(
                 setMessageStateOpen({
                     messageStateOpen: {
                         isOpen: true,
-                        severity: 'info',
-                        message: `已實付金額+此次付款金額超出已實收金額${handleNumber(
-                            new Decimal(payAmountTotal.current)
-                                .add(new Decimal(paidAmountTotal.current))
-                                .minus(new Decimal(receivedAmountTotal.current)),
-                        )}`,
+                        severity: 'error',
+                        message: '請先填寫匯率資料',
                     },
                 }),
             );
         }
     };
 
-    // useEffect(() => {
-    //     let tmpArray = JSON.parse(JSON.stringify(editPaymentInfo));
-    //     tmpArray.forEach((i) => {
-    //         orgfeeAmountTotal.current = new Decimal(orgfeeAmountTotal.current).add(
-    //             new Decimal(i.OrgFeeAmount),
-    //         );
-    //         receivedAmountTotal.current = new Decimal(receivedAmountTotal.current).add(
-    //             new Decimal(i.ReceivedAmount),
-    //         );
-    //         paidAmountTotal.current = new Decimal(paidAmountTotal.current).add(
-    //             new Decimal(i.PaidAmount),
-    //         );
-    //         toPaymentAmountTotal.current = new Decimal(toPaymentAmountTotal.current).add(
-    //             i.OrgFeeAmount - i.PaidAmount > 0
-    //                 ? new Decimal(i.OrgFeeAmount).minus(new Decimal(i.PaidAmount))
-    //                 : 0,
-    //         );
-    //         payAmountTotal.current = new Decimal(payAmountTotal.current).add(
-    //             i.PayAmount
-    //                 ? i.PayAmount
-    //                 : new Decimal(i.ReceivedAmount).minus(new Decimal(i.PaidAmount)),
-    //         );
-    //     });
-    //     if (isDialogOpen) {
-    //         setToPaymentDetailInfo(tmpArray);
-    //     }
-    // }, [isDialogOpen]);
-
-    console.log('dataList=>>', dataList);
-    console.log('invoiceWKMasterInfo=>>', invoiceWKMasterInfo);
-    console.log('isRateDialogOpen=>>', isRateDialogOpen);
+    useEffect(() => {
+        if (isDialogOpen) {
+            let tmpArray = JSON.parse(JSON.stringify(billDetailList));
+            countTotal(tmpArray);
+            setToPaymentDetailInfo(tmpArray);
+        }
+    }, [isDialogOpen, billDetailList]);
 
     return (
         <>
             <ChoseRate
                 isRateDialogOpen={isRateDialogOpen}
                 handleRateDialogClose={handleRateDialogClose}
-                currencyExgList={currencyExgList.current}
-                // submarineCable={submarineCable}
-                // workTitle={workTitle}
-                // fromCode={fromCode}
-                // codeList={codeList}
+                toPaymentDetailInfoDetail={toPaymentDetailInfoDetail.current}
+                rateInfo={rateInfo}
                 // currencyExgID={currencyExgID}
                 // setCurrencyExgID={setCurrencyExgID}
-                // rateInfo={rateInfo}
             />
             <Dialog maxWidth="xxl" open={isDialogOpen}>
-                <BootstrapDialogTitle>
-                    {/* {actionName === 'toPayment' ? '收款明細與編輯付款資訊' : '收款明細與付款資訊'} */}
-                    會員收款換匯作業
-                </BootstrapDialogTitle>
+                <BootstrapDialogTitle>會員收款換匯作業</BootstrapDialogTitle>
                 <DialogContent>
                     <Grid
                         container
@@ -233,9 +277,11 @@ const PaymentExchangeStart = ({
                                     <TextField
                                         value={invoiceWKMasterInfo.InvoiceNo}
                                         fullWidth
-                                        readyOnly
                                         variant="outlined"
                                         size="small"
+                                        InputProps={{
+                                            readyOnly: true,
+                                        }}
                                     />
                                 </Grid>
                                 <Grid item xs={2} sm={2} md={2} lg={2}>
@@ -256,7 +302,9 @@ const PaymentExchangeStart = ({
                                             'YYYY/MM/DD',
                                         )}
                                         fullWidth
-                                        readyOnly
+                                        InputProps={{
+                                            readyOnly: true,
+                                        }}
                                         variant="outlined"
                                         size="small"
                                     />
@@ -277,7 +325,9 @@ const PaymentExchangeStart = ({
                                     <TextField
                                         value={invoiceWKMasterInfo.Purpose}
                                         fullWidth
-                                        readyOnly
+                                        InputProps={{
+                                            readyOnly: true,
+                                        }}
                                         variant="outlined"
                                         size="small"
                                     />
@@ -324,29 +374,21 @@ const PaymentExchangeStart = ({
                                                 <StyledTableCell align="center">
                                                     匯率資料
                                                 </StyledTableCell>
-                                                {/* {actionName === 'toPayment' ? ( */}
                                                 <StyledTableCell align="center">
                                                     Action
                                                 </StyledTableCell>
-                                                {/* ) : null} */}
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                            {dataList?.map((row) => {
-                                                console.log(
-                                                    'row=>>',
-                                                    row.PayAmount === 0,
-                                                    row.PayAmount === -0,
-                                                    row.ReceivedAmount,
-                                                    row.PaidAmount,
+                                            {toPaymentDetailInfo?.map((row, id) => {
+                                                const findRateInfo = rateInfo.current.find(
+                                                    (i) =>
+                                                        i.BillDetailID === row.BillDetailID &&
+                                                        i.BillMasterID === row.BillMasterID,
                                                 );
                                                 return (
                                                     <TableRow
-                                                        key={
-                                                            row.InvoiceNo +
-                                                            row?.BillMasterID +
-                                                            row?.BillDetailID
-                                                        }
+                                                        key={row.BillingNo + id}
                                                         sx={{
                                                             '&:last-child td, &:last-child th': {
                                                                 border: 0,
@@ -362,76 +404,62 @@ const PaymentExchangeStart = ({
                                                         <TableCell align="center">
                                                             {row.PartyName}
                                                         </TableCell>
+                                                        {/* 應收金額 */}
                                                         <TableCell align="center">
-                                                            {row.FeeAmount}
-                                                        </TableCell>
-                                                        <TableCell align="center">
-                                                            {handleNumber(row.ReceivedAmount)}
+                                                            {handleNumber(row.FeeAmount)}
                                                         </TableCell>
                                                         {/* 已實收金額 */}
                                                         <TableCell align="center">
+                                                            {handleNumber(row.ReceivedAmount)}
+                                                        </TableCell>
+                                                        {/* 原幣已換匯累計金額 */}
+                                                        <TableCell align="center">
                                                             {handleNumber(row.ExgOriReceivedAmount)}
                                                         </TableCell>
-                                                        {/* 已實付金額 */}
+                                                        {/* 待換匯金額 */}
                                                         <TableCell align="center">
                                                             {handleNumber(row.ToExgAmount)}
                                                         </TableCell>
+                                                        {/* 換匯後已實收金額 */}
                                                         <TableCell align="center">
                                                             {handleNumber(row.ExgReceivedAmount)}
                                                         </TableCell>
+                                                        {/* 換匯匯差 */}
                                                         <TableCell align="center">
                                                             {handleNumber(row.ExgDiffAmount)}
                                                         </TableCell>
                                                         <TableCell align="center">
                                                             <TextField
                                                                 size="small"
-                                                                value={rate || ''}
+                                                                disabled={row.ToExgAmount === 0}
+                                                                value={findRateInfo?.Purpose || ''}
                                                                 InputProps={{
                                                                     readOnly: true,
                                                                     onClick: () =>
-                                                                        handleRateDialogOpen(
-                                                                            row.CurrencyExgList,
-                                                                        ),
+                                                                        handleRateDialogOpen(row),
                                                                 }}
                                                             />
                                                         </TableCell>
-
                                                         {/* 此次付款金額 */}
-                                                        {/* {actionName === 'toPayment' ? ( */}
                                                         <TableCell align="center">
-                                                            <TextField
-                                                                size="small"
-                                                                inputProps={{ step: '.000001' }}
-                                                                sx={{ minWidth: 75 }}
-                                                                InputProps={{
-                                                                    inputComponent:
-                                                                        NumericFormatCustom,
+                                                            <Button
+                                                                sx={{ mr: '0.05rem' }}
+                                                                variant="contained"
+                                                                disabled={row.ToExgAmount === 0}
+                                                                onClick={() => {
+                                                                    sendInfo(row);
+                                                                    // handleSaveEdit();
+                                                                    feeAmountTotal.current = 0;
+                                                                    receivedAmountTotal.current = 0;
+                                                                    exgOriReceivedAmount.current = 0;
+                                                                    toExgAmount.current = 0;
+                                                                    exgReceivedAmount.current = 0;
+                                                                    exgDiffAmount.current = 0;
                                                                 }}
-                                                                value={
-                                                                    row.PayAmount ||
-                                                                    row.PayAmount === 0
-                                                                        ? row.PayAmount
-                                                                        : new Decimal(
-                                                                              row.ReceivedAmount,
-                                                                          )
-                                                                              .minus(
-                                                                                  new Decimal(
-                                                                                      row.PaidAmount,
-                                                                                  ),
-                                                                              )
-                                                                              .toNumber()
-                                                                }
-                                                                // type="number"
-                                                                onChange={(e) => {
-                                                                    changePayAmount(
-                                                                        e.target.value,
-                                                                        row.BillMasterID,
-                                                                        row.BillDetailID,
-                                                                    );
-                                                                }}
-                                                            />
+                                                            >
+                                                                換匯
+                                                            </Button>
                                                         </TableCell>
-                                                        {/* ) : null} */}
                                                     </TableRow>
                                                 );
                                             })}
@@ -459,12 +487,8 @@ const PaymentExchangeStart = ({
                                                 <StyledTableCell
                                                     className="totalAmount"
                                                     align="center"
-                                                />
-                                                <StyledTableCell
-                                                    className="totalAmount"
-                                                    align="center"
                                                 >
-                                                    {handleNumber(orgfeeAmountTotal.current)}
+                                                    {handleNumber(feeAmountTotal.current)}
                                                 </StyledTableCell>
                                                 <StyledTableCell
                                                     className="totalAmount"
@@ -476,26 +500,34 @@ const PaymentExchangeStart = ({
                                                     className="totalAmount"
                                                     align="center"
                                                 >
-                                                    {handleNumber(paidAmountTotal.current)}
+                                                    {handleNumber(exgOriReceivedAmount.current)}
                                                 </StyledTableCell>
                                                 <StyledTableCell
                                                     className="totalAmount"
                                                     align="center"
                                                 >
-                                                    {handleNumber(toPaymentAmountTotal.current)}
+                                                    {handleNumber(toExgAmount.current)}
+                                                </StyledTableCell>
+                                                <StyledTableCell
+                                                    className="totalAmount"
+                                                    align="center"
+                                                >
+                                                    {handleNumber(exgReceivedAmount.current)}
+                                                </StyledTableCell>
+                                                <StyledTableCell
+                                                    className="totalAmount"
+                                                    align="center"
+                                                >
+                                                    {handleNumber(exgDiffAmount.current)}
                                                 </StyledTableCell>
                                                 <StyledTableCell
                                                     className="totalAmount"
                                                     align="center"
                                                 />
-                                                {actionName === 'toPayment' ? (
-                                                    <StyledTableCell
-                                                        className="totalAmount"
-                                                        align="center"
-                                                    >
-                                                        {handleNumber(payAmountTotal.current)}
-                                                    </StyledTableCell>
-                                                ) : null}
+                                                <StyledTableCell
+                                                    className="totalAmount"
+                                                    align="center"
+                                                />
                                             </TableRow>
                                         </TableBody>
                                     </Table>
@@ -511,13 +543,8 @@ const PaymentExchangeStart = ({
                                 sx={{ mr: '0.05rem' }}
                                 variant="contained"
                                 onClick={() => {
-                                    sendInfo();
-                                    handleSaveEdit();
-                                    orgfeeAmountTotal.current = 0;
-                                    receivedAmountTotal.current = 0;
-                                    paidAmountTotal.current = 0;
-                                    toPaymentAmountTotal.current = 0;
-                                    payAmountTotal.current = 0;
+                                    // handleSaveEdit();
+                                    initData();
                                 }}
                             >
                                 儲存
@@ -528,11 +555,7 @@ const PaymentExchangeStart = ({
                                 onClick={() => {
                                     handleDialogClose();
                                     handleTmpSaveEdit();
-                                    orgfeeAmountTotal.current = 0;
-                                    receivedAmountTotal.current = 0;
-                                    paidAmountTotal.current = 0;
-                                    toPaymentAmountTotal.current = 0;
-                                    payAmountTotal.current = 0;
+                                    initData();
                                 }}
                             >
                                 關閉
@@ -544,11 +567,7 @@ const PaymentExchangeStart = ({
                             variant="contained"
                             onClick={() => {
                                 handleDialogClose();
-                                orgfeeAmountTotal.current = 0;
-                                receivedAmountTotal.current = 0;
-                                paidAmountTotal.current = 0;
-                                toPaymentAmountTotal.current = 0;
-                                payAmountTotal.current = 0;
+                                initData();
                             }}
                         >
                             關閉

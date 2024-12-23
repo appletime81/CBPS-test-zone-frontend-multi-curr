@@ -131,7 +131,9 @@ const ResearchBillDetail = ({ detailInfo }) => {
                                 fullWidth
                                 variant="outlined"
                                 size="small"
-                                readyOnly
+                                InputProps={{
+                                    readyOnly: true,
+                                }}
                             />
                         </Grid>
                         <Grid
@@ -153,7 +155,9 @@ const ResearchBillDetail = ({ detailInfo }) => {
                             <TextField
                                 value={dayjs(billMasterInfo.DueDate).format('YYYY/MM/DD')}
                                 fullWidth
-                                readyOnly
+                                InputProps={{
+                                    readyOnly: true,
+                                }}
                                 variant="outlined"
                                 size="small"
                             />

@@ -17,6 +17,7 @@ const SupplierPayment = () => {
     const [cbToCn, setCbToCn] = useState({}); //勾選合併狀態
     const [isSend, setIsSend] = useState(false);
     const dispatch = useDispatch();
+    const [listInfo, setListInfo] = useState([]);
 
     const handleChange = (event, newValue) => {
         setListInfo([]);
@@ -30,7 +31,6 @@ const SupplierPayment = () => {
         };
     };
 
-    const [listInfo, setListInfo] = useState([]);
     const supplierPaymentQuery = () => {
         fetch(queryApi.current, { method: 'GET' })
             .then((res) => res.json())
@@ -64,7 +64,7 @@ const SupplierPayment = () => {
                 <SupplierPaymentQuery setListInfo={setListInfo} queryApi={queryApi} value={value} />
             </Grid>
             <Grid item xs={12}>
-                <MainCard title={`${value === 0 ? '待確認' : '函稿'}資料列表`}>
+                <MainCard title={value === 0 ? '待確認資料列表' : '函稿資料列表'}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider', position: 'relative' }}>
                         <Tabs value={value} onChange={handleChange}>
                             <Tab label="待確認" {...a11yProps(0)} />
@@ -97,6 +97,8 @@ const SupplierPayment = () => {
                             isSend={isSend}
                             setIsSend={setIsSend}
                             supplierPaymentQuery={supplierPaymentQuery}
+                            queryApi={queryApi.current}
+                            setListInfo={setListInfo}
                         />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={1}>

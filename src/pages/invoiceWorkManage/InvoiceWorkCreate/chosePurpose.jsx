@@ -81,7 +81,6 @@ const ChosePurpose = ({
     };
 
     const handleChange = (row) => {
-        console.log('row=>>', row);
         setTempCurrencyExgID(row.CurrencyExgID);
         tempSelectPurpose.current = {
             Purpose: row.Purpose,
@@ -91,9 +90,7 @@ const ChosePurpose = ({
     };
 
     const handleSave = () => {
-        console.log('????=>>', tempSelectPurpose.current);
         rateInfo.current = tempSelectPurpose.current;
-        // setPurpose(tempSelectPurpose.current);
         setCurrencyExgID(tempCurrencyExgID);
         setTempCurrencyExgID(null);
         handleDialogClose();

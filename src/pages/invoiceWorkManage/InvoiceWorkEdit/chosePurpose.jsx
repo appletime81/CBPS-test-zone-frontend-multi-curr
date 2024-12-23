@@ -81,7 +81,6 @@ const ChosePurpose = ({
     };
 
     const handleChange = (row) => {
-        console.log('row=>>', row);
         setTempCurrencyExgID(row.CurrencyExgID);
         tempSelectPurpose.current = {
             Purpose: row.Purpose,

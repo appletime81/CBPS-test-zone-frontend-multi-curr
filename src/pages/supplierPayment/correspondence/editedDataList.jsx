@@ -138,7 +138,7 @@ const EditedDataList = ({ listInfo }) => {
                                 </StyledTableCell>
                                 <StyledTableCell align="center">{row?.WorkTitle}</StyledTableCell>
                                 <StyledTableCell align="center">
-                                    {row?.TotalFeeAmount}
+                                    {row?.TotalFeeAmount} {row?.PayCode}
                                 </StyledTableCell>
                                 <StyledTableCell align="center">
                                     <Box

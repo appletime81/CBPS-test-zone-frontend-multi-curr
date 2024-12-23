@@ -156,7 +156,7 @@ const LiabilityManage = () => {
                                             messageStateOpen: {
                                                 isOpen: true,
                                                 severity: 'error',
-                                                message: data.message,
+                                                message: data.alert_msg,
                                             },
                                         }),
                                     );

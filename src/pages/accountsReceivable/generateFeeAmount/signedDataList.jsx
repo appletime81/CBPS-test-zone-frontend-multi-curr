@@ -155,8 +155,8 @@ const SignedDataList = ({ dataList, receivableQuery }) => {
                             return (
                                 <TableRow
                                     key={
-                                        row.InvoiceWKMaster?.BillMasterID +
-                                        row.InvoiceWKMaster?.InvoiceNo +
+                                        row.BillMaster?.BillingNo +
+                                        row.BillMaster?.SubmarineCable +
                                         id
                                     }
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}

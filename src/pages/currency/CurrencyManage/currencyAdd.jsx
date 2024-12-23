@@ -62,13 +62,8 @@ const CurrencyAdd = ({
     submarineCableList,
     editItem,
     currencyQuery,
-    setListInfo,
     dialogAction,
-    lBRatio,
-    setLBRatio,
-    modifyNote,
-    setEditItem,
-    lBRawID,
+    workTitleList,
 }) => {
     const dispatch = useDispatch();
     const [submarineCable, setSubmarineCable] = useState('');
@@ -428,9 +423,12 @@ const CurrencyAdd = ({
                                 label="海纜作業"
                                 onChange={(e) => setWorkTitle(e.target.value)}
                             >
-                                <MenuItem value={'Upgrade'}>Upgrade</MenuItem>
-                                <MenuItem value={'Construction'}>Construction</MenuItem>
-                                <MenuItem value={'O&M'}>O&M</MenuItem>
+                                <MenuItem value={'All'}>All</MenuItem>
+                                {workTitleList.map((i) => (
+                                    <MenuItem key={i.Title} value={i.Title}>
+                                        {i.Title}
+                                    </MenuItem>
+                                ))}
                             </Select>
                         </FormControl>
                     </Grid>

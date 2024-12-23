@@ -138,7 +138,6 @@ const ToCombineDataList = ({
                 }),
             );
         } else {
-            console.log('billingNo=>>', billingNo);
             let tmpArray = {
                 BillingNo: billingNo,
             };
@@ -146,7 +145,6 @@ const ToCombineDataList = ({
             billList.DueDate = dayjs(issueDate).format('YYYY-MM-DD HH:mm:ss');
             billList.PONo = poNo;
             delete billList.BillMaster.SupplierName;
-            console.log('tmpArray=>>', tmpArray);
             fetch(isBillNoCheckOK, {
                 method: 'POST',
                 headers: {
@@ -223,7 +221,6 @@ const ToCombineDataList = ({
     };
 
     useEffect(() => {
-        console.log('cbToCn=>>', cbToCn);
         if (Object.keys(cbToCn).length === 0) {
             let tmpObj = {};
             dataList.forEach((i) => {
@@ -243,7 +240,6 @@ const ToCombineDataList = ({
 
     useEffect(() => {
         if (isDialogOpen) {
-            console.log('sendComBineData.current=>>', sendComBineData.current);
             let tmpAmount = 0;
             setBillList({});
             fetch(combineInvo, {

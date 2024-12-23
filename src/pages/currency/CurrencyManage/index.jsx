@@ -10,12 +10,9 @@ import CurrencyManage from './currencyManage';
 
 // api
 import {
-    billMilestoneLiabilityList,
+    getWorkTitle,
     dropdownmenuSubmarineCable,
     dropdownmenuParties,
-    queryLiability,
-    compareLiability,
-    addLiabilityapi,
     getCurrencyExchangeData,
     getCurrencyData,
 } from 'components/apis.jsx';
@@ -30,20 +27,14 @@ const LiabilityManage = () => {
     const [dialogAction, setDialogAction] = useState('');
     const [currencyListInfo, setCurrencyListInfo] = useState([]);
 
-    const [billMilestone, setBillMilestone] = useState(''); //計帳段號
-    const [workTitle, setWorkTitle] = useState(''); //海纜作業
-    const [submarineCable, setSubmarineCable] = useState(''); //海纜名稱
-    const [partyName, setPartyName] = useState([]); //會員名稱
-    const [lBRatio, setLBRatio] = useState(0); //攤分比例
     const [editItem, setEditItem] = useState({}); //編輯項目
-    const [note, setNote] = useState(''); //備註
-    const [modifyNote, setModifyNote] = useState(''); //異動原因
 
     const [partyList, setPartyList] = useState([]); //會員名稱下拉選單
     const [submarineCableList, setSubmarineCableList] = useState([]); //海纜名稱下拉選單
     const [isCurrencyOpen, setIsCurrencyOpen] = useState(false);
     const [isAddCurrencyOpen, setIsAddCurrencyOpen] = useState(false); //新增編輯Currency
     const lBRawID = useRef(0); //LBRawID
+    const [workTitleList, setWorkTitleList] = useState([]); //海纜作業下拉選單
 
     const queryApi = useRef({});
 
@@ -79,30 +70,16 @@ const LiabilityManage = () => {
         setIsAddCurrencyOpen(false);
     };
 
-    const itemDetailInitial = () => {
-        setBillMilestone('');
-        setPartyName([]);
-        setLBRatio('');
-        setModifyNote('');
-    };
-
     //編輯
     const editlistInfoItem = () => {
         let tmpArray = listInfo[editItem];
         if (tmpArray) {
-            setBillMilestone(tmpArray?.BillMilestone);
-            setPartyName([tmpArray?.PartyName]);
-            setLBRatio(tmpArray?.LBRatio);
-            setWorkTitle(tmpArray?.WorkTitle);
-            setSubmarineCable(tmpArray?.SubmarineCable);
-            setModifyNote(tmpArray?.ModifyNote);
             lBRawID.current = tmpArray?.LBRawID;
         }
     };
 
     //儲存編輯
     const currencyQuery = () => {
-        console.log('currencyQuer=>>');
         fetch(getCurrencyExchangeData, {
             method: 'POST',
             headers: {
@@ -123,7 +100,6 @@ const LiabilityManage = () => {
     };
 
     useEffect(() => {
-        itemDetailInitial();
         if (editItem >= 0) {
             editlistInfoItem();
             setIsAddCurrencyOpen(true);
@@ -143,6 +119,35 @@ const LiabilityManage = () => {
                 setPartyList(data);
             })
             .catch((e) => console.log('e1=>', e));
+        // 海纜作業
+        fetch(getWorkTitle, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            },
+            body: JSON.stringify({}),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (Array.isArray(data)) {
+                    setWorkTitleList(data);
+                } else {
+                    setWorkTitleList([]);
+                }
+            })
+            .catch(() => {
+                setWorkTitleList([]);
+                dispatch(
+                    setMessageStateOpen({
+                        messageStateOpen: {
+                            isOpen: true,
+                            severity: 'error',
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
+                        },
+                    }),
+                );
+            });
         getCurrencyDataFun();
     }, []);
 
@@ -173,22 +178,8 @@ const LiabilityManage = () => {
                     submarineCableList={submarineCableList}
                     editItem={editItem}
                     currencyQuery={currencyQuery}
-                    setListInfo={setListInfo}
-                    partyName={partyName}
-                    setPartyName={setPartyName}
-                    workTitle={workTitle}
-                    setWorkTitle={setWorkTitle}
-                    submarineCable={submarineCable}
-                    setSubmarineCable={setSubmarineCable}
                     dialogAction={dialogAction}
-                    lBRatio={lBRatio}
-                    setLBRatio={setLBRatio}
-                    modifyNote={modifyNote}
-                    setModifyNote={setModifyNote}
-                    note={note}
-                    setNote={setNote}
-                    setEditItem={setEditItem}
-                    lBRawID={lBRawID}
+                    workTitleList={workTitleList}
                 />
             </Grid>
             <Grid item xs={12}>

@@ -1,28 +1,11 @@
 import { useEffect, useState, useRef } from 'react';
-import {
-    Typography,
-    Grid,
-    Button,
-    FormControl,
-    InputLabel,
-    TextField,
-    Select,
-    Table,
-    MenuItem,
-    RadioGroup,
-    FormControlLabel,
-    Radio,
-    TableCell,
-} from '@mui/material';
+import { Grid, Button, Table, RadioGroup, FormControlLabel, Radio, TableCell } from '@mui/material';
 
 // day
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 
 // project import
 import { BootstrapDialogTitle } from 'components/commonFunction';
@@ -35,9 +18,6 @@ import TableRow from '@mui/material/TableRow';
 import { tableCellClasses } from '@mui/material/TableCell';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
-
-// api
-import { getCurrencyExchangeData } from 'components/apis.jsx';
 
 // redux
 import { useDispatch } from 'react-redux';
@@ -57,113 +37,65 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     },
 }));
 
-const ChosePurpose = ({
+const ChoseRate = ({
     isRateDialogOpen,
     handleRateDialogClose,
-    currencyExgList,
-    submarineCable,
-    workTitle,
-    fromCode,
-    codeList,
-    currencyExgID,
-    setCurrencyExgID,
+    toPaymentDetailInfoDetail,
+    // currencyExgID,
+    // setCurrencyExgID,
     rateInfo,
 }) => {
     const dispatch = useDispatch();
-    const [billYM, setBillYM] = useState(null); //入帳單到期日
-    const [toCode, setToCode] = useState(''); //兌換幣別代碼
-    const [dataList, setDataList] = useState([]);
     const [tempCurrencyExgID, setTempCurrencyExgID] = useState(null);
-    const tempSelectPurpose = useRef({});
-
-    const initInfo = () => {
-        setToCode('');
-        setBillYM(null);
-    };
+    const tempSelectPurposeInfo = useRef({});
+    const tmpSelect = useRef(null); //for Cancel
 
     const handleChange = (row) => {
-        console.log('row=>>', row);
-        setTempCurrencyExgID(row.CurrencyExgID);
-        tempSelectPurpose.current = {
+        toPaymentDetailInfoDetail.choseCurrencyExgID = row.CurrencyExgID;
+        tempSelectPurposeInfo.current = {
+            BillDetailID: toPaymentDetailInfoDetail.BillDetailID,
+            BillMasterID: toPaymentDetailInfoDetail.BillMasterID,
             Purpose: row.Purpose,
             ExgRate: row.ExgRate,
             ToCode: row.ToCode,
+            CurrencyExgID: row.CurrencyExgID,
         };
+        setTempCurrencyExgID(row.CurrencyExgID);
     };
 
     const handleSave = () => {
-        console.log('????=>>', tempSelectPurpose.current);
-        rateInfo.current = tempSelectPurpose.current;
-        // setPurpose(tempSelectPurpose.current);
-        setCurrencyExgID(tempCurrencyExgID);
+        // rateInfo.current = tempSelectPurposeInfo.current;
+        const existObject = rateInfo.current.find(
+            (i) =>
+                i.BillDetailID === tempSelectPurposeInfo.current.BillDetailID &&
+                i.BillMasterID === tempSelectPurposeInfo.current.BillMasterID,
+        );
+        if (existObject) {
+            // 如果找到該物件，更新其 key 值
+            existObject.BillDetailID = tempSelectPurposeInfo.current.BillDetailID;
+            existObject.BillMasterID = tempSelectPurposeInfo.current.BillMasterID;
+            existObject.Purpose = tempSelectPurposeInfo.current.Purpose;
+            existObject.ExgRate = tempSelectPurposeInfo.current.ExgRate;
+            existObject.ToCode = tempSelectPurposeInfo.current.ToCode;
+        }
+        if (!existObject && Object.keys(tempSelectPurposeInfo.current).length > 0) {
+            // 如果沒有找到，新增一個物件
+            rateInfo.current.push(tempSelectPurposeInfo.current);
+        }
+        // setCurrencyExgID(tempCurrencyExgID);
+        tempSelectPurposeInfo.current = {};
         setTempCurrencyExgID(null);
         handleRateDialogClose();
-        initInfo();
-    };
-
-    const handleQuery = () => {
-        let tmpObject = {
-            SubmarineCable: submarineCable,
-            WorkTitle: workTitle,
-            FromCode: fromCode,
-            ifEnd: false,
-        };
-
-        if (toCode !== '') {
-            tmpObject.ToCode = toCode;
-        }
-        if (billYM) {
-            tmpObject.BillYM = dayjs(billYM).format('YYYYMM');
-        }
-        fetch(getCurrencyExchangeData, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-            },
-            body: JSON.stringify(tmpObject),
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                if (data.length > 0) {
-                    setDataList(data);
-                    dispatch(
-                        setMessageStateOpen({
-                            messageStateOpen: {
-                                isOpen: true,
-                                severity: 'success',
-                                message: '查詢成功',
-                            },
-                        }),
-                    );
-                } else {
-                    setDataList(data);
-                    dispatch(
-                        setMessageStateOpen({
-                            messageStateOpen: {
-                                isOpen: true,
-                                severity: 'success',
-                                message: '查無資料',
-                            },
-                        }),
-                    );
-                }
-            })
-            .catch((e) => console.log('e1=>', e));
     };
 
     useEffect(() => {
-        tempSelectPurpose.current = {};
-        setDataList([]);
-    }, [submarineCable, workTitle]);
-
-    useEffect(() => {
-        if (isRateDialogOpen) {
-            setTempCurrencyExgID(currencyExgID);
+        if (isRateDialogOpen && toPaymentDetailInfoDetail.choseCurrencyExgID) {
+            setTempCurrencyExgID(toPaymentDetailInfoDetail.choseCurrencyExgID);
+            tmpSelect.current = toPaymentDetailInfoDetail.choseCurrencyExgID;
         }
     }, [isRateDialogOpen]);
 
-    console.log('currencyExgList=>>', currencyExgList);
+    console.log();
 
     return (
         <Dialog maxWidth="md" fullWidth open={isRateDialogOpen}>
@@ -176,43 +108,6 @@ const ChosePurpose = ({
                     justifyContent="center"
                     alignItems="center"
                 >
-                    <Grid item md={2} display="flex" justifyContent="center" alignItems="center">
-                        <Typography variant="h5">帳單到期：</Typography>
-                    </Grid>
-                    <Grid item md={2}>
-                        <FormControl>
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DesktopDatePicker
-                                    inputFormat="YYYYMM"
-                                    views={['year', 'month']}
-                                    value={billYM}
-                                    onChange={(e) => {
-                                        setBillYM(e);
-                                    }}
-                                    renderInput={(params) => <TextField size="small" {...params} />}
-                                />
-                            </LocalizationProvider>
-                        </FormControl>
-                    </Grid>
-                    <Grid item md={2} display="flex" justifyContent="center" alignItems="center">
-                        <Typography variant="h5">兌換幣別代碼：</Typography>
-                    </Grid>
-                    <Grid item md={2}>
-                        {/* <FormControl fullWidth size="small">
-                            <InputLabel>選擇兌換幣別</InputLabel>
-                            <Select
-                                value={toCode}
-                                label="幣別"
-                                onChange={(e) => setToCode(e.target.value)}
-                            >
-                                {codeList.map((i) => (
-                                    <MenuItem key={i.Code} value={i.Code}>
-                                        {i.Code}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl> */}
-                    </Grid>
                     <Grid item md={12}>
                         <TableContainer component={Paper} sx={{ maxHeight: 350 }}>
                             <Table stickyHeader>
@@ -221,10 +116,10 @@ const ChosePurpose = ({
                                         <StyledTableCell align="center"></StyledTableCell>
                                         <StyledTableCell align="center">主旨/用途</StyledTableCell>
                                         <StyledTableCell align="center">
-                                            原始幣別代馬
+                                            原始幣別代碼
                                         </StyledTableCell>
                                         <StyledTableCell align="center">
-                                            兌換幣別代馬
+                                            兌換幣別代碼
                                         </StyledTableCell>
                                         <StyledTableCell align="center">匯率</StyledTableCell>
                                         <StyledTableCell align="center">備註</StyledTableCell>
@@ -233,45 +128,67 @@ const ChosePurpose = ({
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {currencyExgList?.map((row, id) => {
-                                        return (
-                                            <TableRow key={row.Purpose + row.ExgRate + id}>
-                                                <TableCell width="5%">
-                                                    <RadioGroup
-                                                        row
-                                                        value={tempCurrencyExgID ?? currencyExgID}
-                                                        onChange={() => handleChange(row)}
-                                                        sx={{ justifyContent: 'center' }}
-                                                    >
-                                                        <FormControlLabel
-                                                            value={row.CurrencyExgID}
-                                                            sx={{ display: 'contents' }}
-                                                            control={
-                                                                <Radio
-                                                                    sx={{
-                                                                        '& .MuiSvgIcon-root': {
-                                                                            fontSize: {
-                                                                                xl: 18,
-                                                                            },
-                                                                        },
-                                                                    }}
+                                    {Object.keys(toPaymentDetailInfoDetail).length > 0 &&
+                                        toPaymentDetailInfoDetail?.CurrencyExgList.map(
+                                            (row, id) => {
+                                                return (
+                                                    <TableRow key={row.Purpose + row.ExgRate + id}>
+                                                        <TableCell width="5%">
+                                                            <RadioGroup
+                                                                row
+                                                                value={
+                                                                    tempSelectPurposeInfo.current
+                                                                        .CurrencyExgID ??
+                                                                    tempCurrencyExgID
+                                                                }
+                                                                onChange={() => handleChange(row)}
+                                                                sx={{ justifyContent: 'center' }}
+                                                            >
+                                                                <FormControlLabel
+                                                                    value={row.CurrencyExgID}
+                                                                    sx={{ display: 'contents' }}
+                                                                    control={
+                                                                        <Radio
+                                                                            sx={{
+                                                                                '& .MuiSvgIcon-root':
+                                                                                    {
+                                                                                        fontSize: {
+                                                                                            xl: 18,
+                                                                                        },
+                                                                                    },
+                                                                            }}
+                                                                        />
+                                                                    }
                                                                 />
-                                                            }
-                                                        />
-                                                    </RadioGroup>
-                                                </TableCell>
-                                                <TableCell align="center">{row.Purpose}</TableCell>
-                                                <TableCell align="center">{row.FromCode}</TableCell>
-                                                <TableCell align="center">{row.ToCode}</TableCell>
-                                                <TableCell align="center">{row.ExgRate}</TableCell>
-                                                <TableCell align="center">{row.Note}</TableCell>
-                                                <TableCell align="center">
-                                                    {dayjs(row.CreateTime).format('YYYY/MM/DD')}
-                                                </TableCell>
-                                                <TableCell align="center">{row.Editor}</TableCell>
-                                            </TableRow>
-                                        );
-                                    })}
+                                                            </RadioGroup>
+                                                        </TableCell>
+                                                        <TableCell align="center">
+                                                            {row.Purpose}
+                                                        </TableCell>
+                                                        <TableCell align="center">
+                                                            {row.FromCode}
+                                                        </TableCell>
+                                                        <TableCell align="center">
+                                                            {row.ToCode}
+                                                        </TableCell>
+                                                        <TableCell align="center">
+                                                            {row.ExgRate}
+                                                        </TableCell>
+                                                        <TableCell align="center">
+                                                            {row.Note}
+                                                        </TableCell>
+                                                        <TableCell align="center">
+                                                            {dayjs(row.CreateTime).format(
+                                                                'YYYY/MM/DD',
+                                                            )}
+                                                        </TableCell>
+                                                        <TableCell align="center">
+                                                            {row.Editor}
+                                                        </TableCell>
+                                                    </TableRow>
+                                                );
+                                            },
+                                        )}
                                 </TableBody>
                             </Table>
                         </TableContainer>
@@ -287,7 +204,8 @@ const ChosePurpose = ({
                     variant="contained"
                     onClick={() => {
                         handleRateDialogClose();
-                        initInfo();
+                        tempSelectPurposeInfo.current = {};
+                        toPaymentDetailInfoDetail.choseCurrencyExgID = tmpSelect.current;
                     }}
                 >
                     取消
@@ -297,4 +215,4 @@ const ChosePurpose = ({
     );
 };
 
-export default ChosePurpose;
+export default ChoseRate;

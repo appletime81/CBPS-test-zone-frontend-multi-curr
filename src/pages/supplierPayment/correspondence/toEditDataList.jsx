@@ -175,7 +175,7 @@ const ToEditDataList = ({ listInfo, initQuery }) => {
                                         {row?.WorkTitle}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        {row?.TotalFeeAmount}
+                                        {row?.TotalFeeAmount} {row?.PayCode}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Box

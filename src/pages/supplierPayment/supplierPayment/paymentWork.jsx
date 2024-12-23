@@ -60,10 +60,12 @@ const PaymentWork = ({
     invoiceNo,
     dueDate,
     savePaymentEdit,
+    code,
+    exgRate,
 }) => {
     const dispatch = useDispatch();
     const [toPaymentDetailInfo, setToPaymentDetailInfo] = useState([]); //帳單明細檔
-    const orgfeeAmountTotal = useRef(0); //應收金額
+    const exgReceivedAmountTotal = useRef(0); //應收金額
     const receivedAmountTotal = useRef(0); //已實收金額
     const paidAmountTotal = useRef(0); //已實付金額
     const toPaymentAmountTotal = useRef(0); //未付款金額
@@ -83,19 +85,10 @@ const PaymentWork = ({
         console.log(payment, typeof new Decimal(payment));
         payAmountTotal.current = 0;
         let tmpArray = toPaymentDetailInfo.map((i) => i);
-        console.log('toPaymentDetailInfo=>>', toPaymentDetailInfo);
         tmpArray.forEach((i, index) => {
             if (i.BillMasterID === billMasterID && i.BillDetailID === billDetailID) {
                 i.PayAmount = Number(payment);
             }
-            console.log(
-                'index=>>',
-                index,
-                payAmountTotal.current,
-                i.PayAmount,
-                i.ReceivedAmount,
-                i.PaidAmount,
-            );
             payAmountTotal.current = new Decimal(payAmountTotal.current)
                 .add(
                     i.PayAmount
@@ -140,29 +133,30 @@ const PaymentWork = ({
     };
 
     useEffect(() => {
-        let tmpArray = JSON.parse(JSON.stringify(editPaymentInfo));
-        tmpArray.forEach((i) => {
-            orgfeeAmountTotal.current = new Decimal(orgfeeAmountTotal.current).add(
-                new Decimal(i.OrgFeeAmount),
-            );
-            receivedAmountTotal.current = new Decimal(receivedAmountTotal.current).add(
-                new Decimal(i.ReceivedAmount),
-            );
-            paidAmountTotal.current = new Decimal(paidAmountTotal.current).add(
-                new Decimal(i.PaidAmount),
-            );
-            toPaymentAmountTotal.current = new Decimal(toPaymentAmountTotal.current).add(
-                i.OrgFeeAmount - i.PaidAmount > 0
-                    ? new Decimal(i.OrgFeeAmount).minus(new Decimal(i.PaidAmount))
-                    : 0,
-            );
-            payAmountTotal.current = new Decimal(payAmountTotal.current).add(
-                i.PayAmount
-                    ? i.PayAmount
-                    : new Decimal(i.ReceivedAmount).minus(new Decimal(i.PaidAmount)),
-            );
-        });
         if (isDialogOpen) {
+            let tmpArray = JSON.parse(JSON.stringify(editPaymentInfo));
+            tmpArray.forEach((i) => {
+                receivedAmountTotal.current = new Decimal(receivedAmountTotal.current).add(
+                    new Decimal(i.ReceivedAmount),
+                );
+                exgReceivedAmountTotal.current = new Decimal(exgReceivedAmountTotal.current).add(
+                    new Decimal(i.ExgReceivedAmount),
+                );
+                paidAmountTotal.current = new Decimal(paidAmountTotal.current).add(
+                    new Decimal(i.PaidAmount),
+                );
+                toPaymentAmountTotal.current = new Decimal(toPaymentAmountTotal.current).add(
+                    i.FeeAmount / exgRate - i.PaidAmount > 0
+                        ? new Decimal(i.FeeAmount / exgRate).minus(new Decimal(i.PaidAmount))
+                        : 0,
+                );
+                // row.FeeAmount / exgRate - row.PaidAmount
+                payAmountTotal.current = new Decimal(payAmountTotal.current).add(
+                    i.PayAmount
+                        ? i.PayAmount
+                        : new Decimal(i.ReceivedAmount).minus(new Decimal(i.PaidAmount)),
+                );
+            });
             setToPaymentDetailInfo(tmpArray);
         }
     }, [isDialogOpen]);
@@ -205,7 +199,9 @@ const PaymentWork = ({
                                 <TextField
                                     value={invoiceNo}
                                     fullWidth
-                                    readyOnly
+                                    InputProps={{
+                                        readyOnly: true,
+                                    }}
                                     variant="outlined"
                                     size="small"
                                 />
@@ -225,7 +221,9 @@ const PaymentWork = ({
                                 <TextField
                                     value={dayjs(dueDate).format('YYYY/MM/DD')}
                                     fullWidth
-                                    readyOnly
+                                    InputProps={{
+                                        readyOnly: true,
+                                    }}
                                     variant="outlined"
                                     size="small"
                                 />
@@ -253,11 +251,14 @@ const PaymentWork = ({
                                                 計帳段號
                                             </StyledTableCell>
                                             <StyledTableCell align="center">會員</StyledTableCell>
-                                            <StyledTableCell align="center">
+                                            {/* <StyledTableCell align="center">
                                                 應收金額
-                                            </StyledTableCell>
+                                            </StyledTableCell> */}
                                             <StyledTableCell align="center">
                                                 已實收金額
+                                            </StyledTableCell>
+                                            <StyledTableCell align="center">
+                                                換匯後已實收金額
                                             </StyledTableCell>
                                             <StyledTableCell align="center">
                                                 已實付金額
@@ -277,14 +278,9 @@ const PaymentWork = ({
                                     </TableHead>
                                     <TableBody>
                                         {toPaymentDetailInfo?.map((row) => {
-                                            console.log(
-                                                'row=>>',
-                                                row.PayAmount === 0,
-                                                row.PayAmount === -0,
-                                                row.ReceivedAmount,
-                                                row.PaidAmount,
-                                            );
-                                            let toPayment = row.OrgFeeAmount - row.PaidAmount;
+                                            // let toPayment = row.OrgFeeAmount - row.PaidAmount;
+                                            let toPayment =
+                                                row.FeeAmount / exgRate - row.PaidAmount;
                                             return (
                                                 <TableRow
                                                     key={
@@ -310,21 +306,30 @@ const PaymentWork = ({
                                                     <TableCell align="center">
                                                         {row.PartyName}
                                                     </TableCell>
-                                                    <TableCell align="center">
+                                                    {/* 應收金額 */}
+                                                    {/* <TableCell align="center">
                                                         {handleNumber(row.OrgFeeAmount)}
-                                                    </TableCell>
+                                                    </TableCell> */}
                                                     {/* 已實收金額 */}
                                                     <TableCell align="center">
-                                                        {handleNumber(row.ReceivedAmount)}
+                                                        {handleNumber(row.ReceivedAmount)}{' '}
+                                                        {row.Code}
+                                                    </TableCell>
+                                                    {/* 換匯後已實收金額 */}
+                                                    <TableCell align="center">
+                                                        {handleNumber(row?.ExgReceivedAmount)}{' '}
+                                                        {row.PayCode}
                                                     </TableCell>
                                                     {/* 已實付金額 */}
                                                     <TableCell align="center">
-                                                        {handleNumber(row.PaidAmount)}
+                                                        {handleNumber(row.PaidAmount)} {row.PayCode}
                                                     </TableCell>
+                                                    {/* 未付款金額 */}
                                                     <TableCell align="center">
                                                         {toPayment > 0
                                                             ? handleNumber(toPayment)
-                                                            : 0}
+                                                            : 0}{' '}
+                                                        {row.PayCode}
                                                     </TableCell>
                                                     {actionName === 'toPayment' ? (
                                                         <TableCell align="center">
@@ -355,16 +360,18 @@ const PaymentWork = ({
                                                                 size="small"
                                                                 inputProps={{ step: '.000001' }}
                                                                 sx={{ minWidth: 75 }}
+                                                                label={row.PayCode}
                                                                 InputProps={{
                                                                     inputComponent:
                                                                         NumericFormatCustom,
                                                                 }}
+                                                                disabled={toPayment <= 0}
                                                                 value={
                                                                     row.PayAmount ||
                                                                     row.PayAmount === 0
                                                                         ? row.PayAmount
                                                                         : new Decimal(
-                                                                              row.ReceivedAmount,
+                                                                              row.ExgReceivedAmount,
                                                                           )
                                                                               .minus(
                                                                                   new Decimal(
@@ -408,10 +415,10 @@ const PaymentWork = ({
                                                 align="center"
                                             />
                                             <StyledTableCell className="totalAmount" align="center">
-                                                {handleNumber(orgfeeAmountTotal.current)}
+                                                {handleNumber(receivedAmountTotal.current)}
                                             </StyledTableCell>
                                             <StyledTableCell className="totalAmount" align="center">
-                                                {handleNumber(receivedAmountTotal.current)}
+                                                {handleNumber(exgReceivedAmountTotal.current)}
                                             </StyledTableCell>
                                             <StyledTableCell className="totalAmount" align="center">
                                                 {handleNumber(paidAmountTotal.current)}
@@ -448,7 +455,7 @@ const PaymentWork = ({
                             onClick={() => {
                                 sendInfo();
                                 handleSaveEdit();
-                                orgfeeAmountTotal.current = 0;
+                                exgReceivedAmountTotal.current = 0;
                                 receivedAmountTotal.current = 0;
                                 paidAmountTotal.current = 0;
                                 toPaymentAmountTotal.current = 0;
@@ -463,7 +470,7 @@ const PaymentWork = ({
                             onClick={() => {
                                 handleDialogClose();
                                 handleTmpSaveEdit();
-                                orgfeeAmountTotal.current = 0;
+                                exgReceivedAmountTotal.current = 0;
                                 receivedAmountTotal.current = 0;
                                 paidAmountTotal.current = 0;
                                 toPaymentAmountTotal.current = 0;
@@ -479,7 +486,7 @@ const PaymentWork = ({
                         variant="contained"
                         onClick={() => {
                             handleDialogClose();
-                            orgfeeAmountTotal.current = 0;
+                            exgReceivedAmountTotal.current = 0;
                             receivedAmountTotal.current = 0;
                             paidAmountTotal.current = 0;
                             toPaymentAmountTotal.current = 0;
