@@ -79,6 +79,7 @@ const ToPaymentDataList = ({
     const [totalAmount, setTotalAmount] = useState(0);
     const payAmount = useRef(0);
     const sendCode = useRef('');
+    const codeInfo = useRef({});
 
     const handleChange = (event, supplierName, code) => {
         if (
@@ -115,9 +116,18 @@ const ToPaymentDataList = ({
         actionName.current = 'toPayment';
     };
 
-    const handlePaymentExchangeStartOpen = (billDetailInfo, invoiceMasterInfo) => {
+    const handlePaymentExchangeStartOpen = (
+        billDetailInfo,
+        invoiceMasterInfo,
+        fromCode,
+        payCode,
+    ) => {
         billDetailListInfo.current = billDetailInfo;
         invoiceWKMasterInfo.current = invoiceMasterInfo;
+        codeInfo.current = {
+            fromCode,
+            payCode,
+        };
         fetch(paymentExchangeStart, {
             method: 'POST',
             headers: {
@@ -278,6 +288,7 @@ const ToPaymentDataList = ({
                 savePaymentEdit={savePaymentEdit}
                 queryApi={queryApi}
                 setListInfo={setListInfo}
+                codeInfo={codeInfo.current}
             />
             <PaymentWork
                 isDialogOpen={isDialogOpen}
@@ -483,7 +494,6 @@ const ToPaymentDataList = ({
                                         .add(new Decimal(i.PayAmount ? i.PayAmount : 0))
                                         .toNumber();
                                 });
-                            // console.log('row1234=>>', row);
                             return (
                                 <TableRow
                                     key={row?.InvoiceWKMaster?.WKMasterID + id}
@@ -527,19 +537,20 @@ const ToPaymentDataList = ({
                                     </StyledTableCell>
                                     {/* 累計實收金額 */}
                                     <StyledTableCell align="center">
-                                        {handleNumber(row?.ExgReceivedAmountSum)}{' '}
+                                        {handleNumber(row?.ReceivedAmountSum)}{' '}
                                         {row?.InvoiceWKMaster.ToCode}
                                     </StyledTableCell>
                                     {/* 換匯後累計實收金額 */}
                                     <StyledTableCell align="center">
-                                        {handleNumber(row?.ReceivedAmountSum)}{' '}
+                                        {handleNumber(row?.ExgReceivedAmountSum)}{' '}
                                         {row?.InvoiceWKMaster.Code}
                                     </StyledTableCell>
-                                    {/* 本次付款金額 */}
+                                    {/* 累計實付金額 */}
                                     <StyledTableCell align="center">
                                         {handleNumber(row?.InvoiceWKMaster?.PaidAmount)}{' '}
                                         {row?.InvoiceWKMaster?.Code}
                                     </StyledTableCell>
+                                    {/* 本次付款金額 */}
                                     <StyledTableCell align="center">
                                         {handleNumber(row.PayAmount)} {row?.InvoiceWKMaster?.Code}
                                     </StyledTableCell>
@@ -564,6 +575,8 @@ const ToPaymentDataList = ({
                                                     handlePaymentExchangeStartOpen(
                                                         row.BillDetailList,
                                                         row.InvoiceWKMaster,
+                                                        row?.InvoiceWKMaster.ToCode,
+                                                        row?.InvoiceWKMaster.Code,
                                                     );
                                                 }}
                                             >

@@ -112,6 +112,10 @@ export const getPayMasterPayStatement = `${httpEnv}://${env}/api/v1/getPayMaster
 export const paymentExchangeStart = `${httpEnv}://${env}/api/v1/payment/exchangeStart`;
 export const paymentExchangeProcess = `${httpEnv}://${env}/api/v1/payment/exchangeProcess`;
 
+// 函稿
+export const getPayDraftStream = `${httpEnv}://${env}/api/v1/getPayDraftStream`;
+export const getCurrencyDataChineseName = `${httpEnv}://${env}/api/v1/get_currency_data_chinese_name`;
+
 // 退回-發票查詢
 export const returnToValidated = `${httpEnv}://${env}/api/v1/returnToValidated`;
 // 退回-待抵扣
@@ -120,7 +124,6 @@ export const beforeDuction = `${httpEnv}://${env}/api/v1/returnBillMaster/before
 export const afterDeduction = `${httpEnv}://${env}/api/v1/returnBillMaster/afterdeduction`;
 // 發票查詢-作廢
 export const afterBilled = `${httpEnv}://${env}/api/v1/invalidInvoice/afterBilled`;
-export const getPayDraftStream = `${httpEnv}://${env}/api/v1/getPayDraftStream`;
 export const getPayDraftStreamCBRefund = `${httpEnv}://${env}/api/v1/getPayDraftStream/CBRefund`;
 // 全域查詢
 export const searchBillMasterByInvoiceWKMaster = `${httpEnv}://${env}/api/v1/searchBillMasterByInvoiceWKMaster`;

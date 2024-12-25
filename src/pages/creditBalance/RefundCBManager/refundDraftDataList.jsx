@@ -38,11 +38,13 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 const CreditBalanceDataList = ({ listInfo }) => {
     const dispatch = useDispatch();
     const payDraftID = useRef(-1);
+    const payCode = useRef('');
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isUploadOpen, setIsUploadOpen] = useState(false); //上傳函稿
     // const payDraftID = useRef(-1);
-    const handleDialogOpen = (id) => {
+    const handleDialogOpen = (id, code) => {
         payDraftID.current = id;
+        payCode.current = code;
         setIsDialogOpen(true);
     };
 
@@ -104,6 +106,7 @@ const CreditBalanceDataList = ({ listInfo }) => {
             <CorrespondenceMake
                 isDialogOpen={isDialogOpen}
                 payDraftID={payDraftID.current}
+                payCode={payCode.current}
                 handleDialogClose={handleDialogClose}
             />
             <PayDraftUpload
@@ -157,7 +160,7 @@ const CreditBalanceDataList = ({ listInfo }) => {
                                                 size="small"
                                                 variant="outlined"
                                                 onClick={() => {
-                                                    handleDialogOpen(row?.PayDraftID);
+                                                    handleDialogOpen(row?.PayDraftID, row?.PayCode);
                                                 }}
                                             >
                                                 產製

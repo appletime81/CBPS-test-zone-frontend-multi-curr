@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -39,9 +39,9 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 const ToPaymentDataList = ({ listInfo }) => {
     const [toPaymentList, setToPaymentList] = useState([]);
-
     const [modifyItem, setModifyItem] = useState([]);
     const [isDetailOpen, setIsDetailOpen] = useState(false);
+    const payCode = useRef('');
 
     const isDetailClose = () => {
         setIsDetailOpen(false);
@@ -57,6 +57,7 @@ const ToPaymentDataList = ({ listInfo }) => {
                 modifyItem={modifyItem}
                 isDetailOpen={isDetailOpen}
                 isDetailClose={isDetailClose}
+                payCode={payCode.current}
             />
             <TableContainer
                 component={Paper}
@@ -96,10 +97,12 @@ const ToPaymentDataList = ({ listInfo }) => {
                                         {row?.PayMaster?.SupplierName}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        {handleNumber(row?.PayMaster?.FeeAmount)}
+                                        {handleNumber(row?.PayMaster?.FeeAmount)}{' '}
+                                        {row?.PayMaster.PayCode}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        {handleNumber(row?.PayMaster?.PaidAmount)}
+                                        {handleNumber(row?.PayMaster?.PaidAmount)}{' '}
+                                        {row?.PayMaster.PayCode}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
                                         {dayjs(row?.PayMaster?.PaidDate).format('YYYY/MM/DD')}
@@ -120,6 +123,7 @@ const ToPaymentDataList = ({ listInfo }) => {
                                                 size="small"
                                                 variant="outlined"
                                                 onClick={() => {
+                                                    payCode.current = row?.PayMaster.PayCode;
                                                     setModifyItem(row.PayStatementList);
                                                     setIsDetailOpen(true);
                                                 }}

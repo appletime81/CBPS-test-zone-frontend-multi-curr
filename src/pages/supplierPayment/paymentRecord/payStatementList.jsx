@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 // project import
 import { handleNumber, BootstrapDialogTitle } from 'components/commonFunction';
 // material-ui
-import { Button, Table, Dialog, DialogContent, Grid, DialogActions } from '@mui/material';
+import { Button, Table, Dialog, DialogContent, Grid, DialogActions, Box } from '@mui/material';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
@@ -36,7 +36,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     },
 }));
 
-const PayStatementList = ({ isDetailOpen, isDetailClose, modifyItem }) => {
+const PayStatementList = ({ isDetailOpen, isDetailClose, modifyItem, payCode }) => {
     let feeAmount = useRef(0); // 總費用金額加總(上)
     const [dataList, setDataList] = useState([]);
 
@@ -58,6 +58,9 @@ const PayStatementList = ({ isDetailOpen, isDetailClose, modifyItem }) => {
     return (
         <Dialog maxWidth="xxl" open={isDetailOpen}>
             <BootstrapDialogTitle>付款紀錄明細</BootstrapDialogTitle>
+            <Box display="flex" justifyContent="end" sx={{ marginRight: '2rem' }}>
+                幣別：{payCode}
+            </Box>
             <DialogContent>
                 <Grid
                     container

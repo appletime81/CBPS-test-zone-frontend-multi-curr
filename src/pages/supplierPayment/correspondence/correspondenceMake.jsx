@@ -1,5 +1,5 @@
-import { useEffect, useState, useRef } from 'react';
-import { Typography, Grid, Button, Box, TextField, TableCell } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { Typography, Grid, Button, Box, TextField } from '@mui/material';
 
 // day
 import Dialog from '@mui/material/Dialog';
@@ -8,14 +8,10 @@ import DialogActions from '@mui/material/DialogActions';
 
 // project import
 import MainCard from 'components/MainCard';
-import { handleNumber, BootstrapDialogTitle, TabPanel } from 'components/commonFunction';
-
-// table
-import { tableCellClasses } from '@mui/material/TableCell';
-import { styled } from '@mui/material/styles';
+import { handleNumber, BootstrapDialogTitle } from 'components/commonFunction';
 
 // api
-import { getPayDraftStream } from 'components/apis.jsx';
+import { getPayDraftStream, getCurrencyDataChineseName } from 'components/apis.jsx';
 
 // print
 import './styles.css';
@@ -24,12 +20,12 @@ import './styles.css';
 import { useDispatch } from 'react-redux';
 import { setMessageStateOpen } from 'store/reducers/dropdown';
 
-const CorrespondenceMake = ({ isDialogOpen, handleDialogClose, payDraftID }) => {
+const CorrespondenceMake = ({ isDialogOpen, handleDialogClose, payDraftID, payCode }) => {
     const dispatch = useDispatch();
     const [correspondenceInfo, setCorrespondenceInfo] = useState({});
     const [subject1, setSubject1] = useState(''); //主旨1
-    // const [subject2, setSubject2] = useState(''); //主旨2
     const [cableInfo, setCableInfo] = useState(''); //海纜資訊
+    const [cCode, setCCode] = useState({});
 
     const saveToSend = () => {
         let tmpArray = {
@@ -104,6 +100,23 @@ const CorrespondenceMake = ({ isDialogOpen, handleDialogClose, payDraftID }) => 
                         }),
                     );
                 });
+
+            fetch(getCurrencyDataChineseName, { method: 'GET' })
+                .then((res) => res.json())
+                .then((data) => {
+                    setCCode(data);
+                })
+                .catch(() => {
+                    dispatch(
+                        setMessageStateOpen({
+                            messageStateOpen: {
+                                isOpen: true,
+                                severity: 'error',
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
+                            },
+                        }),
+                    );
+                });
         }
     }, [isDialogOpen]);
 
@@ -140,8 +153,9 @@ const CorrespondenceMake = ({ isDialogOpen, handleDialogClose, payDraftID }) => 
                                                     width: '20%',
                                                 }}
                                             />
-                                            ，淨額為美金元
-                                            {correspondenceInfo?.PayDraftChineseTotalFeeAmount}(US$
+                                            ，淨額為{cCode[payCode]}元
+                                            {correspondenceInfo?.PayDraftChineseTotalFeeAmount}(
+                                            {payCode}
                                             {handleNumber(correspondenceInfo?.TotalFeeAmount)}
                                             )，請查照
                                         </Typography>
@@ -193,10 +207,10 @@ const CorrespondenceMake = ({ isDialogOpen, handleDialogClose, payDraftID }) => 
                             <Box sx={{ fontSize: '14px' }}>&nbsp;&nbsp;&nbsp;&nbsp;</Box>
                             <Box sx={{ fontSize: '14px' }}>&nbsp;&nbsp;&nbsp;&nbsp;</Box>
                             <Box sx={{ fontSize: '14px' }}>
-                                主旨： 請電匯{correspondenceInfo?.Payee}以支付${subject1}
-                                ，淨額為美金$
+                                主旨： 請電匯{correspondenceInfo?.Payee}以支付{subject1}
+                                ，淨額為{cCode[payCode]}
                                 {correspondenceInfo?.PayDraftChineseTotalFeeAmount}
-                                元(US$
+                                元({payCode}
                                 {handleNumber(correspondenceInfo?.TotalFeeAmount)}
                                 )，請查照。
                             </Box>
@@ -236,13 +250,13 @@ const CorrespondenceMake = ({ isDialogOpen, handleDialogClose, payDraftID }) => 
                             </Box>
                             <Box sx={{ fontSize: '12px' }}>
                                 &nbsp;&nbsp;&nbsp;&nbsp;Invoice No.{correspondenceInfo?.InvoiceNo},
-                                {cableInfo}, US$
+                                {cableInfo}, {payCode}
                                 {handleNumber(correspondenceInfo?.TotalFeeAmount)}
                             </Box>
                             <Box sx={{ fontSize: '12px' }}>三、本款項為全額到行。</Box>
                             <Box sx={{ fontSize: '12px' }}>
                                 四、檢附貴行外幣活期存款第{correspondenceInfo?.CBPBankAcctNo}
-                                號帳戶同額美金取款憑條乙紙。
+                                號帳戶同額{cCode[payCode]}取款憑條乙紙。
                             </Box>
                         </Typography>
                     </Grid>
