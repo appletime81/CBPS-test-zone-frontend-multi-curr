@@ -157,6 +157,7 @@ const ToEditDataList = ({ listInfo, initQuery }) => {
                             <StyledTableCell align="center">海纜名稱</StyledTableCell>
                             <StyledTableCell align="center">海纜作業</StyledTableCell>
                             <StyledTableCell align="center">匯款總金額</StyledTableCell>
+                            <StyledTableCell align="center">匯款幣別</StyledTableCell>
                             <StyledTableCell align="center">Action</StyledTableCell>
                         </TableRow>
                     </TableHead>
@@ -178,8 +179,9 @@ const ToEditDataList = ({ listInfo, initQuery }) => {
                                         {row?.WorkTitle}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        {row?.TotalFeeAmount} {row?.PayCode}
+                                        {row?.TotalFeeAmount}
                                     </StyledTableCell>
+                                    <StyledTableCell align="center">{row?.PayCode}</StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Box
                                             sx={{

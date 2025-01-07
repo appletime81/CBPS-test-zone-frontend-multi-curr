@@ -260,6 +260,7 @@ const IsSendDataList = ({ listInfo }) => {
                             <StyledTableCell align="center">截止日</StyledTableCell>
                             <StyledTableCell align="center">明細數</StyledTableCell>
                             <StyledTableCell align="center">總金額</StyledTableCell>
+                            <StyledTableCell align="center">幣別</StyledTableCell>
                             <StyledTableCell align="center">已寄送</StyledTableCell>
                             <StyledTableCell align="center">狀態</StyledTableCell>
                             <StyledTableCell align="center">Action</StyledTableCell>
@@ -299,7 +300,9 @@ const IsSendDataList = ({ listInfo }) => {
                                         {row.BillDetail ? row.BillDetail.length : 0}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        {handleNumber(row.BillMaster.FeeAmountSum)}{' '}
+                                        {handleNumber(row.BillMaster.FeeAmountSum)}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="center">
                                         {row.BillMaster.Code}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">是</StyledTableCell>

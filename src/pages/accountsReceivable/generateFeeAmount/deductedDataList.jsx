@@ -6,16 +6,7 @@ import GenerateBack from './generateBack';
 import SignAndUpload from './signAndUpload';
 import BillDraftMake from './billDraftMake';
 // material-ui
-import {
-    Button,
-    Table,
-    Box,
-    TableContainer,
-    TableHead,
-    TableRow,
-    TableCell,
-    TableBody,
-} from '@mui/material';
+import { Button, Table, Box, TableContainer, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
 import { tableCellClasses } from '@mui/material/TableCell';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
@@ -27,13 +18,13 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
         // backgroundColor: theme.palette.common.gary,
         color: theme.palette.common.black,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
+        paddingBottom: '0.2rem'
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
-    },
+        paddingBottom: '0.2rem'
+    }
 }));
 
 const DeductedDataList = ({ dataList, receivableQuery }) => {
@@ -46,6 +37,7 @@ const DeductedDataList = ({ dataList, receivableQuery }) => {
     const billDetailInfo = useRef([]);
     const editBillingNo = useRef('');
     const editBillMasterID = useRef('');
+    const tmpBMArray = useRef([]);
 
     const handleDeductedOpen = (data) => {
         billDetailInfo.current = data;
@@ -56,7 +48,14 @@ const DeductedDataList = ({ dataList, receivableQuery }) => {
         setIsDeductedWorkOpen(false);
     };
 
-    const handleDialogOpen = (info) => {
+    const handleDialogOpen = (info, data) => {
+        let bMArray = [];
+        data.forEach((i) => {
+            if (!bMArray.includes(i.BillDetail.BillMilestone)) {
+                bMArray.push(i.BillDetail.BillMilestone);
+            }
+        });
+        tmpBMArray.current = bMArray;
         billMasterID.current = info.BillMasterID;
         billMaster.current = info.BillInfo;
         setIsDialogOpen(true);
@@ -92,11 +91,7 @@ const DeductedDataList = ({ dataList, receivableQuery }) => {
 
     return (
         <>
-            <DeductedWork
-                isDeductedWorkOpen={isDeductedWorkOpen}
-                handleDeductedClose={handleDeductedClose}
-                billDetailInfo={billDetailInfo.current}
-            />
+            <DeductedWork isDeductedWorkOpen={isDeductedWorkOpen} handleDeductedClose={handleDeductedClose} billDetailInfo={billDetailInfo.current} />
             <GenerateBack
                 action={'deducted'}
                 infoBack={infoBack}
@@ -115,13 +110,9 @@ const DeductedDataList = ({ dataList, receivableQuery }) => {
                 issueDateDefault={billMaster.current.IssueDate}
                 dueDateDefault={billMaster.current.DueDate}
                 action={'deducted'}
+                tmpBMArray={tmpBMArray.current}
             />
-            <SignAndUpload
-                isUploadOpen={isUploadOpen}
-                handleUploadClose={handleUploadClose}
-                billMasterID={billMasterID.current}
-                receivableQuery={receivableQuery}
-            />
+            <SignAndUpload isUploadOpen={isUploadOpen} handleUploadClose={handleUploadClose} billMasterID={billMasterID.current} receivableQuery={receivableQuery} />
             <TableContainer component={Paper} sx={{ maxHeight: window.screen.height * 0.5 }}>
                 <Table sx={{ minWidth: 300 }} stickyHeader>
                     <TableHead>
@@ -140,40 +131,21 @@ const DeductedDataList = ({ dataList, receivableQuery }) => {
                     <TableBody>
                         {dataList?.map((row, id) => {
                             return (
-                                <TableRow
-                                    key={
-                                        row.BillMaster.BillMasterID + row.BillMaster.BillingNo + id
-                                    }
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
+                                <TableRow key={row.BillMaster.BillMasterID + row.BillMaster.BillingNo + id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <StyledTableCell align="center">{id + 1}</StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.BillMaster.PartyName}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.BillMaster.SubmarineCable}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.BillMaster.WorkTitle}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.BillMaster.BillingNo}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {dayjs(row.BillMaster.IssueDate).format('YYYY/MM/DD')}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {dayjs(row.BillMaster.DueDate).format('YYYY/MM/DD')}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.data ? row.data.length : 0}
-                                    </StyledTableCell>
+                                    <StyledTableCell align="center">{row.BillMaster.PartyName}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.BillMaster.SubmarineCable}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.BillMaster.WorkTitle}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.BillMaster.BillingNo}</StyledTableCell>
+                                    <StyledTableCell align="center">{dayjs(row.BillMaster.IssueDate).format('YYYY/MM/DD')}</StyledTableCell>
+                                    <StyledTableCell align="center">{dayjs(row.BillMaster.DueDate).format('YYYY/MM/DD')}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.data ? row.data.length : 0}</StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Box
                                             sx={{
                                                 display: 'flex',
                                                 justifyContent: 'center',
-                                                '& button': { mx: 0.2, p: 0 },
+                                                '& button': { mx: 0.2, p: 0 }
                                             }}
                                         >
                                             <Button
@@ -191,10 +163,13 @@ const DeductedDataList = ({ dataList, receivableQuery }) => {
                                                 size="small"
                                                 variant="outlined"
                                                 onClick={() => {
-                                                    handleDialogOpen({
-                                                        BillMasterID: row.BillMaster.BillMasterID,
-                                                        BillInfo: row.BillMaster,
-                                                    });
+                                                    handleDialogOpen(
+                                                        {
+                                                            BillMasterID: row.BillMaster.BillMasterID,
+                                                            BillInfo: row.BillMaster
+                                                        },
+                                                        row.data
+                                                    );
                                                 }}
                                             >
                                                 產製帳單
@@ -205,7 +180,7 @@ const DeductedDataList = ({ dataList, receivableQuery }) => {
                                                 variant="outlined"
                                                 onClick={() => {
                                                     handleUploadOpen({
-                                                        BillMasterID: row.BillMaster.BillMasterID,
+                                                        BillMasterID: row.BillMaster.BillMasterID
                                                     });
                                                 }}
                                             >
@@ -216,10 +191,7 @@ const DeductedDataList = ({ dataList, receivableQuery }) => {
                                                 size="small"
                                                 variant="outlined"
                                                 onClick={() => {
-                                                    handleInfoBack(
-                                                        row.BillMaster.BillingNo,
-                                                        row.BillMaster.BillMasterID,
-                                                    );
+                                                    handleInfoBack(row.BillMaster.BillingNo, row.BillMaster.BillMasterID);
                                                 }}
                                             >
                                                 退回

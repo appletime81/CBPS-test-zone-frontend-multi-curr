@@ -25,19 +25,19 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
         // backgroundColor: theme.palette.common.gary,
         color: theme.palette.common.black,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
+        paddingBottom: '0.2rem'
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
+        paddingBottom: '0.2rem'
     },
     [`&.${tableCellClasses.body}.totalAmount`]: {
         fontSize: 14,
         paddingTop: '0.2rem',
         paddingBottom: '0.2rem',
-        backgroundColor: '#CFD8DC',
-    },
+        backgroundColor: '#CFD8DC'
+    }
 }));
 
 const ToWriteOffDataList = ({ listInfo, writeOffInitQuery }) => {
@@ -62,12 +62,11 @@ const ToWriteOffDataList = ({ listInfo, writeOffInitQuery }) => {
         fetch(tmpQuery, {
             method: 'GET',
             headers: {
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-            },
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+            }
         })
             .then((res) => res.json())
             .then((data) => {
-                console.log('銷帳作業=>>', data);
                 if (Array.isArray(data)) {
                     setWriteOffDetail(data);
                     setIsDialogOpen(true);
@@ -79,9 +78,9 @@ const ToWriteOffDataList = ({ listInfo, writeOffInitQuery }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -90,15 +89,15 @@ const ToWriteOffDataList = ({ listInfo, writeOffInitQuery }) => {
         let tmpArray = {};
         tmpArray = {
             BillMaster: info.BillMaster,
-            CBWriteOff: cBWriteOff,
+            CBWriteOff: cBWriteOff
         };
         fetch(submitWriteOff, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
             },
-            body: JSON.stringify(tmpArray),
+            body: JSON.stringify(tmpArray)
         })
             .then((res) => res.json())
             .then(() => {
@@ -107,9 +106,9 @@ const ToWriteOffDataList = ({ listInfo, writeOffInitQuery }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'success',
-                            message: '銷帳紀錄送出成功',
-                        },
-                    }),
+                            message: '銷帳紀錄送出成功'
+                        }
+                    })
                 );
                 writeOffInitQuery();
             })
@@ -119,9 +118,9 @@ const ToWriteOffDataList = ({ listInfo, writeOffInitQuery }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -131,8 +130,8 @@ const ToWriteOffDataList = ({ listInfo, writeOffInitQuery }) => {
         fetch(tmpQuery, {
             method: 'GET',
             headers: {
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-            },
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+            }
         })
             .then((res) => res.json())
             .then(() => {
@@ -141,9 +140,9 @@ const ToWriteOffDataList = ({ listInfo, writeOffInitQuery }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'success',
-                            message: '完成銷帳成功',
-                        },
-                    }),
+                            message: '完成銷帳成功'
+                        }
+                    })
                 );
                 writeOffInitQuery();
             })
@@ -153,9 +152,9 @@ const ToWriteOffDataList = ({ listInfo, writeOffInitQuery }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -188,6 +187,7 @@ const ToWriteOffDataList = ({ listInfo, writeOffInitQuery }) => {
                             <StyledTableCell align="center">總金額</StyledTableCell>
                             <StyledTableCell align="center">累計實收金額</StyledTableCell>
                             <StyledTableCell align="center">累計手續金額</StyledTableCell>
+                            <StyledTableCell align="center">幣別</StyledTableCell>
                             <StyledTableCell align="center">Action</StyledTableCell>
                         </TableRow>
                     </TableHead>
@@ -200,49 +200,20 @@ const ToWriteOffDataList = ({ listInfo, writeOffInitQuery }) => {
                                 }
                             });
                             return (
-                                <TableRow
-                                    key={
-                                        row?.BillMaster?.BillingNo + row?.BillMaster?.PartyName + id
-                                    }
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
+                                <TableRow key={row?.BillMaster?.BillingNo + row?.BillMaster?.PartyName + id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <StyledTableCell align="center">{id + 1}</StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row?.BillMaster?.SubmarineCable}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row?.BillMaster?.WorkTitle}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {tmpBMArray.join(',')}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row?.BillMaster?.PartyName}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row?.BillMaster?.BillingNo}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {dayjs(row?.BillMaster?.IssueDate).format('YYYY/MM/DD')}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {dayjs(row?.BillMaster?.DueDate).format('YYYY/MM/DD')}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.BillDetail?.length}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {handleNumber(row?.BillMaster?.FeeAmountSum)}{' '}
-                                        {row.BillMaster.Code}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {handleNumber(row?.BillMaster?.ReceivedAmountSum)}{' '}
-                                        {row.BillMaster.Code}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {handleNumber(row?.BillMaster?.BankFees)}{' '}
-                                        {row.BillMaster.Code}
-                                    </StyledTableCell>
+                                    <StyledTableCell align="center">{row?.BillMaster?.SubmarineCable}</StyledTableCell>
+                                    <StyledTableCell align="center">{row?.BillMaster?.WorkTitle}</StyledTableCell>
+                                    <StyledTableCell align="center">{tmpBMArray.join(',')}</StyledTableCell>
+                                    <StyledTableCell align="center">{row?.BillMaster?.PartyName}</StyledTableCell>
+                                    <StyledTableCell align="center">{row?.BillMaster?.BillingNo}</StyledTableCell>
+                                    <StyledTableCell align="center">{dayjs(row?.BillMaster?.IssueDate).format('YYYY/MM/DD')}</StyledTableCell>
+                                    <StyledTableCell align="center">{dayjs(row?.BillMaster?.DueDate).format('YYYY/MM/DD')}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.BillDetail?.length}</StyledTableCell>
+                                    <StyledTableCell align="center">{handleNumber(row?.BillMaster?.FeeAmountSum)}</StyledTableCell>
+                                    <StyledTableCell align="center">{handleNumber(row?.BillMaster?.ReceivedAmountSum)}</StyledTableCell>
+                                    <StyledTableCell align="center">{handleNumber(row?.BillMaster?.BankFees)}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.BillMaster.Code}</StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Box
                                             sx={{
@@ -250,8 +221,8 @@ const ToWriteOffDataList = ({ listInfo, writeOffInitQuery }) => {
                                                 justifyContent: 'center',
                                                 '& button': {
                                                     mx: { sm: 0.3, md: 0.3, lg: 0.6, xl: 1.5 },
-                                                    p: 0,
-                                                },
+                                                    p: 0
+                                                }
                                             }}
                                         >
                                             <Button

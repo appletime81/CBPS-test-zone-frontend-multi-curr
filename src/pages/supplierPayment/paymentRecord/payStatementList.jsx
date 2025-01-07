@@ -109,7 +109,7 @@ const PayStatementList = ({ isDetailOpen, isDetailClose, modifyItem, payCode }) 
                                                     {handleNumber(row?.FeeAmount)}
                                                 </TableCell>
                                                 <TableCell align="center">
-                                                    {handleNumber(row?.FeeAmount)}
+                                                    {handleNumber(row?.PaidAmount)}
                                                 </TableCell>
                                                 <StyledTableCell align="center">
                                                     {dayjs(row?.PaidDate).format('YYYY/MM/DD')}

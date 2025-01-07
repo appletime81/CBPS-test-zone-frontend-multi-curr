@@ -348,7 +348,9 @@ const BilledDataList = ({ listInfo }) => {
                             <StyledTableCell align="center">發票日期</StyledTableCell>
                             <StyledTableCell align="center">明細數量</StyledTableCell>
                             <StyledTableCell align="center">原始金額</StyledTableCell>
+                            <StyledTableCell align="center">原始幣別</StyledTableCell>
                             <StyledTableCell align="center">換匯後金額</StyledTableCell>
+                            <StyledTableCell align="center">換匯後幣別</StyledTableCell>
                             <StyledTableCell align="center">Action</StyledTableCell>
                         </TableRow>
                     </TableHead>
@@ -380,10 +382,14 @@ const BilledDataList = ({ listInfo }) => {
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
                                         {handleNumber(row.InvoiceWKMaster.TotalAmount)}{' '}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="center">
                                         {row.InvoiceWKMaster.Code}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
                                         {handleNumber(row.InvoiceWKMaster.ExgTotalAmount)}{' '}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="center">
                                         {row.InvoiceWKMaster.ToCode}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">

@@ -46,6 +46,7 @@ const CreditBalanceDataList = ({ listInfo, cbToCn, setCbToCn }) => {
                             <StyledTableCell align="center">海纜名稱</StyledTableCell>
                             <StyledTableCell align="center">海纜作業</StyledTableCell>
                             <StyledTableCell align="center">退費金額</StyledTableCell>
+                            <StyledTableCell align="center">幣別</StyledTableCell>
                             <StyledTableCell align="center">建立日期</StyledTableCell>
                             <StyledTableCell align="center">摘要說明</StyledTableCell>
                         </TableRow>
@@ -84,9 +85,10 @@ const CreditBalanceDataList = ({ listInfo, cbToCn, setCbToCn }) => {
                                     <StyledTableCell align="center">
                                         {row.WorkTitle}
                                     </StyledTableCell>
-                                    <StyledTableCell align="center">{`$${handleNumber(
-                                        row.TransAmount,
-                                    )}`}</StyledTableCell>
+                                    <StyledTableCell align="center">
+                                        {handleNumber(row.TransAmount)}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="center">{row.Code}</StyledTableCell>
                                     <StyledTableCell align="center">
                                         {dayjs(row.CreateDate).format('YYYY/MM/DD')}
                                     </StyledTableCell>

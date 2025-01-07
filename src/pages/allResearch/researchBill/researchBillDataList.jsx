@@ -3,7 +3,7 @@
 // project import
 import { handleNumber } from 'components/commonFunction';
 // material-ui
-import { Typography, Button, Table, Box } from '@mui/material';
+import { Button, Table, Box } from '@mui/material';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
@@ -13,7 +13,6 @@ import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 
 import dayjs from 'dayjs';
-import { useEffect, useRef, useState } from 'react';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -30,19 +29,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 const ResearchBillDataList = ({ listInfo, setDetailInfo }) => {
-    const [cbView, setCbview] = useState(false);
-    const [cbTerminal, setCbTerminal] = useState(false);
-    const viewId = useRef(-1);
-
-    const handleViewClose = () => {
-        setCbview(false);
-        viewId.current = -1;
-    };
-
-    const handleTerminalClose = () => {
-        setCbTerminal(false);
-    };
-
     return (
         <TableContainer component={Paper} sx={{ maxHeight: 350 }}>
             <Table sx={{ minWidth: 300 }} stickyHeader>
@@ -58,6 +44,7 @@ const ResearchBillDataList = ({ listInfo, setDetailInfo }) => {
                         <StyledTableCell align="center">總金額</StyledTableCell>
                         <StyledTableCell align="center">累計實付金額</StyledTableCell>
                         <StyledTableCell align="center">累計減項金額</StyledTableCell>
+                        <StyledTableCell align="center">幣別</StyledTableCell>
                         <StyledTableCell align="center">Action</StyledTableCell>
                     </TableRow>
                 </TableHead>
@@ -88,13 +75,16 @@ const ResearchBillDataList = ({ listInfo, setDetailInfo }) => {
                                     {dayjs(row.InvoiceWKMaster.DueDate).format('YYYY/MM/DD')}
                                 </StyledTableCell>
                                 <StyledTableCell align="center">
-                                    ${handleNumber(row.InvoiceWKMaster.TotalAmount)}
+                                    {handleNumber(row.InvoiceWKMaster.TotalAmount)}
                                 </StyledTableCell>
                                 <StyledTableCell align="center">
-                                    ${handleNumber(row.InvoiceWKMaster.PaidAmount)}
+                                    {handleNumber(row.InvoiceWKMaster.PaidAmount)}
                                 </StyledTableCell>
                                 <StyledTableCell align="center">
-                                    ${handleNumber(row.InvoiceWKMaster.DedAmount)}
+                                    {handleNumber(row.InvoiceWKMaster.DedAmount)}
+                                </StyledTableCell>
+                                <StyledTableCell align="center">
+                                    {row.InvoiceWKMaster?.Code}
                                 </StyledTableCell>
                                 <StyledTableCell align="center">
                                     <Box

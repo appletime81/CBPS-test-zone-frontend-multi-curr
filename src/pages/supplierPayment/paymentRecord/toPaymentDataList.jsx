@@ -74,6 +74,7 @@ const ToPaymentDataList = ({ listInfo }) => {
                             <StyledTableCell align="center">供應商</StyledTableCell>
                             <StyledTableCell align="center">此次應付總金額</StyledTableCell>
                             <StyledTableCell align="center">此次付款總金額</StyledTableCell>
+                            <StyledTableCell align="center">幣別</StyledTableCell>
                             <StyledTableCell align="center">付款日期</StyledTableCell>
                             <StyledTableCell align="center">摘要說明</StyledTableCell>
                             <StyledTableCell align="center">動作</StyledTableCell>
@@ -96,12 +97,9 @@ const ToPaymentDataList = ({ listInfo }) => {
                                     <StyledTableCell align="center">
                                         {row?.PayMaster?.SupplierName}
                                     </StyledTableCell>
+                                    <StyledTableCell align="center"></StyledTableCell>
+                                    <StyledTableCell align="center"></StyledTableCell>
                                     <StyledTableCell align="center">
-                                        {handleNumber(row?.PayMaster?.FeeAmount)}{' '}
-                                        {row?.PayMaster.PayCode}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {handleNumber(row?.PayMaster?.PaidAmount)}{' '}
                                         {row?.PayMaster.PayCode}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">

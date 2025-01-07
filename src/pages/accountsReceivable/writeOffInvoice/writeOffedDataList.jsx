@@ -72,6 +72,7 @@ const WriteOffedDataList = ({ listInfo }) => {
                             <StyledTableCell align="center">手續費</StyledTableCell>
                             <StyledTableCell align="center">累計實收金額</StyledTableCell>
                             <StyledTableCell align="center">總金額</StyledTableCell>
+                            <StyledTableCell align="center">幣別</StyledTableCell>
                             <StyledTableCell align="center">Action</StyledTableCell>
                         </TableRow>
                     </TableHead>
@@ -118,15 +119,15 @@ const WriteOffedDataList = ({ listInfo }) => {
                                         {row.BillDetail?.length}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        {handleNumber(row.BillMaster?.BankFees)}{' '}
-                                        {row.BillMaster?.Code}
+                                        {handleNumber(row.BillMaster?.BankFees)}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        {handleNumber(row.BillMaster?.ReceivedAmountSum)}{' '}
-                                        {row.BillMaster?.Code}
+                                        {handleNumber(row.BillMaster?.ReceivedAmountSum)}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
-                                        {handleNumber(row.BillMaster?.FeeAmountSum)}{' '}
+                                        {handleNumber(row.BillMaster?.FeeAmountSum)}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="center">
                                         {row.BillMaster?.Code}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">

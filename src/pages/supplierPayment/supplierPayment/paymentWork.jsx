@@ -60,7 +60,6 @@ const PaymentWork = ({
     invoiceNo,
     dueDate,
     savePaymentEdit,
-    code,
     exgRate,
 }) => {
     const dispatch = useDispatch();
@@ -85,7 +84,7 @@ const PaymentWork = ({
         console.log(payment, typeof new Decimal(payment));
         payAmountTotal.current = 0;
         let tmpArray = toPaymentDetailInfo.map((i) => i);
-        tmpArray.forEach((i, index) => {
+        tmpArray.forEach((i) => {
             if (i.BillMasterID === billMasterID && i.BillDetailID === billDetailID) {
                 i.PayAmount = Number(payment);
             }
@@ -103,9 +102,13 @@ const PaymentWork = ({
     };
 
     const handleSaveEdit = () => {
+        // haha
         let tmpArray = toPaymentDetailInfo.map((i) => i);
         tmpArray.forEach((i) => {
-            i.PayAmount = i.PayAmount ? i.PayAmount : Number(i.ReceivedAmount - i.PaidAmount);
+            // i.PayAmount = i.PayAmount ? i.PayAmount : Number(i.ReceivedAmount - i.PaidAmount);
+            i.PayAmount = i.PayAmount
+                ? i.PayAmount
+                : new Decimal(i.ExgReceivedAmount).minus(new Decimal(i.PaidAmount)).toNumber();
         });
         savePaymentEdit(tmpArray);
     };
@@ -250,9 +253,6 @@ const PaymentWork = ({
                                                 計帳段號
                                             </StyledTableCell>
                                             <StyledTableCell align="center">會員</StyledTableCell>
-                                            {/* <StyledTableCell align="center">
-                                                應收金額
-                                            </StyledTableCell> */}
                                             <StyledTableCell align="center">
                                                 已實收金額
                                             </StyledTableCell>
@@ -376,7 +376,6 @@ const PaymentWork = ({
                                                                         ? row.PayAmount
                                                                         : defaultPayment
                                                                 }
-                                                                // type="number"
                                                                 onChange={(e) => {
                                                                     changePayAmount(
                                                                         e.target.value,

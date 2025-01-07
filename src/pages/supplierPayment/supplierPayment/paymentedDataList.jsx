@@ -71,6 +71,7 @@ const PaymentedDataList = ({ listInfo }) => {
                             <StyledTableCell align="center">總金額</StyledTableCell>
                             <StyledTableCell align="center">累計實收金額</StyledTableCell>
                             <StyledTableCell align="center">累計實付金額</StyledTableCell>
+                            <StyledTableCell align="center">幣別</StyledTableCell>
                             <StyledTableCell align="center">Action</StyledTableCell>
                         </TableRow>
                     </TableHead>
@@ -113,6 +114,9 @@ const PaymentedDataList = ({ listInfo }) => {
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
                                         {handleNumber(row?.InvoiceWKMaster?.PaidAmount)}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="center">
+                                        {handleNumber(row?.InvoiceWKMaster?.Code)}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Box

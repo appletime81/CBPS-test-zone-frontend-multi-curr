@@ -2,26 +2,9 @@ import { useState, useRef, useEffect } from 'react';
 
 // project import
 import { handleNumber, BootstrapDialogTitle } from 'components/commonFunction';
-import {
-    combineInvo,
-    isBillNoCheckOK,
-    initBillMasterBillDetail,
-    generateBillNoCovert,
-} from 'components/apis';
+import { combineInvo, isBillNoCheckOK, initBillMasterBillDetail, generateBillNoCovert } from 'components/apis';
 // material-ui
-import {
-    Box,
-    Typography,
-    Button,
-    Table,
-    Dialog,
-    DialogContent,
-    Grid,
-    FormControl,
-    DialogActions,
-    TextField,
-    Checkbox,
-} from '@mui/material';
+import { Typography, Button, Table, Dialog, DialogContent, Grid, FormControl, DialogActions, TextField, Checkbox } from '@mui/material';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
@@ -45,25 +28,17 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
         // backgroundColor: theme.palette.common.gary,
         color: theme.palette.common.black,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
+        paddingBottom: '0.2rem'
     },
     [`&.${tableCellClasses.body}.totalAmount`]: {
         fontSize: 14,
         paddingTop: '0.2rem',
         paddingBottom: '0.2rem',
-        backgroundColor: '#CFD8DC',
-    },
+        backgroundColor: '#CFD8DC'
+    }
 }));
 
-const ToCombineDataList = ({
-    handleDialogClose,
-    isDialogOpen,
-    dataList,
-    cbToCn,
-    setCbToCn,
-    receivableQuery,
-    initList,
-}) => {
+const ToCombineDataList = ({ handleDialogClose, isDialogOpen, dataList, cbToCn, setCbToCn, receivableQuery, initList }) => {
     const dispatch = useDispatch();
     const [issueDate, setIssueDate] = useState(new Date()); //發票日期
     const [poNo, setPoNo] = useState(''); //PO號碼
@@ -106,15 +81,15 @@ const ToCombineDataList = ({
     //自動產生號碼
     const billNoGenerate = (e) => {
         let tmpArray = {
-            BillingNo: billingNoOld.current,
+            BillingNo: billingNoOld.current
         };
         fetch(generateBillNoCovert, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
             },
-            body: JSON.stringify(tmpArray),
+            body: JSON.stringify(tmpArray)
         })
             .then((res) => res.json())
             .then((data) => {
@@ -133,13 +108,13 @@ const ToCombineDataList = ({
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請填寫帳單號碼',
-                    },
-                }),
+                        message: '請填寫帳單號碼'
+                    }
+                })
             );
         } else {
             let tmpArray = {
-                BillingNo: billingNo,
+                BillingNo: billingNo
             };
             billList.BillMaster.BillingNo = billingNo;
             billList.DueDate = dayjs(issueDate).format('YYYY-MM-DD HH:mm:ss');
@@ -149,9 +124,9 @@ const ToCombineDataList = ({
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
                 },
-                body: JSON.stringify(tmpArray),
+                body: JSON.stringify(tmpArray)
             })
                 .then((res) => res.json())
                 .then((data) => {
@@ -161,9 +136,9 @@ const ToCombineDataList = ({
                             method: 'POST',
                             headers: {
                                 'Content-type': 'application/json',
-                                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
                             },
-                            body: JSON.stringify(billList),
+                            body: JSON.stringify(billList)
                         })
                             .then((res) => res.json())
                             .then(() => {
@@ -172,9 +147,9 @@ const ToCombineDataList = ({
                                         messageStateOpen: {
                                             isOpen: true,
                                             severity: 'success',
-                                            message: '合併帳單成功',
-                                        },
-                                    }),
+                                            message: '合併帳單成功'
+                                        }
+                                    })
                                 );
                                 //資料初始化
                                 setIssueDate(new Date());
@@ -189,9 +164,9 @@ const ToCombineDataList = ({
                                         messageStateOpen: {
                                             isOpen: true,
                                             severity: 'error',
-                                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                                        },
-                                    }),
+                                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                                        }
+                                    })
                                 );
                             });
                     } else {
@@ -200,9 +175,9 @@ const ToCombineDataList = ({
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'error',
-                                    message: '帳單號碼已重複',
-                                },
-                            }),
+                                    message: '帳單號碼已重複'
+                                }
+                            })
                         );
                     }
                 })
@@ -212,9 +187,9 @@ const ToCombineDataList = ({
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
         }
@@ -246,9 +221,9 @@ const ToCombineDataList = ({
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
                 },
-                body: JSON.stringify(sendComBineData.current),
+                body: JSON.stringify(sendComBineData.current)
             })
                 .then((res) => res.json())
                 .then((data) => {
@@ -260,9 +235,9 @@ const ToCombineDataList = ({
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'error',
-                                    message: '請選擇同一會員進行合併帳單',
-                                },
-                            }),
+                                    message: '請選擇同一會員進行合併帳單'
+                                }
+                            })
                         );
                         handleDialogClose();
                     } else if (data?.SubmarineCable === 'SubmarineCable is not unique') {
@@ -272,9 +247,9 @@ const ToCombineDataList = ({
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'error',
-                                    message: '請選擇同一海纜進行合併帳單',
-                                },
-                            }),
+                                    message: '請選擇同一海纜進行合併帳單'
+                                }
+                            })
                         );
                     } else if (data?.ToCode === 'ToCode is not unique') {
                         handleDialogClose();
@@ -283,9 +258,9 @@ const ToCombineDataList = ({
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'error',
-                                    message: '請選擇同一幣別進行合併帳單',
-                                },
-                            }),
+                                    message: '請選擇同一幣別進行合併帳單'
+                                }
+                            })
                         );
                     } else if (data?.WorkTitle === 'WorkTitle is not unique') {
                         handleDialogClose();
@@ -294,9 +269,9 @@ const ToCombineDataList = ({
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'error',
-                                    message: '請選擇同一海纜作業進行合併帳單',
-                                },
-                            }),
+                                    message: '請選擇同一海纜作業進行合併帳單'
+                                }
+                            })
                         );
                     } else if (data?.alert_msg) {
                         handleDialogClose();
@@ -305,9 +280,9 @@ const ToCombineDataList = ({
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'error',
-                                    message: data.alert_msg,
-                                },
-                            }),
+                                    message: data.alert_msg
+                                }
+                            })
                         );
                     } else {
                         billingNoOld.current = data.BillMaster.BillingNo;
@@ -325,9 +300,9 @@ const ToCombineDataList = ({
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
         }
@@ -338,25 +313,9 @@ const ToCombineDataList = ({
             <Dialog maxWidth="lg" fullWidth open={isDialogOpen}>
                 <BootstrapDialogTitle>合併帳單作業</BootstrapDialogTitle>
                 <DialogContent>
-                    <Grid
-                        container
-                        spacing={1}
-                        display="flex"
-                        justifyContent="center"
-                        alignItems="center"
-                    >
-                        <Grid
-                            item
-                            md={1}
-                            lg={1}
-                            display="flex"
-                            justifyContent="center"
-                            alignItems="center"
-                        >
-                            <Typography
-                                variant="h5"
-                                sx={{ fontSize: { lg: '0.7rem', xl: '0.88rem' } }}
-                            >
+                    <Grid container spacing={1} display="flex" justifyContent="center" alignItems="center">
+                        <Grid item md={1} lg={1} display="flex" justifyContent="center" alignItems="center">
+                            <Typography variant="h5" sx={{ fontSize: { lg: '0.7rem', xl: '0.88rem' } }}>
                                 帳單到期日：
                             </Typography>
                         </Grid>
@@ -369,25 +328,13 @@ const ToCombineDataList = ({
                                         onChange={(e) => {
                                             setIssueDate(e);
                                         }}
-                                        renderInput={(params) => (
-                                            <TextField size="small" {...params} />
-                                        )}
+                                        renderInput={(params) => <TextField size="small" {...params} />}
                                     />
                                 </LocalizationProvider>
                             </FormControl>
                         </Grid>
-                        <Grid
-                            item
-                            md={1}
-                            lg={1}
-                            display="flex"
-                            justifyContent="center"
-                            alignItems="center"
-                        >
-                            <Typography
-                                variant="h5"
-                                sx={{ fontSize: { lg: '0.7rem', xl: '0.88rem' } }}
-                            >
+                        <Grid item md={1} lg={1} display="flex" justifyContent="center" alignItems="center">
+                            <Typography variant="h5" sx={{ fontSize: { lg: '0.7rem', xl: '0.88rem' } }}>
                                 PO號碼：
                             </Typography>
                         </Grid>
@@ -404,18 +351,8 @@ const ToCombineDataList = ({
                                 }}
                             />
                         </Grid>
-                        <Grid
-                            item
-                            md={1}
-                            lg={1}
-                            display="flex"
-                            justifyContent="center"
-                            alignItems="center"
-                        >
-                            <Typography
-                                variant="h5"
-                                sx={{ fontSize: { lg: '0.7rem', xl: '0.88rem' } }}
-                            >
+                        <Grid item md={1} lg={1} display="flex" justifyContent="center" alignItems="center">
+                            <Typography variant="h5" sx={{ fontSize: { lg: '0.7rem', xl: '0.88rem' } }}>
                                 帳單號碼：
                             </Typography>
                         </Grid>
@@ -432,20 +369,8 @@ const ToCombineDataList = ({
                                 }}
                             />
                         </Grid>
-                        <Grid
-                            item
-                            md={2}
-                            lg={2}
-                            display="flex"
-                            justifyContent="start"
-                            alignItems="center"
-                        >
-                            <Button
-                                sx={{ ml: '0.rem' }}
-                                variant="contained"
-                                size="small"
-                                onClick={billNoGenerate}
-                            >
+                        <Grid item md={2} lg={2} display="flex" justifyContent="start" alignItems="center">
+                            <Button sx={{ ml: '0.rem' }} variant="contained" size="small" onClick={billNoGenerate}>
                                 自動產生
                             </Button>
                         </Grid>
@@ -458,16 +383,10 @@ const ToCombineDataList = ({
                                     <TableHead>
                                         <TableRow>
                                             <StyledTableCell align="center">會員</StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                發票號碼
-                                            </StyledTableCell>
+                                            <StyledTableCell align="center">發票號碼</StyledTableCell>
                                             <StyledTableCell align="center">供應商</StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                海纜名稱
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                發票日期
-                                            </StyledTableCell>
+                                            <StyledTableCell align="center">海纜名稱</StyledTableCell>
+                                            <StyledTableCell align="center">發票日期</StyledTableCell>
                                             <StyledTableCell align="center">總金額</StyledTableCell>
                                         </TableRow>
                                     </TableHead>
@@ -478,57 +397,33 @@ const ToCombineDataList = ({
                                                     key={row.PartyName + id}
                                                     sx={{
                                                         '&:last-child td, &:last-child th': {
-                                                            border: 0,
-                                                        },
+                                                            border: 0
+                                                        }
                                                     }}
                                                 >
-                                                    <TableCell align="center">
-                                                        {row.PartyName}
-                                                    </TableCell>
-                                                    <TableCell align="center">
-                                                        {row.InvoiceNo}
-                                                    </TableCell>
-                                                    <TableCell align="center">
-                                                        {row.SupplierName}
-                                                    </TableCell>
-                                                    <TableCell align="center">
-                                                        {row.SubmarineCable}
-                                                    </TableCell>
-                                                    <TableCell align="center">
-                                                        {dayjs(row.IssueDate).format('YYYY/MM/DD')}
-                                                    </TableCell>
-                                                    <TableCell align="center">
-                                                        ${handleNumber(row.FeeAmount)}
-                                                    </TableCell>
+                                                    <TableCell align="center">{row.PartyName}</TableCell>
+                                                    <TableCell align="center">{row.InvoiceNo}</TableCell>
+                                                    <TableCell align="center">{row.SupplierName}</TableCell>
+                                                    <TableCell align="center">{row.SubmarineCable}</TableCell>
+                                                    <TableCell align="center">{dayjs(row.IssueDate).format('YYYY/MM/DD')}</TableCell>
+                                                    <TableCell align="center">{handleNumber(row.FeeAmount)}</TableCell>
                                                 </TableRow>
                                             );
                                         })}
                                         <TableRow
                                             sx={{
-                                                '&:last-child td, &:last-child th': { border: 0 },
+                                                '&:last-child td, &:last-child th': { border: 0 }
                                             }}
                                         >
                                             <StyledTableCell className="totalAmount" align="center">
                                                 Total
                                             </StyledTableCell>
-                                            <StyledTableCell
-                                                className="totalAmount"
-                                                align="center"
-                                            ></StyledTableCell>
-                                            <StyledTableCell
-                                                className="totalAmount"
-                                                align="center"
-                                            ></StyledTableCell>
-                                            <StyledTableCell
-                                                className="totalAmount"
-                                                align="center"
-                                            ></StyledTableCell>
-                                            <StyledTableCell
-                                                className="totalAmount"
-                                                align="center"
-                                            ></StyledTableCell>
+                                            <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
+                                            <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
+                                            <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
+                                            <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
                                             <StyledTableCell className="totalAmount" align="center">
-                                                ${handleNumber(totalAmount.current)}
+                                                {handleNumber(totalAmount.current)}
                                             </StyledTableCell>
                                         </TableRow>
                                     </TableBody>
@@ -562,22 +457,16 @@ const ToCombineDataList = ({
                             <StyledTableCell align="center">供應商</StyledTableCell>
                             <StyledTableCell align="center">發票日期</StyledTableCell>
                             <StyledTableCell align="center">總金額</StyledTableCell>
+                            <StyledTableCell align="center">幣別</StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {dataList.map((row, id) => {
                             tmpBMArray = [];
                             return (
-                                <TableRow
-                                    key={row?.FeeItem + row?.InvoiceNo + id}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
+                                <TableRow key={row?.FeeItem + row?.InvoiceNo + id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <TableCell align="center">
-                                        <Checkbox
-                                            value={row?.InvDetailID}
-                                            onChange={handleChange}
-                                            checked={cbToCn[row?.InvDetailID] || false}
-                                        />
+                                        <Checkbox value={row?.InvDetailID} onChange={handleChange} checked={cbToCn[row?.InvDetailID] || false} />
                                     </TableCell>
                                     <TableCell align="center">{row?.FeeItem}</TableCell>
                                     <TableCell align="center">{row?.PartyName}</TableCell>
@@ -586,12 +475,9 @@ const ToCombineDataList = ({
                                     <TableCell align="center">{row?.BillMilestone}</TableCell>
                                     <TableCell align="center">{row?.InvoiceNo}</TableCell>
                                     <TableCell align="center">{row?.SupplierName}</TableCell>
-                                    <TableCell align="center">
-                                        {dayjs(row?.IssueDate).format('YYYY/MM/DD')}
-                                    </TableCell>
-                                    <TableCell align="center">
-                                        {handleNumber(row?.FeeAmountPost)} {row.ToCode}
-                                    </TableCell>
+                                    <TableCell align="center">{dayjs(row?.IssueDate).format('YYYY/MM/DD')}</TableCell>
+                                    <TableCell align="center">{handleNumber(row?.FeeAmountPost)}</TableCell>
+                                    <TableCell align="center">{row.ToCode}</TableCell>
                                 </TableRow>
                             );
                         })}

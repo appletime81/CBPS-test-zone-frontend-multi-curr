@@ -123,6 +123,7 @@ const CreditBalanceDataList = ({ listInfo }) => {
                             <StyledTableCell align="center">海纜名稱</StyledTableCell>
                             <StyledTableCell align="center">海纜作業</StyledTableCell>
                             <StyledTableCell align="center">匯款總金額</StyledTableCell>
+                            <StyledTableCell align="center">幣別</StyledTableCell>
                             <StyledTableCell align="center">Action</StyledTableCell>
                         </TableRow>
                     </TableHead>
@@ -141,9 +142,10 @@ const CreditBalanceDataList = ({ listInfo }) => {
                                     <StyledTableCell align="center">
                                         {row.WorkTitle}
                                     </StyledTableCell>
-                                    <StyledTableCell align="center">{`$${handleNumber(
-                                        row.TotalFeeAmount,
-                                    )}`}</StyledTableCell>
+                                    <StyledTableCell align="center">
+                                        {handleNumber(row.TotalFeeAmount)}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="center">{row.Code}</StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Box
                                             sx={{

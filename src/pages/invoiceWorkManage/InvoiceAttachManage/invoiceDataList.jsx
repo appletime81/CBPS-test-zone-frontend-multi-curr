@@ -226,8 +226,9 @@ const InvoiceDataList = ({ listInfo, page, setPage }) => {
                             <StyledTableCell align="center">發票到期日</StyledTableCell>
                             <StyledTableCell align="center">明細數量</StyledTableCell>
                             <StyledTableCell align="center">總金額</StyledTableCell>
+                            <StyledTableCell align="center">總金額幣別</StyledTableCell>
                             <StyledTableCell align="center">累計實付金額</StyledTableCell>
-                            {/* <StyledTableCell align="center">累計減項金額</StyledTableCell> */}
+                            <StyledTableCell align="center">累計實付幣別</StyledTableCell>
                             <StyledTableCell align="center">Action</StyledTableCell>
                         </TableRow>
                     </TableHead>
@@ -275,10 +276,14 @@ const InvoiceDataList = ({ listInfo, page, setPage }) => {
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
                                         {handleNumber(row.InvoiceWKMaster.TotalAmount)}{' '}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="center">
                                         {row.InvoiceWKMaster.Code}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
                                         {handleNumber(row.InvoiceWKMaster.PaidAmount)}{' '}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="center">
                                         {row.InvoiceWKMaster.ToCode}
                                     </StyledTableCell>
                                     <TableCell align="center">

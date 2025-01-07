@@ -285,6 +285,7 @@ const ResearchBillDataList = ({ listInfo, setDetailInfo }) => {
                             <StyledTableCell align="center">帳單到期日</StyledTableCell>
                             <StyledTableCell align="center">應收金額</StyledTableCell>
                             <StyledTableCell align="center">已實收金額</StyledTableCell>
+                            <StyledTableCell align="center">幣別</StyledTableCell>
                             <StyledTableCell align="center">狀態</StyledTableCell>
                             <StyledTableCell align="center">Action</StyledTableCell>
                         </TableRow>
@@ -320,6 +321,9 @@ const ResearchBillDataList = ({ listInfo, setDetailInfo }) => {
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
                                         {handleNumber(row.BillMaster.ReceivedAmountSum)}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="center">
+                                        {row.BillMaster.Code}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
                                         {row.BillMaster.Status === 'COMPLETE'

@@ -147,6 +147,7 @@ const SignedDataList = ({ dataList, receivableQuery }) => {
                             <StyledTableCell align="center">截止日</StyledTableCell>
                             <StyledTableCell align="center">明細數量</StyledTableCell>
                             <StyledTableCell align="center">總金額</StyledTableCell>
+                            <StyledTableCell align="center">幣別</StyledTableCell>
                             <StyledTableCell align="center">Action</StyledTableCell>
                         </TableRow>
                     </TableHead>
@@ -185,6 +186,8 @@ const SignedDataList = ({ dataList, receivableQuery }) => {
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
                                         {handleNumber(row.BillMaster.FeeAmountSum)}{' '}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="center">
                                         {row.BillMaster.Code}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">

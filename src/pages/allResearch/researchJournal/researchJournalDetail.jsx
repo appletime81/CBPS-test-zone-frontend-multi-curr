@@ -1,4 +1,3 @@
-import { useState, useRef } from 'react';
 import { Table } from '@mui/material';
 
 // project import
@@ -28,7 +27,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     },
 }));
 
-const ResearchBillDetail = ({ datailInfo, isDetailShow }) => {
+const ResearchBillDetail = ({ datailInfo }) => {
     return (
         <TableContainer component={Paper} sx={{ maxHeight: 350 }}>
             <Table sx={{ minWidth: 300 }} stickyHeader>
@@ -54,9 +53,9 @@ const ResearchBillDetail = ({ datailInfo, isDetailShow }) => {
                                 <StyledTableCell align="center">{row.PartyName}</StyledTableCell>
                                 <StyledTableCell align="center">{row.BillingNo}</StyledTableCell>
                                 <StyledTableCell align="center">{row.WorkTitle}</StyledTableCell>
-                                <StyledTableCell align="center">{`$${handleNumber(
-                                    row.CurrAmount,
-                                )}`}</StyledTableCell>
+                                <StyledTableCell align="center">
+                                    {handleNumber(row.CurrAmount)}
+                                </StyledTableCell>
                                 <StyledTableCell align="center">
                                     {dayjs(row.CreateDate).format('YYYY/MM/DD')}
                                 </StyledTableCell>
