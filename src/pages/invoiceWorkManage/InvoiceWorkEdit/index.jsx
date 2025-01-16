@@ -121,9 +121,9 @@ const InvoiceWorkManage = () => {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
             },
-            body: JSON.stringify(queryApi.current),
+            body: JSON.stringify(queryApi.current)
         })
             .then((res) => res.json())
             .then((data) => {
@@ -135,9 +135,9 @@ const InvoiceWorkManage = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -147,9 +147,9 @@ const InvoiceWorkManage = () => {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
             },
-            body: JSON.stringify(queryApiTemporary),
+            body: JSON.stringify(queryApiTemporary)
         })
             .then((res) => res.json())
             .then((data) => {
@@ -161,9 +161,9 @@ const InvoiceWorkManage = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -173,9 +173,9 @@ const InvoiceWorkManage = () => {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
             },
-            body: JSON.stringify(queryApiTemporary),
+            body: JSON.stringify(queryApiTemporary)
         })
             .then((res) => res.json())
             .then((data) => {
@@ -188,9 +188,9 @@ const InvoiceWorkManage = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -213,7 +213,7 @@ const InvoiceWorkManage = () => {
         TotalAmount,
         CurrencyExgID,
         Purpose,
-        fromCode,
+        fromCode
     ) => {
         return {
             WKMasterID,
@@ -233,7 +233,7 @@ const InvoiceWorkManage = () => {
             TotalAmount,
             CurrencyExgID,
             Purpose,
-            Code: fromCode,
+            Code: fromCode
         };
     };
 
@@ -268,9 +268,9 @@ const InvoiceWorkManage = () => {
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'error',
-                                    message: data.alert_msg,
-                                },
-                            }),
+                                    message: data.alert_msg
+                                }
+                            })
                         );
                     }
                 })
@@ -281,13 +281,57 @@ const InvoiceWorkManage = () => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
         }
-    }
+    };
+
+    const getPartList = () => {
+        fetch(dropdownmenuParties, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+            },
+            body: JSON.stringify({
+                SubmarineCable: submarineCable,
+                WorkTitle: workTitle,
+                IsLiability: isLiability.toString()
+            })
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (Array.isArray(data)) {
+                    setPartyNameList(data);
+                }
+                if (data.alert_msg) {
+                    setPartyNameList([]);
+                    dispatch(
+                        setMessageStateOpen({
+                            messageStateOpen: {
+                                isOpen: true,
+                                severity: 'error',
+                                message: data.alert_msg
+                            }
+                        })
+                    );
+                }
+            })
+            .catch(() => {
+                dispatch(
+                    setMessageStateOpen({
+                        messageStateOpen: {
+                            isOpen: true,
+                            severity: 'error',
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
+                );
+            });
+    };
 
     useEffect(() => {
         itemInfoInitial();
@@ -296,7 +340,7 @@ const InvoiceWorkManage = () => {
         firstQueryInit();
         fetch(supplierNameDropDownUnique, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
         })
             .then((res) => res.json())
             .then((data) => {
@@ -310,9 +354,9 @@ const InvoiceWorkManage = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         //海纜名稱
@@ -327,9 +371,9 @@ const InvoiceWorkManage = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         fetch(billMilestoneLiabilityList, { method: 'GET' })
@@ -343,45 +387,46 @@ const InvoiceWorkManage = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
-            fetch(getWorkTitle, {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-                },
-                body: JSON.stringify({}),
-            })
-                .then((res) => res.json())
-                .then((data) => {
-                    if (Array.isArray(data)) {
-                        setWorkTitleList(data);
-                    } else {
-                        setWorkTitleList([]);
-                    }
-                })
-                .catch(() => {
+        fetch(getWorkTitle, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+            },
+            body: JSON.stringify({})
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (Array.isArray(data)) {
+                    setWorkTitleList(data);
+                } else {
                     setWorkTitleList([]);
-                    dispatch(
-                        setMessageStateOpen({
-                            messageStateOpen: {
-                                isOpen: true,
-                                severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
-                    );
-                });
+                }
+            })
+            .catch(() => {
+                setWorkTitleList([]);
+                dispatch(
+                    setMessageStateOpen({
+                        messageStateOpen: {
+                            isOpen: true,
+                            severity: 'error',
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
+                );
+            });
     }, []);
 
     useEffect(() => {
         if ((modifyItem !== '' && action === '編輯') || (modifyItem !== '' && action === '檢視')) {
             listInfo.forEach((i) => {
                 if (i.InvoiceWKMaster.InvoiceNo === modifyItem) {
+                    console.log('i=>>', i);
                     setSupplierName(i.InvoiceWKMaster.SupplierName);
                     setInvoiceNo(i.InvoiceWKMaster.InvoiceNo);
                     setSubmarineCable(i.InvoiceWKMaster.SubmarineCable);
@@ -401,7 +446,7 @@ const InvoiceWorkManage = () => {
                     rateInfo.current = {
                         Purpose: i.InvoiceWKMaster.Purpose,
                         ExgRate: i.InvoiceWKMaster.ExgRate,
-                        ToCode: i.InvoiceWKMaster.ToCode,
+                        ToCode: i.InvoiceWKMaster.ToCode
                     };
                     wKMasterID.current = i.InvoiceWKMaster.WKMasterID;
                 }
@@ -421,15 +466,15 @@ const InvoiceWorkManage = () => {
         if (action === '待立帳') {
             let tmpArray = {
                 WKMasterID: tmpModifyItem,
-                Status: 'VALIDATED',
+                Status: 'VALIDATED'
             };
             fetch(updateInvoice, {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
                 },
-                body: JSON.stringify(tmpArray),
+                body: JSON.stringify(tmpArray)
             })
                 .then((res) => res.json())
                 .then(() => {
@@ -438,9 +483,9 @@ const InvoiceWorkManage = () => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'success',
-                                message: '待立帳成功',
-                            },
-                        }),
+                                message: '待立帳成功'
+                            }
+                        })
                     );
                     setPage(0);
                     setAction('');
@@ -452,23 +497,23 @@ const InvoiceWorkManage = () => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
         }
         if (action === '作廢') {
             let tmpArray = {
-                WKMasterID: tmpModifyItem,
+                WKMasterID: tmpModifyItem
             };
             fetch(afterBilled, {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
                 },
-                body: JSON.stringify(tmpArray),
+                body: JSON.stringify(tmpArray)
             })
                 .then((res) => res.json())
                 .then((data) => {
@@ -478,9 +523,9 @@ const InvoiceWorkManage = () => {
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'error',
-                                    message: '作廢失敗',
-                                },
-                            }),
+                                    message: '作廢失敗'
+                                }
+                            })
                         );
                         returnDataList.current = data.BillMaster;
                         setIsReturnOpen(true);
@@ -491,9 +536,9 @@ const InvoiceWorkManage = () => {
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'success',
-                                    message: '作廢成功',
-                                },
-                            }),
+                                    message: '作廢成功'
+                                }
+                            })
                         );
                     }
                 })
@@ -503,23 +548,23 @@ const InvoiceWorkManage = () => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
         }
         if (action === '退回') {
             let tmpArray = {
-                WKMasterID: tmpModifyItem,
+                WKMasterID: tmpModifyItem
             };
             fetch(returnToValidated, {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
                 },
-                body: JSON.stringify(tmpArray),
+                body: JSON.stringify(tmpArray)
             })
                 .then((res) => res.json())
                 .then((data) => {
@@ -529,9 +574,9 @@ const InvoiceWorkManage = () => {
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'error',
-                                    message: '退回失敗',
-                                },
-                            }),
+                                    message: '退回失敗'
+                                }
+                            })
                         );
                         returnDataList.current = data.BillMaster;
                         setIsReturnOpen(true);
@@ -542,9 +587,9 @@ const InvoiceWorkManage = () => {
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'success',
-                                    message: '退回成功',
-                                },
-                            }),
+                                    message: '退回成功'
+                                }
+                            })
                         );
                     }
                 })
@@ -554,23 +599,23 @@ const InvoiceWorkManage = () => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
         }
         if (action === '刪除') {
             let tmpArray = {
-                WKMasterID: tmpModifyItem,
+                WKMasterID: tmpModifyItem
             };
             fetch(deleteInvoiceWKMaster, {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
                 },
-                body: JSON.stringify(tmpArray),
+                body: JSON.stringify(tmpArray)
             })
                 .then((res) => res.json())
                 .then(() => {
@@ -579,9 +624,9 @@ const InvoiceWorkManage = () => {
                         method: 'POST',
                         headers: {
                             'Content-type': 'application/json',
-                            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
                         },
-                        body: JSON.stringify(tmpArray),
+                        body: JSON.stringify(tmpArray)
                     })
                         .then((res) => res.json())
                         .then(() => {
@@ -593,9 +638,9 @@ const InvoiceWorkManage = () => {
                                     messageStateOpen: {
                                         isOpen: true,
                                         severity: 'success',
-                                        message: '刪除成功',
-                                    },
-                                }),
+                                        message: '刪除成功'
+                                    }
+                                })
                             );
                         })
                         .catch(() => {
@@ -604,9 +649,9 @@ const InvoiceWorkManage = () => {
                                     messageStateOpen: {
                                         isOpen: true,
                                         severity: 'error',
-                                        message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                                    },
-                                }),
+                                        message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                                    }
+                                })
                             );
                         });
                 })
@@ -616,9 +661,9 @@ const InvoiceWorkManage = () => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
         }
@@ -636,9 +681,9 @@ const InvoiceWorkManage = () => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '總金額不等於費用項目金額加總',
-                    },
-                }),
+                        message: '總金額不等於費用項目金額加總'
+                    }
+                })
             );
             return false;
         }
@@ -648,9 +693,9 @@ const InvoiceWorkManage = () => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '不攤分請選擇會員名稱',
-                    },
-                }),
+                        message: '不攤分請選擇會員名稱'
+                    }
+                })
             );
             return false;
         }
@@ -660,9 +705,9 @@ const InvoiceWorkManage = () => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入海纜名稱',
-                    },
-                }),
+                        message: '請輸入海纜名稱'
+                    }
+                })
             );
             return false;
         }
@@ -672,17 +717,17 @@ const InvoiceWorkManage = () => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入海纜作業',
-                    },
-                }),
+                        message: '請輸入海纜作業'
+                    }
+                })
             );
             return false;
         }
         if (supplierName === '') {
             dispatch(
                 setMessageStateOpen({
-                    messageStateOpen: { isOpen: true, severity: 'error', message: '請輸入供應商' },
-                }),
+                    messageStateOpen: { isOpen: true, severity: 'error', message: '請輸入供應商' }
+                })
             );
             return false;
         }
@@ -692,9 +737,9 @@ const InvoiceWorkManage = () => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入發票號碼',
-                    },
-                }),
+                        message: '請輸入發票號碼'
+                    }
+                })
             );
             return false;
         }
@@ -704,9 +749,9 @@ const InvoiceWorkManage = () => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入合約種類',
-                    },
-                }),
+                        message: '請輸入合約種類'
+                    }
+                })
             );
             return false;
         }
@@ -716,9 +761,9 @@ const InvoiceWorkManage = () => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入會員名稱',
-                    },
-                }),
+                        message: '請輸入會員名稱'
+                    }
+                })
             );
             return false;
         }
@@ -729,9 +774,7 @@ const InvoiceWorkManage = () => {
         if (infoCheck()) {
             let tmpArray = createData(
                 wKMasterID.current,
-                invoiceNo.trim() === ''
-                    ? 'No.' + dayjs(new Date()).format('YYYYMMDDHHmmss')
-                    : invoiceNo,
+                invoiceNo.trim() === '' ? 'No.' + dayjs(new Date()).format('YYYYMMDDHHmmss') : invoiceNo,
                 supplierName,
                 submarineCable,
                 workTitle,
@@ -749,14 +792,14 @@ const InvoiceWorkManage = () => {
                 rateInfo.current.Purpose,
                 fromCode,
                 rateInfo.current.ExgRate,
-                rateInfo.current.ToCode,
+                rateInfo.current.ToCode
             );
             invoiceDetailInfo.forEach((i) => {
                 i.FeeAmount = Number(i.FeeAmount);
             });
             let combineArray = {
                 InvoiceWKMaster: tmpArray,
-                InvoiceWKDetail: invoiceDetailInfo,
+                InvoiceWKDetail: invoiceDetailInfo
             };
             let tmpModifyItem;
             listInfo.forEach((i) => {
@@ -765,15 +808,15 @@ const InvoiceWorkManage = () => {
                 }
             });
             let tmpWKMasterID = {
-                WKMasterID: tmpModifyItem,
+                WKMasterID: tmpModifyItem
             };
             fetch(deleteInvoiceWKMaster, {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
                 },
-                body: JSON.stringify(tmpWKMasterID),
+                body: JSON.stringify(tmpWKMasterID)
             })
                 .then((res) => res.json())
                 .then(() => {
@@ -782,9 +825,9 @@ const InvoiceWorkManage = () => {
                         method: 'POST',
                         headers: {
                             'Content-type': 'application/json',
-                            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
                         },
-                        body: JSON.stringify(tmpWKMasterID),
+                        body: JSON.stringify(tmpWKMasterID)
                     })
                         .then((res) => res.json())
                         .then(() => {
@@ -793,10 +836,9 @@ const InvoiceWorkManage = () => {
                                 method: 'POST',
                                 headers: {
                                     'Content-type': 'application/json',
-                                    Authorization:
-                                        'Bearer' + localStorage.getItem('accessToken') ?? '',
+                                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
                                 },
-                                body: JSON.stringify(combineArray),
+                                body: JSON.stringify(combineArray)
                             })
                                 .then((res) => res.json())
                                 .then(() => {
@@ -805,9 +847,9 @@ const InvoiceWorkManage = () => {
                                             messageStateOpen: {
                                                 isOpen: true,
                                                 severity: 'success',
-                                                message: '儲存成功',
-                                            },
-                                        }),
+                                                message: '儲存成功'
+                                            }
+                                        })
                                     );
                                     // 重新query
                                     initQuery();
@@ -824,9 +866,9 @@ const InvoiceWorkManage = () => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
         }
@@ -848,15 +890,10 @@ const InvoiceWorkManage = () => {
         rateInfo.current = {};
         setCurrencyExgID(null);
         if (workTitle && submarineCable && action === '編輯') {
-            let snApi =
-                supplierNameListForInvoice +
-                'SubmarineCable=' +
-                submarineCable +
-                '&WorkTitle=' +
-                workTitle;
+            let snApi = supplierNameListForInvoice + 'SubmarineCable=' + submarineCable + '&WorkTitle=' + workTitle;
             fetch(snApi, {
                 method: 'GET',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
             })
                 .then((res) => res.json())
                 .then((data) => {
@@ -872,9 +909,9 @@ const InvoiceWorkManage = () => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                     setSupNmList([]);
                 });
@@ -883,122 +920,22 @@ const InvoiceWorkManage = () => {
             console.log('supplierName5=>>>>', supplierName);
             setSupNmList([{ SupplierName: supplierName }]);
         }
-
-        // rateInfo.current = {};
-        // setCurrencyExgID(null);
-        // if (workTitle && submarineCable) {
-        //     let bmApi =
-        //         billMilestoneList +
-        //         'SubmarineCable=' +
-        //         submarineCable +
-        //         '&WorkTitle=' +
-        //         workTitle +
-        //         '&End=false';
-        //     fetch(bmApi, { method: 'GET' })
-        //         .then((res) => res.json())
-        //         .then((data) => {
-        //             setBmStoneList(data);
-        //         })
-        //         .catch(() => {
-        //             dispatch(
-        //                 setMessageStateOpen({
-        //                     messageStateOpen: {
-        //                         isOpen: true,
-        //                         severity: 'error',
-        //                         message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-        //                     },
-        //                 }),
-        //             );
-        //         });
-        //     fetch(dropdownmenuParties, {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-type': 'application/json',
-        //             Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-        //         },
-        //         body: JSON.stringify({
-        //             SubmarineCable: submarineCable,
-        //             WorkTitle: workTitle,
-        //         }),
-        //     })
-        //         .then((res) => res.json())
-        //         .then((data) => {
-        //             console.log('data=>>', data);
-        //             setPartyNameList(data);
-        //         })
-        //         .catch(() => {
-        //             dispatch(
-        //                 setMessageStateOpen({
-        //                     messageStateOpen: {
-        //                         isOpen: true,
-        //                         severity: 'error',
-        //                         message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-        //                     },
-        //                 }),
-        //             );
-        //         });
-        // } else {
-        //     setBmStoneList([]);
-        //     setSupNmList([]);
-        // }
     }, [workTitle, submarineCable]);
 
     useEffect(() => {
-        rateInfo.current = {};
+        // rateInfo.current = {}; 使用者更動海纜名稱跟海纜作業才能清空匯率資料
         setCurrencyExgID(null);
-        if (workTitle && submarineCable && isLiability !== 'false') {
-            let bmStone =
-                billMilestoneList +
-                'SubmarineCable=' +
-                submarineCable +
-                '&WorkTitle=' +
-                workTitle +
-                '&End=false&IsLiability=' +
-                isLiability;
+        console.log('workTitle=>>', workTitle, submarineCable, isLiability.toString());
+        console.log('1=>>', workTitle && submarineCable && isLiability.toString() !== 'false');
+        console.log('2=>>', workTitle && submarineCable && isLiability.toString() === 'false');
+        if (workTitle && submarineCable && isLiability.toString() !== 'false') {
+            let bmStone = billMilestoneList + 'SubmarineCable=' + submarineCable + '&WorkTitle=' + workTitle + '&End=false&IsLiability=' + isLiability;
             getBmStoneList(bmStone);
-        } else if (workTitle && submarineCable && isLiability === 'false' && !partyName) {
-            fetch(dropdownmenuParties, {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-                },
-                body: JSON.stringify({
-                    SubmarineCable: submarineCable,
-                    WorkTitle: workTitle,
-                    IsLiability: isLiability,
-                }),
-            })
-                .then((res) => res.json())
-                .then((data) => {
-                    if (Array.isArray(data)) {
-                        setPartyNameList(data);
-                    }
-                    if (data.alert_msg) {
-                        setPartyNameList([]);
-                        dispatch(
-                            setMessageStateOpen({
-                                messageStateOpen: {
-                                    isOpen: true,
-                                    severity: 'error',
-                                    message: data.alert_msg,
-                                },
-                            }),
-                        );
-                    }
-                })
-                .catch(() => {
-                    dispatch(
-                        setMessageStateOpen({
-                            messageStateOpen: {
-                                isOpen: true,
-                                severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
-                    );
-                });
+            // getPartList();
+            // } else if (workTitle && submarineCable && isLiability.toString() === 'false' && !partyName) {
+        } else if (workTitle && submarineCable && isLiability.toString() === 'false') {
             setBmStoneList([]);
+            getPartList();
         } else {
             setBmStoneList([]);
             setPartyNameList([]);
@@ -1007,16 +944,7 @@ const InvoiceWorkManage = () => {
 
     useEffect(() => {
         if (workTitle && submarineCable && isLiability === 'false' && partyName) {
-            let bmStone =
-                billMilestoneList +
-                'SubmarineCable=' +
-                submarineCable +
-                '&WorkTitle=' +
-                workTitle +
-                '&End=false&IsLiability=' +
-                isLiability +
-                '&PartyName=' +
-                partyName;
+            let bmStone = billMilestoneList + 'SubmarineCable=' + submarineCable + '&WorkTitle=' + workTitle + '&End=false&IsLiability=' + isLiability + '&PartyName=' + partyName;
             getBmStoneList(bmStone);
         }
     }, [workTitle, submarineCable, isLiability, partyName]);
@@ -1038,9 +966,9 @@ const InvoiceWorkManage = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         fetch(billMilestoneLiabilityList, { method: 'GET' })
@@ -1054,14 +982,14 @@ const InvoiceWorkManage = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         fetch(getCurrencyData, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
         })
             .then((res) => res.json())
             .then((data) => {
@@ -1076,9 +1004,9 @@ const InvoiceWorkManage = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     }, []);
@@ -1096,12 +1024,7 @@ const InvoiceWorkManage = () => {
                 setCurrencyExgID={setCurrencyExgID}
                 rateInfo={rateInfo}
             />
-            <ReturnDataList
-                isReturnOpen={isReturnOpen}
-                handleReturnClose={handleReturnClose}
-                returnDataList={returnDataList.current}
-                actionBack={actionBack.current}
-            />
+            <ReturnDataList isReturnOpen={isReturnOpen} handleReturnClose={handleReturnClose} returnDataList={returnDataList.current} actionBack={actionBack.current} />
             <Grid container spacing={1}>
                 <Grid item xs={12}>
                     <MainCard sx={{ width: '100%' }}>
@@ -1125,13 +1048,7 @@ const InvoiceWorkManage = () => {
                     <MainCard title="發票資料列表" sx={{ width: '100%' }}>
                         <Grid container display="flex" spacing={2}>
                             <Grid item xs={12}>
-                                <InvoiceDataList
-                                    listInfo={listInfo}
-                                    setAction={setAction}
-                                    setModifyItem={setModifyItem}
-                                    page={page}
-                                    setPage={setPage}
-                                />
+                                <InvoiceDataList listInfo={listInfo} setAction={setAction} setModifyItem={setModifyItem} page={page} setPage={setPage} />
                             </Grid>
                         </Grid>
                     </MainCard>
@@ -1199,25 +1116,11 @@ const InvoiceWorkManage = () => {
                                     />
                                 </Grid>
                                 {action === '編輯' ? (
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        display="flex"
-                                        justifyContent="center"
-                                        alignItems="center"
-                                    >
-                                        <Button
-                                            variant="contained"
-                                            onClick={saveEdit}
-                                            sx={{ mx: 1 }}
-                                        >
+                                    <Grid item xs={12} display="flex" justifyContent="center" alignItems="center">
+                                        <Button variant="contained" onClick={saveEdit} sx={{ mx: 1 }}>
                                             儲存編輯
                                         </Button>
-                                        <Button
-                                            variant="contained"
-                                            onClick={cancelAdd}
-                                            sx={{ mx: 1 }}
-                                        >
+                                        <Button variant="contained" onClick={cancelAdd} sx={{ mx: 1 }}>
                                             取消編輯
                                         </Button>
                                     </Grid>
@@ -1227,11 +1130,7 @@ const InvoiceWorkManage = () => {
                     </Grid>
                 ) : null}
                 <Grid item xs={12} display="flex" justifyContent="center" alignItems="center">
-                    <Link
-                        to="/CreateJournal/CreateJournal"
-                        onClick={handleLink}
-                        style={{ color: '#262626', textDecoration: 'none' }}
-                    >
+                    <Link to="/CreateJournal/CreateJournal" onClick={handleLink} style={{ color: '#262626', textDecoration: 'none' }}>
                         <Button variant="contained">切換至立帳作業</Button>
                     </Link>
                 </Grid>

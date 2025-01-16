@@ -215,10 +215,7 @@ const ToDeductWork = ({
         setTmpCBArray([]);
         tmpDeductArray.current = [];
         editItem.current = '';
-        // orgFeeAmount.current = 0;
         dedAmount.current = 0;
-        // wHTAmountTotal.current = 0;
-        // setFeeAmountTotal(0);
     };
 
     const sendDuctWork = () => {

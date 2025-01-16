@@ -5,15 +5,7 @@ import Loadable from 'components/Loadable';
 import MainLayout from 'layout/MainLayout';
 import { useSelector } from 'react-redux';
 //api
-import {
-    ssoUrlOL,
-    ssoUrlQA,
-    checktokenForLDAP,
-    redirectUriOL,
-    redirectUriQA,
-    accessSSOOL,
-    accessSSOQA,
-} from 'components/apis.jsx';
+import { ssoUrlOL, ssoUrlQA, checktokenForLDAP, redirectUriOL, redirectUriQA, accessSSOOL, accessSSOQA } from 'components/apis.jsx';
 import { useDispatch } from 'react-redux';
 import dayjs from 'dayjs';
 
@@ -25,15 +17,9 @@ import { setMessageStateOpen } from 'store/reducers/dropdown';
 // render - dashboard
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
 // 發票工作管理
-const InvoiceWorkManageCreate = Loadable(
-    lazy(() => import('pages/invoiceWorkManage/InvoiceWorkCreate')),
-);
-const InvoiceWorkManageEdit = Loadable(
-    lazy(() => import('pages/invoiceWorkManage/InvoiceWorkEdit')),
-);
-const InvoiceAttachManage = Loadable(
-    lazy(() => import('pages/invoiceWorkManage/InvoiceAttachManage')),
-);
+const InvoiceWorkManageCreate = Loadable(lazy(() => import('pages/invoiceWorkManage/InvoiceWorkCreate')));
+const InvoiceWorkManageEdit = Loadable(lazy(() => import('pages/invoiceWorkManage/InvoiceWorkEdit')));
+const InvoiceAttachManage = Loadable(lazy(() => import('pages/invoiceWorkManage/InvoiceAttachManage')));
 // 立帳管理
 const CreateJournal = Loadable(lazy(() => import('pages/createJournal/CreateJournal')));
 const JournalQuery = Loadable(lazy(() => import('pages/createJournal/CreateJournalQuery')));
@@ -44,13 +30,9 @@ const RefundCBManager = Loadable(lazy(() => import('pages/creditBalance/RefundCB
 // Credit Memo
 const CreditMemo = Loadable(lazy(() => import('pages/creditMemo/CreditMemo')));
 // 應收帳款管理
-const GenerateFeeAmount = Loadable(
-    lazy(() => import('pages/accountsReceivable/generateFeeAmount')),
-);
+const GenerateFeeAmount = Loadable(lazy(() => import('pages/accountsReceivable/generateFeeAmount')));
 const WriteOffInvoice = Loadable(lazy(() => import('pages/accountsReceivable/writeOffInvoice')));
-const BillAttachManagement = Loadable(
-    lazy(() => import('pages/accountsReceivable/billAttachManagement')),
-);
+const BillAttachManagement = Loadable(lazy(() => import('pages/accountsReceivable/billAttachManagement')));
 const SupplierPayment = Loadable(lazy(() => import('pages/supplierPayment/supplierPayment')));
 const Correspondence = Loadable(lazy(() => import('pages/supplierPayment/correspondence')));
 const PaymentRecord = Loadable(lazy(() => import('pages/supplierPayment/paymentRecord')));
@@ -66,9 +48,10 @@ const LiabilityManage = Loadable(lazy(() => import('pages/liability/LiabilityMan
 const CurrencyManage = Loadable(lazy(() => import('pages/currency/CurrencyManage')));
 // 上傳資料管理
 const UploadManage = Loadable(lazy(() => import('pages/uploadManage/UploadManage')));
-// 通知管理
+// 內部提醒通知管理
 const Notification = Loadable(lazy(() => import('pages/notification/Notification')));
-// 通知管理
+// 預算費用項目管理
+const BudgetManage = Loadable(lazy(() => import('pages/budgetManage/BudgetManage')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -83,12 +66,7 @@ const RequireAuth = ({ children, item }) => {
         return window.location.replace(window.location.protocol + '//' + window.location.host);
     };
 
-    if (
-        window.location.host.includes('localhost') ||
-        window.location.host.includes('127.0.0.1') ||
-        dayjs(getExpireTime).diff(new Date(), 'minute') > 0 ||
-        isLogin
-    ) {
+    if (window.location.host.includes('localhost') || window.location.host.includes('127.0.0.1') || dayjs(getExpireTime).diff(new Date(), 'minute') > 0 || isLogin) {
         if (userInfo[item] === false) sendNoPermission();
         return children;
     } else if (window.location.href.indexOf('code') !== -1) {
@@ -97,7 +75,7 @@ const RequireAuth = ({ children, item }) => {
             client_id: isOL ? 'CBPS-CBPS.OL.I' : 'CBPS.QA.I',
             redirect_uri: isOL ? redirectUriOL : redirectUriQA,
             code: accessCode,
-            grant_type: 'authorization_code',
+            grant_type: 'authorization_code'
         };
         const searchParams = new URLSearchParams(tmpArray);
         console.log('searchParamshaha1=>>', accessCode);
@@ -105,8 +83,8 @@ const RequireAuth = ({ children, item }) => {
             method: 'POST',
             body: searchParams,
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
         })
             .then((res) => res.json())
             .then((data) => {
@@ -117,9 +95,9 @@ const RequireAuth = ({ children, item }) => {
                             loginInInfo: {
                                 EmployeeNumber: jwt_decode(data.access_token).employeeNumber,
                                 Email: jwt_decode(data.access_token).email,
-                                Name: jwt_decode(data.access_token).name,
-                            },
-                        }),
+                                Name: jwt_decode(data.access_token).name
+                            }
+                        })
                     );
                     localStorage.setItem('expireTimeCBP', dayjs().add(480, 'minute'));
                     localStorage.setItem('accessToken', data.access_token);
@@ -128,9 +106,9 @@ const RequireAuth = ({ children, item }) => {
                         method: 'POST',
                         headers: {
                             'Content-type': 'application/json',
-                            Authorization: 'Bearer' + data.access_token,
+                            Authorization: 'Bearer' + data.access_token
                         },
-                        body: JSON.stringify({ accessToken: data.access_token }),
+                        body: JSON.stringify({ accessToken: data.access_token })
                     })
                         .then((res) => res.json())
                         .then((data) => {
@@ -155,9 +133,9 @@ const RequireAuth = ({ children, item }) => {
                                         Liability: data.Liability,
                                         Pay: data.Pay,
                                         PartyNotify: data.PartyNotify,
-                                        SysNotify: data.SysNotify,
-                                    },
-                                }),
+                                        SysNotify: data.SysNotify
+                                    }
+                                })
                             );
                             if (data[item] === false) sendNoPermission();
                         })
@@ -167,9 +145,9 @@ const RequireAuth = ({ children, item }) => {
                                     messageStateOpen: {
                                         isOpen: true,
                                         severity: 'error',
-                                        message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                                    },
-                                }),
+                                        message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                                    }
+                                })
                             );
                         });
                     return children;
@@ -183,9 +161,9 @@ const RequireAuth = ({ children, item }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     } else {
@@ -203,7 +181,7 @@ const MainRoutes = {
                 <RequireAuth>
                     <DashboardDefault />
                 </RequireAuth>
-            ),
+            )
         },
         {
             path: '/',
@@ -211,7 +189,7 @@ const MainRoutes = {
                 <RequireAuth>
                     <DashboardDefault />
                 </RequireAuth>
-            ),
+            )
         },
         {
             path: 'InvoiceWorkManage',
@@ -222,7 +200,7 @@ const MainRoutes = {
                         <RequireAuth item={'InvoiceWK'}>
                             <InvoiceWorkManageCreate />
                         </RequireAuth>
-                    ),
+                    )
                 },
                 {
                     path: 'InvoiceWorkEdit',
@@ -230,7 +208,7 @@ const MainRoutes = {
                         <RequireAuth item={'InvoiceWK'}>
                             <InvoiceWorkManageEdit />
                         </RequireAuth>
-                    ),
+                    )
                 },
                 {
                     path: 'InvoiceAttachManage',
@@ -238,9 +216,9 @@ const MainRoutes = {
                         <RequireAuth item={'InvoiceWK'}>
                             <InvoiceAttachManage />
                         </RequireAuth>
-                    ),
-                },
-            ],
+                    )
+                }
+            ]
         },
         {
             path: 'CreateJournal',
@@ -251,7 +229,7 @@ const MainRoutes = {
                         <RequireAuth item={'Invoice'}>
                             <CreateJournal />
                         </RequireAuth>
-                    ),
+                    )
                 },
                 {
                     path: 'JournalQuery',
@@ -259,9 +237,9 @@ const MainRoutes = {
                         <RequireAuth item={'Invoice'}>
                             <JournalQuery />
                         </RequireAuth>
-                    ),
-                },
-            ],
+                    )
+                }
+            ]
         },
         {
             path: 'AccountsReceivable',
@@ -272,7 +250,7 @@ const MainRoutes = {
                         <RequireAuth item={'Bill'}>
                             <GenerateFeeAmount />
                         </RequireAuth>
-                    ),
+                    )
                 },
                 {
                     path: 'BillAttachManagement',
@@ -280,7 +258,7 @@ const MainRoutes = {
                         <RequireAuth item={'Bill'}>
                             <BillAttachManagement />
                         </RequireAuth>
-                    ),
+                    )
                 },
                 {
                     path: 'WriteOffInvoice',
@@ -288,9 +266,9 @@ const MainRoutes = {
                         <RequireAuth item={'Bill'}>
                             <WriteOffInvoice />
                         </RequireAuth>
-                    ),
-                },
-            ],
+                    )
+                }
+            ]
         },
         {
             path: 'SupplierPayment',
@@ -301,7 +279,7 @@ const MainRoutes = {
                         <RequireAuth item={'Pay'}>
                             <SupplierPayment />
                         </RequireAuth>
-                    ),
+                    )
                 },
                 {
                     path: 'Correspondence',
@@ -309,7 +287,7 @@ const MainRoutes = {
                         <RequireAuth item={'Pay'}>
                             <Correspondence />
                         </RequireAuth>
-                    ),
+                    )
                 },
                 {
                     path: 'PaymentRecord',
@@ -317,9 +295,9 @@ const MainRoutes = {
                         <RequireAuth item={'Pay'}>
                             <PaymentRecord />
                         </RequireAuth>
-                    ),
-                },
-            ],
+                    )
+                }
+            ]
         },
         {
             path: 'CreditBalance',
@@ -330,7 +308,7 @@ const MainRoutes = {
                         <RequireAuth item={'CB'}>
                             <CreditBalance />
                         </RequireAuth>
-                    ),
+                    )
                 },
                 {
                     path: 'CreditBalanceRefund',
@@ -338,7 +316,7 @@ const MainRoutes = {
                         <RequireAuth item={'CB'}>
                             <CreditBalanceRefund />
                         </RequireAuth>
-                    ),
+                    )
                 },
                 {
                     path: 'RefundCBManager',
@@ -346,9 +324,9 @@ const MainRoutes = {
                         <RequireAuth item={'CB'}>
                             <RefundCBManager />
                         </RequireAuth>
-                    ),
-                },
-            ],
+                    )
+                }
+            ]
         },
         {
             path: 'CreditMemo',
@@ -359,9 +337,9 @@ const MainRoutes = {
                         <RequireAuth item={'CM'}>
                             <CreditMemo />
                         </RequireAuth>
-                    ),
-                },
-            ],
+                    )
+                }
+            ]
         },
         {
             path: 'AllResearch',
@@ -372,7 +350,7 @@ const MainRoutes = {
                         <RequireAuth item={'GlobalQuery'}>
                             <ResearchBill />
                         </RequireAuth>
-                    ),
+                    )
                 },
                 {
                     path: 'ResearchInvoice',
@@ -380,7 +358,7 @@ const MainRoutes = {
                         <RequireAuth item={'GlobalQuery'}>
                             <ResearchInvoice />
                         </RequireAuth>
-                    ),
+                    )
                 },
                 {
                     path: 'ResearchJournal',
@@ -388,9 +366,9 @@ const MainRoutes = {
                         <RequireAuth item={'GlobalQuery'}>
                             <ResearchJournal />
                         </RequireAuth>
-                    ),
-                },
-            ],
+                    )
+                }
+            ]
         },
         {
             path: 'Setting',
@@ -401,7 +379,7 @@ const MainRoutes = {
                         <RequireAuth item={'Liability'}>
                             <LiabilityManage />
                         </RequireAuth>
-                    ),
+                    )
                 },
                 {
                     path: 'Currency',
@@ -409,7 +387,7 @@ const MainRoutes = {
                         <RequireAuth item={'Currency'}>
                             <CurrencyManage />
                         </RequireAuth>
-                    ),
+                    )
                 },
                 {
                     path: 'Data',
@@ -417,7 +395,7 @@ const MainRoutes = {
                         <RequireAuth item={'Data'}>
                             <Information />
                         </RequireAuth>
-                    ),
+                    )
                 },
                 {
                     path: 'SysNotify',
@@ -425,9 +403,17 @@ const MainRoutes = {
                         <RequireAuth>
                             <Notification item={'SysNotify'} />
                         </RequireAuth>
-                    ),
+                    )
                 },
-            ],
+                {
+                    path: 'BudgetManage',
+                    element: (
+                        <RequireAuth>
+                            <BudgetManage item={'BudgetManage'} />
+                        </RequireAuth>
+                    )
+                }
+            ]
         },
         {
             path: 'UploadManage',
@@ -435,18 +421,18 @@ const MainRoutes = {
                 <RequireAuth>
                     <UploadManage />
                 </RequireAuth>
-            ),
+            )
         },
         {
             path: 'dashboard',
             children: [
                 {
                     path: 'default',
-                    element: <DashboardDefault />,
-                },
-            ],
-        },
-    ],
+                    element: <DashboardDefault />
+                }
+            ]
+        }
+    ]
 };
 
 export default MainRoutes;

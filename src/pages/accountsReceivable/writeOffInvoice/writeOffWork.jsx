@@ -18,7 +18,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
-import DeductWork from './toDeductWork';
+import ToDeductWork from './toDeductWork';
 
 import { saveWriteOff } from 'components/apis.jsx';
 
@@ -209,7 +209,7 @@ const WriteOffWork = ({ isDialogOpen, handleDialogClose, writeOffInfo, writeOffD
                 i.BRAmount = 0; //總金額(暫時)
                 tmpOrgFeeAmountTotal = new Decimal(tmpOrgFeeAmountTotal).add(new Decimal(i.OrgFeeAmount || 0)).toNumber();
                 tmpDedAmountTotal = new Decimal(tmpDedAmountTotal).add(new Decimal(i.DedAmount)).toNumber();
-                tmpWHTAmountTotal = new Decimal(tmpWHTAmountTotal).add(new Decimal(i.WHTAmount)).toNumber();
+                tmpWHTAmountTotal = new Decimal(tmpWHTAmountTotal).add(new Decimal(i?.WHTAmount)).toNumber();
                 tmpFeeAmountTotal = new Decimal(tmpFeeAmountTotal).add(new Decimal(i.FeeAmount)).toNumber();
                 tmpReceivedAmountTotal = new Decimal(tmpReceivedAmountTotal).add(new Decimal(i.ReceivedAmount)).toNumber();
                 tmpBankFeesTotal = new Decimal(tmpBankFeesTotal).add(new Decimal(i.BankFees)).toNumber();
@@ -240,11 +240,12 @@ const WriteOffWork = ({ isDialogOpen, handleDialogClose, writeOffInfo, writeOffD
             setToWriteOffDetailInfo(tmpArray);
         } else {
             tmpArray.forEach((i) => {
-                tmpOrgFeeAmountTotal = new Decimal(tmpOrgFeeAmountTotal).add(new Decimal(i.OrgFeeAmount));
-                tmpDedAmountTotal = new Decimal(tmpDedAmountTotal).add(new Decimal(i.DedAmount));
-                tmpFeeAmountTotal = new Decimal(tmpFeeAmountTotal).add(new Decimal(i.FeeAmount));
-                tmpReceivedAmountTotal = new Decimal(tmpReceivedAmountTotal).add(new Decimal(i.ReceivedAmount));
-                tmpBankFeesTotal = new Decimal(tmpBankFeesTotal).add(new Decimal(i.BankFees));
+                tmpOrgFeeAmountTotal = new Decimal(tmpOrgFeeAmountTotal).add(new Decimal(i.OrgFeeAmount)).toNumber();
+                tmpDedAmountTotal = new Decimal(tmpDedAmountTotal).add(new Decimal(i.DedAmount)).toNumber();
+                tmpWHTAmountTotal = new Decimal(tmpWHTAmountTotal).add(new Decimal(i.WHTAmount ?? 0)).toNumber();
+                tmpFeeAmountTotal = new Decimal(tmpFeeAmountTotal).add(new Decimal(i.FeeAmount)).toNumber();
+                tmpReceivedAmountTotal = new Decimal(tmpReceivedAmountTotal).add(new Decimal(i.ReceivedAmount)).toNumber();
+                tmpBankFeesTotal = new Decimal(tmpBankFeesTotal).add(new Decimal(i.BankFees)).toNumber();
                 i.OverAmount =
                     Number(i.ReceiveAmount) + (Number(i.CBWriteOffAmount) || 0) + Number(i.ReceivedAmount) - Number(i.FeeAmount) <= 0
                         ? 0
@@ -264,23 +265,26 @@ const WriteOffWork = ({ isDialogOpen, handleDialogClose, writeOffInfo, writeOffD
                               .toNumber();
 
                 // 20250106新增銷帳作業Default 設為正常繳款-起
-                i.Status = 'OK';
-                tmpChangeState = new Decimal(i.ReceiveAmount).add(new Decimal(i.ShortAmount)).toNumber();
-                i.ReceiveAmount = tmpChangeState;
-                i.BRAmount = new Decimal(tmpChangeState).add(new Decimal(i.BankFee)).toNumber();
-                i.ShortAmount =
-                    Number(i.FeeAmount) - Number(i.ReceivedAmount) - Number(i.BankFees) - tmpChangeState - Number(i.BankFee) <= 0
-                        ? 0
-                        : new Decimal(i.FeeAmount)
-                              .minus(new Decimal(i.ReceivedAmount))
-                              .minus(new Decimal(i.BankFees))
-                              .minus(new Decimal(tmpChangeState))
-                              .minus(new Decimal(i.BankFee))
-                              .toNumber();
+                if (i.Status === 'INCOMPLETE' && i.ReceiveAmount === 0) {
+                    i.Status = 'OK';
+                    tmpChangeState = new Decimal(i.ReceiveAmount).add(new Decimal(i.ShortAmount)).toNumber();
+                    i.ReceiveAmount = tmpChangeState;
+                    i.BRAmount = new Decimal(tmpChangeState).add(new Decimal(i.BankFee)).toNumber();
+                    i.ShortAmount =
+                        Number(i.FeeAmount) - Number(i.ReceivedAmount) - Number(i.BankFees) - tmpChangeState - Number(i.BankFee) <= 0
+                            ? 0
+                            : new Decimal(i.FeeAmount)
+                                  .minus(new Decimal(i.ReceivedAmount))
+                                  .minus(new Decimal(i.BankFees))
+                                  .minus(new Decimal(tmpChangeState))
+                                  .minus(new Decimal(i.BankFee))
+                                  .toNumber();
+                }
                 // 20250106新增銷帳作業Default 設為正常繳款-終
             });
             orgFeeAmountTotal.current = tmpOrgFeeAmountTotal; //原始費用
             dedAmountTotal.current = tmpDedAmountTotal; //折扣
+            wHTAmountTotal.current = tmpWHTAmountTotal; //預付稅款
             feeAmountTotal.current = tmpFeeAmountTotal; //應收
             receivedAmountTotal.current = tmpReceivedAmountTotal; //累計費用
             bankFeesTotal.current = tmpBankFeesTotal; //累計手續費
@@ -299,7 +303,6 @@ const WriteOffWork = ({ isDialogOpen, handleDialogClose, writeOffInfo, writeOffD
             toWriteOffDetailInfo.forEach((i) => {
                 tmpObj[i?.BillDetailID] = true;
             });
-            console.log('');
             setCbToCn(tmpObj);
         } else {
             setCbToCn({});
@@ -365,7 +368,7 @@ const WriteOffWork = ({ isDialogOpen, handleDialogClose, writeOffInfo, writeOffD
         if (writeOffDetail?.length > 0 && isDialogOpen) {
             initData();
         }
-    }, [writeOffDetail, isDialogOpen]);
+    }, [isDialogOpen]);
 
     useEffect(() => {
         if (!isDeductOpen && toWriteOffDetailInfo.length > 0) {
@@ -392,11 +395,9 @@ const WriteOffWork = ({ isDialogOpen, handleDialogClose, writeOffInfo, writeOffD
         }
     }, [isDeductOpen]);
 
-    console.log('toWriteOffDetailInfo=>>', toWriteOffDetailInfo);
-
     return (
         <>
-            <DeductWork
+            <ToDeductWork
                 isDeductOpen={isDeductOpen}
                 handleDeductClose={handleDeductClose}
                 cbData={cbData}
@@ -568,8 +569,6 @@ const WriteOffWork = ({ isDialogOpen, handleDialogClose, writeOffInfo, writeOffD
                                                 tmpOverAmount = new Decimal(tmpOverAmount).add(new Decimal(row.OverAmount)).toNumber(); //溢繳加總
                                                 tmpShortAmount = new Decimal(tmpShortAmount).add(new Decimal(row.ShortAmount)).toNumber(); //短繳加總
                                                 tmpcbAmountTotal = new Decimal(tmpcbAmountTotal).add(new Decimal(row.CBWriteOffAmount || 0)).toNumber(); //CB加總
-                                                tmpReceiveAmount = new Decimal(row.ReceiveAmount).minus(new Decimal(row?.CBWriteOffAmount)).toNumber();
-                                                console.log('row=>>', row);
                                                 return (
                                                     <TableRow
                                                         key={id + row?.InvoiceNo + row?.FeeItem + row?.OrgFeeAmount + id}
@@ -579,14 +578,16 @@ const WriteOffWork = ({ isDialogOpen, handleDialogClose, writeOffInfo, writeOffD
                                                             }
                                                         }}
                                                     >
-                                                        <TableCell
-                                                            align="center"
-                                                            sx={{
-                                                                minWidth: 75
-                                                            }}
-                                                        >
-                                                            <Checkbox value={row?.BillDetailID} onChange={handleChangeCheckBox} checked={cbToCn[row?.BillDetailID] || false} />
-                                                        </TableCell>
+                                                        {action === 'view' ? null : (
+                                                            <TableCell
+                                                                align="center"
+                                                                sx={{
+                                                                    minWidth: 75
+                                                                }}
+                                                            >
+                                                                <Checkbox value={row?.BillDetailID} onChange={handleChangeCheckBox} checked={cbToCn[row?.BillDetailID] || false} />
+                                                            </TableCell>
+                                                        )}
                                                         <TableCell
                                                             align="center"
                                                             sx={{
@@ -613,7 +614,7 @@ const WriteOffWork = ({ isDialogOpen, handleDialogClose, writeOffInfo, writeOffD
                                                         </TableCell>
                                                         {/* 原始費用 */}
                                                         <TableCell align="center">{handleNumber(row?.OrgFeeAmount)}</TableCell>
-                                                        {/* 折抵 */}
+                                                        {/* 抵扣 */}
                                                         <TableCell align="center">{handleNumber(row?.DedAmount)}</TableCell>
                                                         {/* 預付稅款 */}
                                                         <TableCell align="center">{handleNumber(row?.WHTAmount)}</TableCell>
@@ -642,7 +643,7 @@ const WriteOffWork = ({ isDialogOpen, handleDialogClose, writeOffInfo, writeOffD
                                                                 />
                                                             </TableCell>
                                                         )}
-                                                        {/* 本次實收haha */}
+                                                        {/* 本次實收 */}
                                                         {action === 'view' ? null : (
                                                             <TableCell align="center">
                                                                 <TextField
@@ -650,7 +651,7 @@ const WriteOffWork = ({ isDialogOpen, handleDialogClose, writeOffInfo, writeOffD
                                                                         minWidth: 80
                                                                     }}
                                                                     size="small"
-                                                                    value={tmpReceiveAmount}
+                                                                    value={row.ReceiveAmount}
                                                                     InputProps={{
                                                                         inputComponent: NumericFormatCustom
                                                                     }}
@@ -753,8 +754,13 @@ const WriteOffWork = ({ isDialogOpen, handleDialogClose, writeOffInfo, writeOffD
                                                     }
                                                 }}
                                             >
+                                                {action === 'view' ? null : (
+                                                    <StyledTableCell className="totalAmount" align="center">
+                                                        Total
+                                                    </StyledTableCell>
+                                                )}
                                                 <StyledTableCell className="totalAmount" align="center">
-                                                    Total
+                                                    {action === 'view' ? 'Total' : null}
                                                 </StyledTableCell>
                                                 <StyledTableCell className="totalAmount" align="center" />
                                                 <StyledTableCell className="totalAmount" align="center" />
@@ -814,7 +820,6 @@ const WriteOffWork = ({ isDialogOpen, handleDialogClose, writeOffInfo, writeOffD
                                                 <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
                                                 <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
                                                 <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
-                                                {action === 'view' ? null : <StyledTableCell className="totalAmount" align="center"></StyledTableCell>}
                                                 {action === 'view' ? null : <StyledTableCell className="totalAmount" align="center"></StyledTableCell>}
                                             </TableRow>
                                         </TableBody>

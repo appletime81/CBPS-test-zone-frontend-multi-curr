@@ -1,10 +1,6 @@
 // project import
 import SimpleBar from 'components/third-party/SimpleBar';
-import Notification from './Notification';
-import Setting from './Setting';
 import Profile from './Profile';
-import UploadManage from './uploadManage';
-import Liability from './liabilityManage';
 import DrawerFooterStyled from './DrawerFooterStyled';
 
 // ==============================|| DRAWER CONTENT ||============================== //
@@ -19,12 +15,7 @@ const DrawerContent = () => (
             mb: 1
         }}
     >
-        {/* <Notification /> */}
-        {/* <UploadManage /> */}
-        {/* <Setting /> */}
-        {/* <Liability /> */}
         <Profile />
-        {/* <NavCard /> */}
     </DrawerFooterStyled>
 );
 

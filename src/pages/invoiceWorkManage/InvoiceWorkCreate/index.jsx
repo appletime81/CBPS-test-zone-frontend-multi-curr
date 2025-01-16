@@ -13,15 +13,7 @@ import { activeItem } from 'store/reducers/menu';
 import ChosePurpose from './chosePurpose';
 
 // api
-import {
-    supplierNameListForInvoice,
-    submarineCableInfoList,
-    billMilestoneList,
-    generateInvoice,
-    getCurrencyData,
-    dropdownmenuParties,
-    getWorkTitle,
-} from 'components/apis.jsx';
+import { supplierNameListForInvoice, submarineCableInfoList, billMilestoneList, generateInvoice, getCurrencyData, dropdownmenuParties, getWorkTitle } from 'components/apis.jsx';
 import { handleNumber } from 'components/commonFunction';
 
 // redux
@@ -113,7 +105,7 @@ const InvoiceWorkManage = () => {
         Purpose,
         fromCode,
         ExgRate,
-        ToCode,
+        ToCode
     ) => {
         return {
             InvoiceNo,
@@ -133,7 +125,7 @@ const InvoiceWorkManage = () => {
             Purpose,
             Code: fromCode,
             ExgRate,
-            ToCode,
+            ToCode
         };
     };
 
@@ -150,9 +142,9 @@ const InvoiceWorkManage = () => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '總金額不等於費用項目金額加總',
-                    },
-                }),
+                        message: '總金額不等於費用項目金額加總'
+                    }
+                })
             );
             return false;
         }
@@ -162,9 +154,9 @@ const InvoiceWorkManage = () => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '不攤分請選擇會員名稱',
-                    },
-                }),
+                        message: '不攤分請選擇會員名稱'
+                    }
+                })
             );
             return false;
         }
@@ -174,9 +166,9 @@ const InvoiceWorkManage = () => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入海纜名稱',
-                    },
-                }),
+                        message: '請輸入海纜名稱'
+                    }
+                })
             );
             return false;
         }
@@ -186,17 +178,17 @@ const InvoiceWorkManage = () => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入海纜作業',
-                    },
-                }),
+                        message: '請輸入海纜作業'
+                    }
+                })
             );
             return false;
         }
         if (supplierName === '') {
             dispatch(
                 setMessageStateOpen({
-                    messageStateOpen: { isOpen: true, severity: 'error', message: '請輸入供應商' },
-                }),
+                    messageStateOpen: { isOpen: true, severity: 'error', message: '請輸入供應商' }
+                })
             );
             return false;
         }
@@ -206,9 +198,9 @@ const InvoiceWorkManage = () => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入發票號碼',
-                    },
-                }),
+                        message: '請輸入發票號碼'
+                    }
+                })
             );
             return false;
         }
@@ -218,9 +210,9 @@ const InvoiceWorkManage = () => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入合約種類',
-                    },
-                }),
+                        message: '請輸入合約種類'
+                    }
+                })
             );
             return false;
         }
@@ -230,9 +222,9 @@ const InvoiceWorkManage = () => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入會員名稱',
-                    },
-                }),
+                        message: '請輸入會員名稱'
+                    }
+                })
             );
             return false;
         }
@@ -242,9 +234,9 @@ const InvoiceWorkManage = () => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請選擇原始幣別',
-                    },
-                }),
+                        message: '請選擇原始幣別'
+                    }
+                })
             );
             return false;
         }
@@ -257,9 +249,7 @@ const InvoiceWorkManage = () => {
         if (infoCheck()) {
             let tmpList = listInfo.map((i) => i);
             let tmpArray = createData(
-                invoiceNo.trim() === ''
-                    ? 'No.' + dayjs(new Date()).format('YYYYMMDDHHmmss')
-                    : invoiceNo,
+                invoiceNo.trim() === '' ? 'No.' + dayjs(new Date()).format('YYYYMMDDHHmmss') : invoiceNo,
                 supplierName,
                 submarineCable,
                 workTitle,
@@ -276,14 +266,14 @@ const InvoiceWorkManage = () => {
                 rateInfo.current.Purpose,
                 fromCode,
                 rateInfo.current.ExgRate,
-                rateInfo.current.ToCode,
+                rateInfo.current.ToCode
             );
             invoiceDetailInfo.forEach((i) => {
                 i.FeeAmount = Number(i.FeeAmount);
             });
             let combineArray = {
                 InvoiceWKMaster: tmpArray,
-                InvoiceWKDetail: invoiceDetailInfo,
+                InvoiceWKDetail: invoiceDetailInfo
             };
             tmpList.push(combineArray);
             setListInfo([...tmpList]);
@@ -321,7 +311,7 @@ const InvoiceWorkManage = () => {
             rateInfo.current = {
                 Purpose: tmpArray?.InvoiceWKMaster.Purpose,
                 ExgRate: tmpArray?.InvoiceWKMaster.ExgRate,
-                ToCode: tmpArray?.InvoiceWKMaster.ToCode,
+                ToCode: tmpArray?.InvoiceWKMaster.ToCode
             };
         }
     };
@@ -334,9 +324,7 @@ const InvoiceWorkManage = () => {
             let tmpList = listInfo.map((i) => i);
             tmpList.splice(editItem, 1);
             let tmpArray = createData(
-                invoiceNo.trim() === ''
-                    ? 'No.' + dayjs(new Date()).format('YYYYMMDDHHmmss')
-                    : invoiceNo,
+                invoiceNo.trim() === '' ? 'No.' + dayjs(new Date()).format('YYYYMMDDHHmmss') : invoiceNo,
                 supplierName,
                 submarineCable,
                 workTitle,
@@ -353,14 +341,14 @@ const InvoiceWorkManage = () => {
                 rateInfo.current.Purpose,
                 fromCode,
                 rateInfo.current.ExgRate,
-                rateInfo.current.ToCode,
+                rateInfo.current.ToCode
             );
             invoiceDetailInfo.forEach((i) => {
                 i.FeeAmount = Number(i.FeeAmount);
             });
             let combineArray = {
                 InvoiceWKMaster: tmpArray,
-                InvoiceWKDetail: invoiceDetailInfo,
+                InvoiceWKDetail: invoiceDetailInfo
             };
             tmpList.push(combineArray);
             tmpList.reverse();
@@ -386,9 +374,9 @@ const InvoiceWorkManage = () => {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
                 },
-                body: JSON.stringify(dataInfo),
+                body: JSON.stringify(dataInfo)
             })
                 .then((res) => res.json())
                 .then(() => {
@@ -397,9 +385,9 @@ const InvoiceWorkManage = () => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'success',
-                                message: '送出發票成功',
-                            },
-                        }),
+                                message: '送出發票成功'
+                            }
+                        })
                     );
                     setListInfo([]);
                 })
@@ -418,9 +406,9 @@ const InvoiceWorkManage = () => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入海纜名稱',
-                    },
-                }),
+                        message: '請輸入海纜名稱'
+                    }
+                })
             );
             return false;
         }
@@ -430,21 +418,9 @@ const InvoiceWorkManage = () => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入海纜作業',
-                    },
-                }),
-            );
-            return false;
-        }
-        if (workTitle === '') {
-            dispatch(
-                setMessageStateOpen({
-                    messageStateOpen: {
-                        isOpen: true,
-                        severity: 'error',
-                        message: '請輸入海纜作業',
-                    },
-                }),
+                        message: '請輸入海纜作業'
+                    }
+                })
             );
             return false;
         }
@@ -454,9 +430,9 @@ const InvoiceWorkManage = () => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請選擇原始幣別',
-                    },
-                }),
+                        message: '請選擇原始幣別'
+                    }
+                })
             );
             return false;
         }
@@ -488,9 +464,9 @@ const InvoiceWorkManage = () => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: data.alert_msg,
-                            },
-                        }),
+                                message: data.alert_msg
+                            }
+                        })
                     );
                 }
             })
@@ -500,9 +476,9 @@ const InvoiceWorkManage = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -511,15 +487,10 @@ const InvoiceWorkManage = () => {
         rateInfo.current = {};
         setCurrencyExgID(null);
         if (workTitle && submarineCable) {
-            let snApi =
-                supplierNameListForInvoice +
-                'SubmarineCable=' +
-                submarineCable +
-                '&WorkTitle=' +
-                workTitle;
+            let snApi = supplierNameListForInvoice + 'SubmarineCable=' + submarineCable + '&WorkTitle=' + workTitle;
             fetch(snApi, {
                 method: 'GET',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
             })
                 .then((res) => res.json())
                 .then((data) => {
@@ -533,9 +504,9 @@ const InvoiceWorkManage = () => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
         } else {
@@ -544,36 +515,24 @@ const InvoiceWorkManage = () => {
     }, [workTitle, submarineCable]);
 
     useEffect(() => {
-        rateInfo.current = {};
+        // rateInfo.current = {}; 使用者更動海纜名稱跟海纜作業才能清空匯率資料
         setCurrencyExgID(null);
-        console.log(
-            "workTitle && submarineCable && isLiability === 'true'",
-            workTitle && submarineCable && isLiability === 'true',
-            isLiability === 'true',
-            isLiability,
-        );
+        console.log("workTitle && submarineCable && isLiability === 'true'", workTitle && submarineCable && isLiability === 'true', isLiability === 'true', isLiability);
         if (workTitle && submarineCable && isLiability !== 'false') {
-            let bmStone =
-                billMilestoneList +
-                'SubmarineCable=' +
-                submarineCable +
-                '&WorkTitle=' +
-                workTitle +
-                '&End=false&IsLiability=' +
-                isLiability;
+            let bmStone = billMilestoneList + 'SubmarineCable=' + submarineCable + '&WorkTitle=' + workTitle + '&End=false&IsLiability=' + isLiability;
             getBmStoneList(bmStone);
         } else if (workTitle && submarineCable && isLiability === 'false' && !partyName) {
             fetch(dropdownmenuParties, {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
                 },
                 body: JSON.stringify({
                     SubmarineCable: submarineCable,
                     WorkTitle: workTitle,
-                    IsLiability: isLiability,
-                }),
+                    IsLiability: isLiability
+                })
             })
                 .then((res) => res.json())
                 .then((data) => {
@@ -587,9 +546,9 @@ const InvoiceWorkManage = () => {
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'error',
-                                    message: data.alert_msg,
-                                },
-                            }),
+                                    message: data.alert_msg
+                                }
+                            })
                         );
                     }
                 })
@@ -599,9 +558,9 @@ const InvoiceWorkManage = () => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
             setBmStoneList([]);
@@ -613,16 +572,7 @@ const InvoiceWorkManage = () => {
 
     useEffect(() => {
         if (workTitle && submarineCable && isLiability === 'false' && partyName) {
-            let bmStone =
-                billMilestoneList +
-                'SubmarineCable=' +
-                submarineCable +
-                '&WorkTitle=' +
-                workTitle +
-                '&End=false&IsLiability=' +
-                isLiability +
-                '&PartyName=' +
-                partyName;
+            let bmStone = billMilestoneList + 'SubmarineCable=' + submarineCable + '&WorkTitle=' + workTitle + '&End=false&IsLiability=' + isLiability + '&PartyName=' + partyName;
             getBmStoneList(bmStone);
         }
     }, [workTitle, submarineCable, isLiability, partyName]);
@@ -639,9 +589,9 @@ const InvoiceWorkManage = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         fetch(getCurrencyData, { method: 'GET' })
@@ -656,18 +606,18 @@ const InvoiceWorkManage = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         fetch(getWorkTitle, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
             },
-            body: JSON.stringify({}),
+            body: JSON.stringify({})
         })
             .then((res) => res.json())
             .then((data) => {
@@ -684,9 +634,9 @@ const InvoiceWorkManage = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     }, []);
@@ -771,44 +721,22 @@ const InvoiceWorkManage = () => {
                                 />
                             </Grid>
                             {/* 按鈕 */}
-                            <Grid
-                                item
-                                xs={12}
-                                display="flex"
-                                justifyContent="center"
-                                alignItems="center"
-                            >
+                            <Grid item xs={12} display="flex" justifyContent="center" alignItems="center">
                                 {isListEdit ? (
                                     <>
-                                        <Button
-                                            variant="contained"
-                                            onClick={saveEdit}
-                                            sx={{ mx: 1 }}
-                                        >
+                                        <Button variant="contained" onClick={saveEdit} sx={{ mx: 1 }}>
                                             儲存編輯
                                         </Button>
-                                        <Button
-                                            variant="contained"
-                                            onClick={cancelEdit}
-                                            sx={{ mx: 1 }}
-                                        >
+                                        <Button variant="contained" onClick={cancelEdit} sx={{ mx: 1 }}>
                                             取消編輯
                                         </Button>
                                     </>
                                 ) : (
                                     <>
-                                        <Button
-                                            variant="contained"
-                                            onClick={addInvoiceInfo}
-                                            sx={{ mx: 1 }}
-                                        >
+                                        <Button variant="contained" onClick={addInvoiceInfo} sx={{ mx: 1 }}>
                                             新增發票
                                         </Button>
-                                        <Button
-                                            variant="contained"
-                                            onClick={itemInfoInitial}
-                                            sx={{ mx: 1 }}
-                                        >
+                                        <Button variant="contained" onClick={itemInfoInitial} sx={{ mx: 1 }}>
                                             全部清除
                                         </Button>
                                     </>
@@ -822,34 +750,16 @@ const InvoiceWorkManage = () => {
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 <MainCard title="發票資料建立列表">
-                                    <InvoiceDataList
-                                        listInfo={listInfo}
-                                        setEditItem={setEditItem}
-                                        deletelistInfoItem={deletelistInfoItem}
-                                    />
+                                    <InvoiceDataList listInfo={listInfo} setEditItem={setEditItem} deletelistInfoItem={deletelistInfoItem} />
                                 </MainCard>
                             </Grid>
-                            <Grid
-                                item
-                                xs={12}
-                                display="flex"
-                                justifyContent="center"
-                                alignItems="center"
-                            >
+                            <Grid item xs={12} display="flex" justifyContent="center" alignItems="center">
                                 {listInfo.length > 0 ? (
-                                    <Button
-                                        variant="contained"
-                                        onClick={sendInvoice}
-                                        sx={{ mx: 1 }}
-                                    >
+                                    <Button variant="contained" onClick={sendInvoice} sx={{ mx: 1 }}>
                                         送出發票
                                     </Button>
                                 ) : null}
-                                <Link
-                                    to="/InvoiceWorkManage/InvoiceWorkEdit"
-                                    onClick={handleLink}
-                                    style={{ color: '#262626', textDecoration: 'none' }}
-                                >
+                                <Link to="/InvoiceWorkManage/InvoiceWorkEdit" onClick={handleLink} style={{ color: '#262626', textDecoration: 'none' }}>
                                     <Button variant="contained" sx={{ mx: 1 }}>
                                         下一頁
                                     </Button>

@@ -1,18 +1,7 @@
-import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 // material-ui
-import {
-    Typography,
-    Grid,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    RadioGroup,
-    FormControlLabel,
-    Radio,
-} from '@mui/material';
+import { Typography, Grid, FormControl, InputLabel, Select, MenuItem, RadioGroup, FormControlLabel, Radio } from '@mui/material';
 // material-ui
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
@@ -21,10 +10,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import MainCard from 'components/MainCard';
 import NumericFormatCustom from 'components/numericFormatCustom';
 import { TextField } from '@mui/material/index';
-import { handleNumber } from 'components/commonFunction';
 
 // api
-import { supplierNameListForInvoice, checkInvoiceNo } from 'components/apis.jsx';
+import { checkInvoiceNo } from 'components/apis.jsx';
 
 // redux
 import { useDispatch } from 'react-redux';
@@ -66,22 +54,22 @@ const InvoiceWorkManage = ({
     purpose,
     partyNameList,
     supNmList,
-    workTitleList,
+    workTitleList
 }) => {
     // const [supNmList, setSupNmList] = useState([]); //供應商下拉選單
     const dispatch = useDispatch();
     const invoiceNoCheck = () => {
         if (action !== '檢視') {
             let tmpArray = {
-                InvoiceNo: invoiceNo,
+                InvoiceNo: invoiceNo
             };
             fetch(checkInvoiceNo, {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
                 },
-                body: JSON.stringify(tmpArray),
+                body: JSON.stringify(tmpArray)
             })
                 .then((res) => res.json())
                 .then((data) => {
@@ -91,9 +79,9 @@ const InvoiceWorkManage = ({
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'error',
-                                    message: '發票號碼重複',
-                                },
-                            }),
+                                    message: '發票號碼重複'
+                                }
+                            })
                         );
                         setInvoiceNo('');
                     } else {
@@ -102,9 +90,9 @@ const InvoiceWorkManage = ({
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'success',
-                                    message: '發票號碼無重複',
-                                },
-                            }),
+                                    message: '發票號碼無重複'
+                                }
+                            })
                         );
                     }
                 })
@@ -114,43 +102,15 @@ const InvoiceWorkManage = ({
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
         }
     };
 
-    // useEffect(() => {
-    //     if (workTitle && submarineCable) {
-    //         let snApi =
-    //             supplierNameListForInvoice +
-    //             'SubmarineCable=' +
-    //             submarineCable +
-    //             '&WorkTitle=' +
-    //             workTitle;
-    //         fetch(snApi, {
-    //             method: 'GET',
-    //             Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-    //         })
-    //             .then((res) => res.json())
-    //             .then((data) => {
-    //                 setSupNmList(data);
-    //             })
-    //             .catch(() => {
-    //                 dispatch(
-    //                     setMessageStateOpen({
-    //                         messageStateOpen: {
-    //                             isOpen: true,
-    //                             severity: 'error',
-    //                             message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-    //                         },
-    //                     }),
-    //                 );
-    //             });
-    //     }
-    // }, [workTitle, submarineCable]);
+    console.log('partyName=>>', partyName, partyNameList);
 
     return (
         <MainCard title="發票工作主檔" sx={{ height: '100%' }}>
@@ -161,7 +121,7 @@ const InvoiceWorkManage = ({
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0rem', xl: '1.5rem' },
+                            ml: { lg: '0rem', xl: '1.5rem' }
                         }}
                     >
                         海纜名稱：
@@ -170,12 +130,7 @@ const InvoiceWorkManage = ({
                 <Grid item xs={12} sm={6} md={4} lg={4}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇海纜</InputLabel>
-                        <Select
-                            value={submarineCable}
-                            label="發票供應商"
-                            inputProps={{ readOnly: action === '檢視' }}
-                            onChange={(e) => setSubmarineCable(e.target.value)}
-                        >
+                        <Select value={submarineCable} label="發票供應商" inputProps={{ readOnly: action === '檢視' }} onChange={(e) => setSubmarineCable(e.target.value)}>
                             {submarineCableList.map((i) => (
                                 <MenuItem key={i.CableName} value={i.CableName}>
                                     {i.CableName}
@@ -189,7 +144,7 @@ const InvoiceWorkManage = ({
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0rem', xl: '1.5rem' },
+                            ml: { lg: '0rem', xl: '1.5rem' }
                         }}
                     >
                         海纜作業：
@@ -198,12 +153,7 @@ const InvoiceWorkManage = ({
                 <Grid item xs={12} sm={6} md={4} lg={4}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇海纜作業</InputLabel>
-                        <Select
-                            value={workTitle}
-                            label="填寫海纜作業"
-                            inputProps={{ readOnly: action === '檢視' }}
-                            onChange={(e) => setWorkTitle(e.target.value)}
-                        >
+                        <Select value={workTitle} label="填寫海纜作業" inputProps={{ readOnly: action === '檢視' }} onChange={(e) => setWorkTitle(e.target.value)}>
                             {workTitleList.map((i) => (
                                 <MenuItem key={i.Title} value={i.Title}>
                                     {i.Title}
@@ -218,7 +168,7 @@ const InvoiceWorkManage = ({
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0rem', xl: '1.5rem' },
+                            ml: { lg: '0rem', xl: '1.5rem' }
                         }}
                     >
                         供應商：
@@ -227,12 +177,7 @@ const InvoiceWorkManage = ({
                 <Grid item xs={12} sm={6} md={4} lg={4}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇供應商</InputLabel>
-                        <Select
-                            value={supplierName}
-                            label="發票供應商"
-                            inputProps={{ readOnly: action === '檢視' }}
-                            onChange={(e) => setSupplierName(e.target.value)}
-                        >
+                        <Select value={supplierName} label="發票供應商" inputProps={{ readOnly: action === '檢視' }} onChange={(e) => setSupplierName(e.target.value)}>
                             {supNmList.map((i) => (
                                 <MenuItem key={i.SupplierName} value={i.SupplierName}>
                                     {i.SupplierName}
@@ -246,7 +191,7 @@ const InvoiceWorkManage = ({
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0rem', xl: '1.5rem' },
+                            ml: { lg: '0rem', xl: '1.5rem' }
                         }}
                     >
                         發票號碼：
@@ -264,7 +209,7 @@ const InvoiceWorkManage = ({
                             readOnly: action === '檢視',
                             onBlur: () => {
                                 invoiceNoCheck();
-                            },
+                            }
                         }}
                         onChange={(e) => setInvoiceNo(e.target.value)}
                     />
@@ -275,7 +220,7 @@ const InvoiceWorkManage = ({
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0rem', xl: '1.5rem' },
+                            ml: { lg: '0rem', xl: '1.5rem' }
                         }}
                     >
                         合約種類：
@@ -284,12 +229,7 @@ const InvoiceWorkManage = ({
                 <Grid item xs={12} sm={6} md={4} lg={4}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇合約種類</InputLabel>
-                        <Select
-                            value={contractType}
-                            label="發票供應商"
-                            inputProps={{ readOnly: action === '檢視' }}
-                            onChange={(e) => setContractType(e.target.value)}
-                        >
+                        <Select value={contractType} label="發票供應商" inputProps={{ readOnly: action === '檢視' }} onChange={(e) => setContractType(e.target.value)}>
                             <MenuItem value={'SC'}>SC</MenuItem>
                             <MenuItem value={'NSC'}>NSC</MenuItem>
                         </Select>
@@ -300,7 +240,7 @@ const InvoiceWorkManage = ({
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0rem', xl: '1.5rem' },
+                            ml: { lg: '0rem', xl: '1.5rem' }
                         }}
                     >
                         發票日期：
@@ -327,7 +267,7 @@ const InvoiceWorkManage = ({
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0rem', xl: '1.5rem' },
+                            ml: { lg: '0rem', xl: '1.5rem' }
                         }}
                     >
                         總金額：
@@ -342,7 +282,7 @@ const InvoiceWorkManage = ({
                         label="填寫發票總金額"
                         InputProps={{
                             readOnly: action === '檢視',
-                            inputComponent: NumericFormatCustom,
+                            inputComponent: NumericFormatCustom
                         }}
                         onChange={(e) => {
                             setTotalAmount(e.target.value);
@@ -354,7 +294,7 @@ const InvoiceWorkManage = ({
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0rem', xl: '1.5rem' },
+                            ml: { lg: '0rem', xl: '1.5rem' }
                         }}
                     >
                         發票到期日：
@@ -379,7 +319,7 @@ const InvoiceWorkManage = ({
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0rem', xl: '1.5rem' },
+                            ml: { lg: '0rem', xl: '1.5rem' }
                         }}
                     >
                         幣別：
@@ -388,12 +328,7 @@ const InvoiceWorkManage = ({
                 <Grid item xs={12} sm={6} md={3} lg={4}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇原始幣別</InputLabel>
-                        <Select
-                            value={fromCode}
-                            label="幣別"
-                            inputProps={{ readOnly: action === '檢視' }}
-                            onChange={(e) => setFromCode(e.target.value)}
-                        >
+                        <Select value={fromCode} label="幣別" inputProps={{ readOnly: action === '檢視' }} onChange={(e) => setFromCode(e.target.value)}>
                             {currencyListInfo?.map((i) => (
                                 <MenuItem key={i.Code} value={i.Code}>
                                     {i.Code}
@@ -407,7 +342,7 @@ const InvoiceWorkManage = ({
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0rem', xl: '1.5rem' },
+                            ml: { lg: '0rem', xl: '1.5rem' }
                         }}
                     >
                         匯率資料：
@@ -420,7 +355,7 @@ const InvoiceWorkManage = ({
                             value={purpose}
                             InputProps={{
                                 readOnly: true,
-                                onClick: () => handleDialogOpen(),
+                                onClick: () => handleDialogOpen()
                             }}
                         />
                     </FormControl>
@@ -431,7 +366,7 @@ const InvoiceWorkManage = ({
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0rem', xl: '1.5rem' },
+                            ml: { lg: '0rem', xl: '1.5rem' }
                         }}
                     >
                         是否為Pro-Forma：
@@ -446,7 +381,7 @@ const InvoiceWorkManage = ({
                                 control={
                                     <Radio
                                         sx={{
-                                            '& .MuiSvgIcon-root': { fontSize: { lg: 14, xl: 20 } },
+                                            '& .MuiSvgIcon-root': { fontSize: { lg: 14, xl: 20 } }
                                         }}
                                     />
                                 }
@@ -458,7 +393,7 @@ const InvoiceWorkManage = ({
                                 control={
                                     <Radio
                                         sx={{
-                                            '& .MuiSvgIcon-root': { fontSize: { lg: 14, xl: 20 } },
+                                            '& .MuiSvgIcon-root': { fontSize: { lg: 14, xl: 20 } }
                                         }}
                                     />
                                 }
@@ -473,7 +408,7 @@ const InvoiceWorkManage = ({
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0rem', xl: '1.5rem' },
+                            ml: { lg: '0rem', xl: '1.5rem' }
                         }}
                     >
                         是否為短繳補收：
@@ -481,18 +416,14 @@ const InvoiceWorkManage = ({
                 </Grid>
                 <Grid item xs={12} sm={6} md={4} lg={3}>
                     <FormControl>
-                        <RadioGroup
-                            row
-                            value={isRecharge}
-                            onChange={(e) => setIsRecharge(e.target.value)}
-                        >
+                        <RadioGroup row value={isRecharge} onChange={(e) => setIsRecharge(e.target.value)}>
                             <FormControlLabel
                                 value={true}
                                 disabled={action === '檢視'}
                                 control={
                                     <Radio
                                         sx={{
-                                            '& .MuiSvgIcon-root': { fontSize: { lg: 14, xl: 20 } },
+                                            '& .MuiSvgIcon-root': { fontSize: { lg: 14, xl: 20 } }
                                         }}
                                     />
                                 }
@@ -504,7 +435,7 @@ const InvoiceWorkManage = ({
                                 control={
                                     <Radio
                                         sx={{
-                                            '& .MuiSvgIcon-root': { fontSize: { lg: 14, xl: 20 } },
+                                            '& .MuiSvgIcon-root': { fontSize: { lg: 14, xl: 20 } }
                                         }}
                                     />
                                 }
@@ -518,7 +449,7 @@ const InvoiceWorkManage = ({
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0rem', xl: '1.5rem' },
+                            ml: { lg: '0rem', xl: '1.5rem' }
                         }}
                     >
                         是否需攤分：
@@ -540,7 +471,7 @@ const InvoiceWorkManage = ({
                                 control={
                                     <Radio
                                         sx={{
-                                            '& .MuiSvgIcon-root': { fontSize: { lg: 14, xl: 20 } },
+                                            '& .MuiSvgIcon-root': { fontSize: { lg: 14, xl: 20 } }
                                         }}
                                     />
                                 }
@@ -552,7 +483,7 @@ const InvoiceWorkManage = ({
                                 control={
                                     <Radio
                                         sx={{
-                                            '& .MuiSvgIcon-root': { fontSize: { lg: 14, xl: 20 } },
+                                            '& .MuiSvgIcon-root': { fontSize: { lg: 14, xl: 20 } }
                                         }}
                                     />
                                 }
@@ -567,7 +498,7 @@ const InvoiceWorkManage = ({
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0rem', xl: '1.5rem' },
+                            ml: { lg: '0rem', xl: '1.5rem' }
                         }}
                     >
                         {isLiability === false || isLiability === 'false' ? '會員名稱：' : null}
@@ -577,12 +508,7 @@ const InvoiceWorkManage = ({
                     {isLiability === false || isLiability === 'false' ? (
                         <FormControl fullWidth size="small">
                             <InputLabel>選擇會員</InputLabel>
-                            <Select
-                                value={partyName}
-                                readOnly={action === '檢視'}
-                                label="不須攤分請填寫名稱"
-                                onChange={(e) => setPartyName(e.target.value)}
-                            >
+                            <Select value={partyName} readOnly={action === '檢視'} label="不須攤分請填寫名稱" onChange={(e) => setPartyName(e.target.value)}>
                                 {partyNameList.map((i) => (
                                     <MenuItem key={i} value={i}>
                                         {i}
@@ -626,7 +552,7 @@ InvoiceWorkManage.propTypes = {
     dueDate: PropTypes.instanceOf(Date),
     setDueDate: PropTypes.func,
     issueDate: PropTypes.instanceOf(Date),
-    setIssueDate: PropTypes.func,
+    setIssueDate: PropTypes.func
 };
 
 export default InvoiceWorkManage;

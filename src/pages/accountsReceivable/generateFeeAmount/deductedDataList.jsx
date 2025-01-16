@@ -55,9 +55,10 @@ const DeductedDataList = ({ dataList, receivableQuery }) => {
                 bMArray.push(i.BillDetail.BillMilestone);
             }
         });
+        console.log('info=>>', info.BillMasterID);
         tmpBMArray.current = bMArray;
         billMasterID.current = info.BillMasterID;
-        billMaster.current = info.BillInfo;
+        billMaster.current = info;
         setIsDialogOpen(true);
     };
 
@@ -109,8 +110,10 @@ const DeductedDataList = ({ dataList, receivableQuery }) => {
                 billingNo={billMaster.current.current}
                 issueDateDefault={billMaster.current.IssueDate}
                 dueDateDefault={billMaster.current.DueDate}
+                code={billMaster.current.Code}
                 action={'deducted'}
                 tmpBMArray={tmpBMArray.current}
+                workTitle={billMaster.current.WorkTitle}
             />
             <SignAndUpload isUploadOpen={isUploadOpen} handleUploadClose={handleUploadClose} billMasterID={billMasterID.current} receivableQuery={receivableQuery} />
             <TableContainer component={Paper} sx={{ maxHeight: window.screen.height * 0.5 }}>
@@ -163,13 +166,7 @@ const DeductedDataList = ({ dataList, receivableQuery }) => {
                                                 size="small"
                                                 variant="outlined"
                                                 onClick={() => {
-                                                    handleDialogOpen(
-                                                        {
-                                                            BillMasterID: row.BillMaster.BillMasterID,
-                                                            BillInfo: row.BillMaster
-                                                        },
-                                                        row.data
-                                                    );
+                                                    handleDialogOpen(row.BillMaster, row.data);
                                                 }}
                                             >
                                                 產製帳單
