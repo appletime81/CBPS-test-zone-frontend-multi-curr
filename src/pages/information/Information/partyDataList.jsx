@@ -274,6 +274,18 @@ const PartyDataList = ({ infoList, setInfoList }) => {
             );
             return false;
         }
+        if (code.length > 4){
+            dispatch(
+                setMessageStateOpen({
+                    messageStateOpen: {
+                        isOpen: true,
+                        severity: 'error',
+                        message: '會員代碼請小於4碼',
+                    },
+                }),
+            );
+            return false;
+        }
         if (submarineCable === '') {
             dispatch(
                 setMessageStateOpen({

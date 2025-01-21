@@ -1,38 +1,33 @@
 import { useState } from 'react';
 
 // project import
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { handleNumber } from 'components/commonFunction';
 
 // material-ui
 import { Button, Table, Box } from '@mui/material';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import {
-    TableContainer,
-    TableHead,
-    TableBody,
-    TableFooter,
-    TableRow,
-    Paper,
-    TablePagination,
-} from '@mui/material';
+import { TableContainer, TableHead, TableBody, TableFooter, TableRow, Paper, TablePagination } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import dayjs from 'dayjs';
+// redux
+import { useDispatch } from 'react-redux';
+import { setMessageStateOpen } from 'store/reducers/dropdown';
 
-const InvoiceDataList = ({ listInfo, setAction, setModifyItem, page, setPage }) => {
+const InvoiceDataList = ({ listInfo, setAction, setModifyItem, page, setPage, action }) => {
+    const dispatch = useDispatch();
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
         [`&.${tableCellClasses.head}`]: {
             // backgroundColor: theme.palette.common.gary,
             color: theme.palette.common.black,
             paddingTop: '0.1rem',
-            paddingBottom: '0.1rem',
+            paddingBottom: '0.1rem'
         },
         [`&.${tableCellClasses.body}`]: {
             fontSize: 14,
             paddingTop: '0.1rem',
-            paddingBottom: '0.1rem',
-        },
+            paddingBottom: '0.1rem'
+        }
     }));
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - listInfo.length) : 0;
@@ -50,6 +45,22 @@ const InvoiceDataList = ({ listInfo, setAction, setModifyItem, page, setPage }) 
     const options1 = ['檢視', '待立帳', '編輯', '刪除'];
     const options2 = ['檢視', '作廢'];
     const options3 = ['檢視', '作廢', '退回'];
+
+    const actionChect = () => {
+        if (action === '編輯') {
+            dispatch(
+                setMessageStateOpen({
+                    messageStateOpen: {
+                        isOpen: true,
+                        severity: 'warning',
+                        message: '請先儲存或取消目前編輯作業'
+                    }
+                })
+            );
+            return false;
+        }
+        return true;
+    };
 
     return (
         <TableContainer component={Paper}>
@@ -74,10 +85,7 @@ const InvoiceDataList = ({ listInfo, setAction, setModifyItem, page, setPage }) 
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {(rowsPerPage > 0
-                        ? listInfo.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        : listInfo
-                    )?.map((row, itemID) => {
+                    {(rowsPerPage > 0 ? listInfo.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : listInfo)?.map((row, itemID) => {
                         tmpBMArray = [];
                         row.InvoiceWKDetail.forEach((i) => {
                             if (!tmpBMArray.includes(i.BillMilestone)) {
@@ -85,49 +93,20 @@ const InvoiceDataList = ({ listInfo, setAction, setModifyItem, page, setPage }) 
                             }
                         });
                         return (
-                            <TableRow
-                                key={
-                                    row.InvoiceWKMaster?.WKMasterID + row.InvoiceWKMaster?.InvoiceNo
-                                }
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
+                            <TableRow key={row.InvoiceWKMaster?.WKMasterID + row.InvoiceWKMaster?.InvoiceNo} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                 <StyledTableCell align="center">{itemID + 1}</StyledTableCell>
-                                <StyledTableCell align="center">
-                                    {row.InvoiceWKMaster?.InvoiceNo}
-                                </StyledTableCell>
-                                <StyledTableCell align="center">
-                                    {row.InvoiceWKMaster?.SupplierName}
-                                </StyledTableCell>
-                                <StyledTableCell align="center">
-                                    {row.InvoiceWKMaster?.SubmarineCable}
-                                </StyledTableCell>
-                                <StyledTableCell align="center">
-                                    {tmpBMArray.join(',')}
-                                </StyledTableCell>
-                                <StyledTableCell align="center">
-                                    {row.InvoiceWKMaster?.ContractType}
-                                </StyledTableCell>
-                                <StyledTableCell align="center">
-                                    {dayjs(row.InvoiceWKMaster?.IssueDate).format('YYYY/MM/DD')}
-                                </StyledTableCell>
-                                <StyledTableCell align="center">
-                                    {dayjs(row.InvoiceWKMaster?.DueDate).format('YYYY/MM/DD')}
-                                </StyledTableCell>
-                                <StyledTableCell align="center">
-                                    {row.InvoiceWKDetail.length}
-                                </StyledTableCell>
-                                <StyledTableCell align="center">
-                                    {handleNumber(row.InvoiceWKMaster.TotalAmount)}{' '}
-                                </StyledTableCell>
-                                <StyledTableCell align="center">
-                                    {row.InvoiceWKMaster.Code}
-                                </StyledTableCell>
-                                <StyledTableCell align="center">
-                                    {handleNumber(row.InvoiceWKMaster.ExgTotalAmount)}{' '}
-                                </StyledTableCell>
-                                <StyledTableCell align="center">
-                                    {row.InvoiceWKMaster.ToCode}
-                                </StyledTableCell>
+                                <StyledTableCell align="center">{row.InvoiceWKMaster?.InvoiceNo}</StyledTableCell>
+                                <StyledTableCell align="center">{row.InvoiceWKMaster?.SupplierName}</StyledTableCell>
+                                <StyledTableCell align="center">{row.InvoiceWKMaster?.SubmarineCable}</StyledTableCell>
+                                <StyledTableCell align="center">{tmpBMArray.join(',')}</StyledTableCell>
+                                <StyledTableCell align="center">{row.InvoiceWKMaster?.ContractType}</StyledTableCell>
+                                <StyledTableCell align="center">{dayjs(row.InvoiceWKMaster?.IssueDate).format('YYYY/MM/DD')}</StyledTableCell>
+                                <StyledTableCell align="center">{dayjs(row.InvoiceWKMaster?.DueDate).format('YYYY/MM/DD')}</StyledTableCell>
+                                <StyledTableCell align="center">{row.InvoiceWKDetail.length}</StyledTableCell>
+                                <StyledTableCell align="center">{handleNumber(row.InvoiceWKMaster.TotalAmount)} </StyledTableCell>
+                                <StyledTableCell align="center">{row.InvoiceWKMaster.Code}</StyledTableCell>
+                                <StyledTableCell align="center">{handleNumber(row.InvoiceWKMaster.ExgTotalAmount)} </StyledTableCell>
+                                <StyledTableCell align="center">{row.InvoiceWKMaster.ToCode}</StyledTableCell>
                                 <StyledTableCell align="center">
                                     {row.InvoiceWKMaster.Status === 'TEMPORARY'
                                         ? '暫存'
@@ -149,30 +128,22 @@ const InvoiceDataList = ({ listInfo, setAction, setModifyItem, page, setPage }) 
                                                 justifyContent: 'center',
                                                 '& button': {
                                                     mx: { md: 0.1, lg: 0.1, xl: 0.2 },
-                                                    p: 0,
-                                                },
+                                                    p: 0
+                                                }
                                             }}
                                         >
                                             {options1.map((option) => {
                                                 return (
                                                     <Button
-                                                        color={
-                                                            option === '檢視'
-                                                                ? 'primary'
-                                                                : option === '待立帳'
-                                                                ? 'success'
-                                                                : option === '編輯'
-                                                                ? 'warning'
-                                                                : 'error'
-                                                        }
+                                                        color={option === '檢視' ? 'primary' : option === '待立帳' ? 'success' : option === '編輯' ? 'warning' : 'error'}
                                                         key={option}
                                                         variant="outlined"
                                                         size="small"
                                                         onClick={() => {
-                                                            setModifyItem(
-                                                                row.InvoiceWKMaster?.InvoiceNo,
-                                                            );
-                                                            setAction(option);
+                                                            if (actionChect()) {
+                                                                setModifyItem(row.InvoiceWKMaster?.InvoiceNo);
+                                                                setAction(option);
+                                                            }
                                                         }}
                                                     >
                                                         {option}
@@ -187,23 +158,19 @@ const InvoiceDataList = ({ listInfo, setAction, setModifyItem, page, setPage }) 
                                                 justifyContent: 'center',
                                                 '& button': {
                                                     mx: { md: 0.1, lg: 0.1, xl: 0.2 },
-                                                    p: 0,
-                                                },
+                                                    p: 0
+                                                }
                                             }}
                                         >
                                             {options2.map((option) => {
                                                 return (
                                                     <Button
-                                                        color={
-                                                            option === '檢視' ? 'success' : 'error'
-                                                        }
+                                                        color={option === '檢視' ? 'success' : 'error'}
                                                         key={option}
                                                         variant="outlined"
                                                         size="small"
                                                         onClick={() => {
-                                                            setModifyItem(
-                                                                row.InvoiceWKMaster?.InvoiceNo,
-                                                            );
+                                                            setModifyItem(row.InvoiceWKMaster?.InvoiceNo);
                                                             setAction(option);
                                                         }}
                                                     >
@@ -219,27 +186,19 @@ const InvoiceDataList = ({ listInfo, setAction, setModifyItem, page, setPage }) 
                                                 justifyContent: 'center',
                                                 '& button': {
                                                     mx: { md: 0.1, lg: 0.1, xl: 0.2 },
-                                                    p: 0,
-                                                },
+                                                    p: 0
+                                                }
                                             }}
                                         >
                                             {options3.map((option) => {
                                                 return (
                                                     <Button
-                                                        color={
-                                                            option === '檢視'
-                                                                ? 'primary'
-                                                                : option === '作廢'
-                                                                ? 'error'
-                                                                : 'info'
-                                                        }
+                                                        color={option === '檢視' ? 'primary' : option === '作廢' ? 'error' : 'info'}
                                                         key={option}
                                                         variant="outlined"
                                                         size="small"
                                                         onClick={() => {
-                                                            setModifyItem(
-                                                                row.InvoiceWKMaster?.InvoiceNo,
-                                                            );
+                                                            setModifyItem(row.InvoiceWKMaster?.InvoiceNo);
                                                             setAction(option);
                                                         }}
                                                     >
@@ -255,8 +214,8 @@ const InvoiceDataList = ({ listInfo, setAction, setModifyItem, page, setPage }) 
                                                 justifyContent: 'center',
                                                 '& button': {
                                                     mx: { md: 0.1, lg: 0.1, xl: 0.2 },
-                                                    p: 0,
-                                                },
+                                                    p: 0
+                                                }
                                             }}
                                         >
                                             <Button

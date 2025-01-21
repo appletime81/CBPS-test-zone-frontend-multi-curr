@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 
 // material-ui
 import { Grid, Button } from '@mui/material';
@@ -25,7 +25,32 @@ import { Link } from 'react-router-dom';
 // ==============================|| SAMPLE PAGE ||============================== //
 
 const InvoiceWorkManage = () => {
-    const [invoiceDetailInfo, setInvoiceDetailInfo] = useState([]);
+    // const [invoiceDetails, setInvoiceDetails] = useState({
+    //     supplierName: '', //供應商
+    //     invoiceNo: '', //發票號碼
+    //     submarineCable: '', //海纜名稱
+    //     workTitle: '', //海纜作業
+    //     contractType: '', //合約種類
+    //     issueDate: new Date(), //發票日期
+    //     dueDate: new Date(), //發票到期日
+    //     totalAmount: '', //總金額
+    //     isPro: false, //是否為Pro-forma
+    //     isLiability: true, //是否需攤分
+    //     isRecharge: false, //是否為短腳補收
+    //     fromCode: '', //幣別
+    //     partyName: '', //會員名稱
+    //     invoiceDetailInfo: [],
+    //     currencyExgID: null
+    // });
+
+    const [dropdownLists, setDropdownLists] = useState({
+        supNmList: [], //供應商下拉選單
+        submarineCableList: [], //海纜名稱下拉選單
+        partyNameList: [], //會員下拉選單
+        bmStoneList: [], //計帳段號下拉選單
+        workTitleList: [], //海纜作業下拉選單
+        codeList: [] //幣別下拉選單
+    });
     const [supplierName, setSupplierName] = useState(''); //供應商
     const [invoiceNo, setInvoiceNo] = useState(''); //發票號碼
     const [submarineCable, setSubmarineCable] = useState(''); //海纜名稱
@@ -39,27 +64,42 @@ const InvoiceWorkManage = () => {
     const [isRecharge, setIsRecharge] = useState(false); //是否為短腳補收
     const [fromCode, setFromCode] = useState(''); //幣別
     const [partyName, setPartyName] = useState(''); //會員名稱
-    const [supNmList, setSupNmList] = useState([]); //供應商下拉選單
-    const [submarineCableList, setSubmarineCableList] = useState([]); //海纜名稱下拉選單
+    const [invoiceDetailInfo, setInvoiceDetailInfo] = useState([]);
     const [partyNameList, setPartyNameList] = useState([]); //會員下拉選單
     const [bmStoneList, setBmStoneList] = useState([]); //計帳段號下拉選單
-    const [workTitleList, setWorkTitleList] = useState([]); //海纜作業下拉選單
-    const [codeList, setCodeList] = useState([]);
-
     const [billMilestone, setBillMilestone] = useState(''); //計帳段號
     const [feeItem, setFeeItem] = useState(''); //費用項目
     const [feeAmount, setFeeAmount] = useState(''); //費用金額
     const isTax = useRef(0);
     const [currencyExgID, setCurrencyExgID] = useState(null);
     const rateInfo = useRef({});
-
     const [editItem, setEditItem] = useState(NaN);
     const [listInfo, setListInfo] = useState([]);
     const [isListEdit, setIsListEdit] = useState(false);
-
     const [isPurposeDialogOpen, setIsPurposeDialogOpen] = useState(false);
-
     const dispatch = useDispatch();
+
+    const fetchData = useCallback(
+        async (url, method = 'GET', body = null) => {
+            const headers = {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') ?? ''}`
+            };
+            const options = {
+                method,
+                headers,
+                ...(body && { body: JSON.stringify(body) })
+            };
+            try {
+                const response = await fetch(url, options);
+                return await response.json();
+            } catch (error) {
+                dispatch(setMessageStateOpen({ messageStateOpen: { isOpen: true, severity: 'error', message: '網路異常，請檢查網路連線或與系統窗口聯絡' } }));
+                throw error;
+            }
+        },
+        [dispatch]
+    );
 
     const itemInfoInitial = () => {
         rateInfo.current = {};
@@ -131,12 +171,9 @@ const InvoiceWorkManage = () => {
 
     const infoCheck = () => {
         // 金額確認
-        let detailAmount = 0;
-        invoiceDetailInfo.forEach((i) => {
-            detailAmount = detailAmount + Number(i.FeeAmount);
-        });
+        let totalFeeAmount = invoiceDetailInfo.reduce((acc, i) => acc + Number(i.FeeAmount), 0);
 
-        if (Number(totalAmount).toFixed(6) !== Number(detailAmount).toFixed(6)) {
+        if (Number(totalAmount).toFixed(6) !== Number(totalFeeAmount).toFixed(6)) {
             dispatch(
                 setMessageStateOpen({
                     messageStateOpen: {
@@ -148,7 +185,7 @@ const InvoiceWorkManage = () => {
             );
             return false;
         }
-        if ((!isLiability || isLiability === 'false') && partyName === '') {
+        if (isLiability.toString() === 'false' && partyName === '') {
             dispatch(
                 setMessageStateOpen({
                     messageStateOpen: {
@@ -216,7 +253,7 @@ const InvoiceWorkManage = () => {
             );
             return false;
         }
-        if (!isLiability && partyName === '') {
+        if (isLiability.toString() === 'false' && partyName === '') {
             dispatch(
                 setMessageStateOpen({
                     messageStateOpen: {
@@ -258,9 +295,9 @@ const InvoiceWorkManage = () => {
                 dayjs(dueDate).format('YYYY-MM-DD HH:mm:ss'),
                 partyName,
                 'TEMPORARY',
-                isPro === 'true' || isPro === true ? true : false,
-                isRecharge === 'true' || isRecharge === true ? true : false,
-                isLiability === 'true' || isLiability === true ? true : false,
+                isPro.toString() === 'true' ? true : false,
+                isRecharge.toString() === 'true' ? true : false,
+                isLiability.toString() === 'true' ? true : false,
                 Number(totalAmount),
                 currencyExgID,
                 rateInfo.current.Purpose,
@@ -292,10 +329,10 @@ const InvoiceWorkManage = () => {
     const editlistInfoItem = () => {
         let tmpArray = listInfo[editItem];
         if (tmpArray) {
-            setSupplierName(tmpArray?.InvoiceWKMaster.SupplierName);
-            setInvoiceNo(tmpArray?.InvoiceWKMaster.InvoiceNo);
             setSubmarineCable(tmpArray?.InvoiceWKMaster.SubmarineCable);
             setWorkTitle(tmpArray.InvoiceWKMaster.WorkTitle);
+            setSupplierName(tmpArray?.InvoiceWKMaster.SupplierName);
+            setInvoiceNo(tmpArray?.InvoiceWKMaster.InvoiceNo);
             setContractType(tmpArray?.InvoiceWKMaster.ContractType);
             setIssueDate(tmpArray?.InvoiceWKMaster.IssueDate);
             setDueDate(tmpArray?.InvoiceWKMaster.DueDate);
@@ -333,9 +370,9 @@ const InvoiceWorkManage = () => {
                 dayjs(dueDate).format('YYYY-MM-DD HH:mm:ss'),
                 partyName,
                 'TEMPORARY',
-                isPro === 'true' || isPro === true ? true : false,
-                isRecharge === 'true' || isRecharge === true ? true : false,
-                isLiability === 'true' || isLiability === true ? true : false,
+                isPro.toString() === 'true' ? true : false,
+                isRecharge.toString() === 'true' ? true : false,
+                isLiability.toString() === 'true' ? true : false,
                 Number(totalAmount),
                 currencyExgID,
                 rateInfo.current.Purpose,
@@ -379,17 +416,29 @@ const InvoiceWorkManage = () => {
                 body: JSON.stringify(dataInfo)
             })
                 .then((res) => res.json())
-                .then(() => {
-                    dispatch(
-                        setMessageStateOpen({
-                            messageStateOpen: {
-                                isOpen: true,
-                                severity: 'success',
-                                message: '送出發票成功'
-                            }
-                        })
-                    );
-                    setListInfo([]);
+                .then((data) => {
+                    if (data.message === 'success') {
+                        dispatch(
+                            setMessageStateOpen({
+                                messageStateOpen: {
+                                    isOpen: true,
+                                    severity: 'success',
+                                    message: '送出發票成功'
+                                }
+                            })
+                        );
+                        setListInfo([]);
+                    } else {
+                        dispatch(
+                            setMessageStateOpen({
+                                messageStateOpen: {
+                                    isOpen: true,
+                                    severity: 'error',
+                                    message: data.message
+                                }
+                            })
+                        );
+                    }
                 })
                 .catch((e) => console.log('e=>', e));
         });
@@ -453,7 +502,6 @@ const InvoiceWorkManage = () => {
         fetch(api, { method: 'GET' })
             .then((res) => res.json())
             .then((data) => {
-                console.log('1111=>', data, api);
                 if (Array.isArray(data)) {
                     setBmStoneList(data);
                 }
@@ -483,45 +531,34 @@ const InvoiceWorkManage = () => {
             });
     };
 
+    //海纜名稱或海纜作業更動時，則更動供應商及匯率資料
     useEffect(() => {
-        rateInfo.current = {};
-        setCurrencyExgID(null);
         if (workTitle && submarineCable) {
-            let snApi = supplierNameListForInvoice + 'SubmarineCable=' + submarineCable + '&WorkTitle=' + workTitle;
-            fetch(snApi, {
-                method: 'GET',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
-            })
-                .then((res) => res.json())
-                .then((data) => {
-                    if (Array.isArray(data)) {
-                        setSupNmList(data);
-                    }
-                })
-                .catch(() => {
-                    dispatch(
-                        setMessageStateOpen({
-                            messageStateOpen: {
-                                isOpen: true,
-                                severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
-                            }
-                        })
-                    );
-                });
-        } else {
-            setSupNmList([]);
+            const fetchSupplierList = async () => {
+                try {
+                    const data = await fetchData(`${supplierNameListForInvoice}SubmarineCable=${submarineCable}&WorkTitle=${workTitle}`);
+                    setDropdownLists((prev) => ({ ...prev, supNmList: data }));
+                } catch (error) {
+                    console.error('Error fetching supplier list:', error);
+                }
+            };
+            fetchSupplierList();
+        }
+        const item = listInfo[editItem]?.InvoiceWKMaster;
+        if (isNaN(editItem) || item?.WorkTitle !== workTitle || item?.SubmarineCable !== submarineCable) {
+            rateInfo.current = {};
+            setCurrencyExgID(null);
         }
     }, [workTitle, submarineCable]);
 
+    //海纜名稱或海纜作業更動時，則更動供應商及匯率資料
     useEffect(() => {
         // rateInfo.current = {}; 使用者更動海纜名稱跟海纜作業才能清空匯率資料
-        setCurrencyExgID(null);
-        console.log("workTitle && submarineCable && isLiability === 'true'", workTitle && submarineCable && isLiability === 'true', isLiability === 'true', isLiability);
-        if (workTitle && submarineCable && isLiability !== 'false') {
+        // setCurrencyExgID(null); 使用者更動海纜名稱跟海纜作業才能清空匯率資料
+        if (workTitle && submarineCable && isLiability.toString() !== 'false') {
             let bmStone = billMilestoneList + 'SubmarineCable=' + submarineCable + '&WorkTitle=' + workTitle + '&End=false&IsLiability=' + isLiability;
             getBmStoneList(bmStone);
-        } else if (workTitle && submarineCable && isLiability === 'false' && !partyName) {
+        } else if (workTitle && submarineCable && isLiability.toString() === 'false' && !partyName) {
             fetch(dropdownmenuParties, {
                 method: 'POST',
                 headers: {
@@ -571,74 +608,40 @@ const InvoiceWorkManage = () => {
     }, [workTitle, submarineCable, isLiability]);
 
     useEffect(() => {
-        if (workTitle && submarineCable && isLiability === 'false' && partyName) {
+        if (workTitle && submarineCable && isLiability.toString() === 'false' && partyName) {
             let bmStone = billMilestoneList + 'SubmarineCable=' + submarineCable + '&WorkTitle=' + workTitle + '&End=false&IsLiability=' + isLiability + '&PartyName=' + partyName;
             getBmStoneList(bmStone);
         }
     }, [workTitle, submarineCable, isLiability, partyName]);
 
     useEffect(() => {
-        fetch(submarineCableInfoList, { method: 'GET' })
-            .then((res) => res.json())
-            .then((data) => {
-                setSubmarineCableList(data);
-            })
-            .catch(() => {
-                dispatch(
-                    setMessageStateOpen({
-                        messageStateOpen: {
-                            isOpen: true,
-                            severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
-                        }
-                    })
-                );
-            });
-        fetch(getCurrencyData, { method: 'GET' })
-            .then((res) => res.json())
-            .then((data) => {
-                setCodeList(data);
-            })
-            .catch(() => {
-                setCodeList([]);
-                dispatch(
-                    setMessageStateOpen({
-                        messageStateOpen: {
-                            isOpen: true,
-                            severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
-                        }
-                    })
-                );
-            });
-        fetch(getWorkTitle, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
-            },
-            body: JSON.stringify({})
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                if (Array.isArray(data)) {
-                    setWorkTitleList(data);
-                } else {
-                    setWorkTitleList([]);
-                }
-            })
-            .catch(() => {
-                setWorkTitleList([]);
-                dispatch(
-                    setMessageStateOpen({
-                        messageStateOpen: {
-                            isOpen: true,
-                            severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
-                        }
-                    })
-                );
-            });
+        const fetchSubmarineCableList = async () => {
+            try {
+                const data = await fetchData(submarineCableInfoList);
+                setDropdownLists((prev) => ({ ...prev, submarineCableList: data }));
+            } catch (error) {
+                console.error('Error fetching submarine cable list:', error);
+            }
+        };
+        const fetchCurrencyData = async () => {
+            try {
+                const data = await fetchData(getCurrencyData);
+                setDropdownLists((prev) => ({ ...prev, codeList: data }));
+            } catch (error) {
+                console.error('Error fetching currency data:', error);
+            }
+        };
+        const fetchWorkTitle = async () => {
+            try {
+                const data = await fetchData(getWorkTitle, 'POST', {});
+                setDropdownLists((prev) => ({ ...prev, workTitleList: data }));
+            } catch (error) {
+                console.error('Error fetching currency data:', error);
+            }
+        };
+        fetchSubmarineCableList();
+        fetchCurrencyData();
+        fetchWorkTitle();
     }, []);
 
     useEffect(() => {
@@ -657,7 +660,7 @@ const InvoiceWorkManage = () => {
                 submarineCable={submarineCable}
                 workTitle={workTitle}
                 fromCode={fromCode}
-                codeList={codeList}
+                codeList={dropdownLists.codeList}
                 currencyExgID={currencyExgID}
                 setCurrencyExgID={setCurrencyExgID}
                 rateInfo={rateInfo}
@@ -696,12 +699,12 @@ const InvoiceWorkManage = () => {
                                     setFromCode={setFromCode}
                                     partyName={partyName}
                                     setPartyName={setPartyName}
-                                    supNmList={supNmList}
-                                    submarineCableList={submarineCableList}
-                                    codeList={codeList}
+                                    supNmList={dropdownLists.supNmList}
+                                    submarineCableList={dropdownLists.submarineCableList}
+                                    codeList={dropdownLists.codeList}
                                     purpose={rateInfo.current.Purpose}
                                     partyNameList={partyNameList}
-                                    workTitleList={workTitleList}
+                                    workTitleList={dropdownLists.workTitleList}
                                 />
                             </Grid>
                             {/* 右 */}

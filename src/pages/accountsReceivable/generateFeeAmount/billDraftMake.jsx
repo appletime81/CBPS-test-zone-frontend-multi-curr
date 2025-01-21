@@ -452,7 +452,7 @@ const BillDraftMake = ({ isDialogOpen, handleDialogClose, billMasterID, pONo, wo
                                 }}
                             >
                                 <Box>
-                                    {submarineCableName} {workTitle} Cable Network {subject1} Central Billing Party
+                                    {submarineCableName} {workTitle} Cable {subject1} Central Billing Party
                                 </Box>
                                 <Box>{tmpBMArray.join(',')}</Box>
                                 <Box>

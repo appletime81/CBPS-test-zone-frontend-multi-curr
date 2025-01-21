@@ -18,13 +18,13 @@ const InvoiceDataList = ({ listInfo, setEditItem, deletelistInfoItem }) => {
             // backgroundColor: theme.palette.common.gary,
             color: theme.palette.common.black,
             paddingTop: '0.2rem',
-            paddingBottom: '0.2rem',
+            paddingBottom: '0.2rem'
         },
         [`&.${tableCellClasses.body}`]: {
             fontSize: 14,
             paddingTop: '0.2rem',
-            paddingBottom: '0.2rem',
-        },
+            paddingBottom: '0.2rem'
+        }
     }));
 
     return (
@@ -48,41 +48,17 @@ const InvoiceDataList = ({ listInfo, setEditItem, deletelistInfoItem }) => {
                 <TableBody>
                     {listInfo?.map((row, id) => {
                         return (
-                            <TableRow
-                                key={row.InvoiceWKMaster?.InvoiceNo + id}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
-                                <StyledTableCell align="center">
-                                    {row.InvoiceWKMaster?.InvoiceNo}
-                                </StyledTableCell>
-                                <StyledTableCell align="center">
-                                    {row.InvoiceWKMaster?.SupplierName}
-                                </StyledTableCell>
-                                <StyledTableCell align="center">
-                                    {row.InvoiceWKMaster?.SubmarineCable}
-                                </StyledTableCell>
-                                <StyledTableCell align="center">
-                                    {row.InvoiceWKMaster?.ContractType}
-                                </StyledTableCell>
-                                <StyledTableCell align="center">
-                                    {dayjs(row.InvoiceWKMaster?.IssueDate).format('YYYY/MM/DD')}
-                                </StyledTableCell>
-                                <StyledTableCell align="center">
-                                    {row.InvoiceWKDetail.length}
-                                </StyledTableCell>
-                                <StyledTableCell align="center">
-                                    {handleNumber(row.InvoiceWKMaster.TotalAmount)}
-                                </StyledTableCell>
-                                <StyledTableCell align="center">
-                                    {row.InvoiceWKMaster.Code}
-                                </StyledTableCell>
-                                <StyledTableCell align="center">
-                                    {row.InvoiceWKMaster.TotalAmount *
-                                        (row.InvoiceWKMaster.ExgRate || 1)}
-                                </StyledTableCell>
-                                <StyledTableCell align="center">
-                                    {row.InvoiceWKMaster.ToCode || row.InvoiceWKMaster.Code}
-                                </StyledTableCell>
+                            <TableRow key={row.InvoiceWKMaster?.InvoiceNo + id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                <StyledTableCell align="center">{row.InvoiceWKMaster?.InvoiceNo}</StyledTableCell>
+                                <StyledTableCell align="center">{row.InvoiceWKMaster?.SupplierName}</StyledTableCell>
+                                <StyledTableCell align="center">{row.InvoiceWKMaster?.SubmarineCable}</StyledTableCell>
+                                <StyledTableCell align="center">{row.InvoiceWKMaster?.ContractType}</StyledTableCell>
+                                <StyledTableCell align="center">{dayjs(row.InvoiceWKMaster?.IssueDate).format('YYYY/MM/DD')}</StyledTableCell>
+                                <StyledTableCell align="center">{row.InvoiceWKDetail.length}</StyledTableCell>
+                                <StyledTableCell align="center">{handleNumber(row.InvoiceWKMaster.TotalAmount)}</StyledTableCell>
+                                <StyledTableCell align="center">{row.InvoiceWKMaster.Code}</StyledTableCell>
+                                <StyledTableCell align="center">{handleNumber(row.InvoiceWKMaster.TotalAmount * (row.InvoiceWKMaster.ExgRate || 1))}</StyledTableCell>
+                                <StyledTableCell align="center">{row.InvoiceWKMaster.ToCode || row.InvoiceWKMaster.Code}</StyledTableCell>
                                 <StyledTableCell align="center">
                                     <Button
                                         color="primary"

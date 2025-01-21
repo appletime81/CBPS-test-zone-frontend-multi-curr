@@ -50,11 +50,12 @@ const InvoiceWorkManage = ({
     partyName,
     setPartyName,
     submarineCableList,
-    currencyListInfo,
+    codeList,
     purpose,
     partyNameList,
     supNmList,
-    workTitleList
+    workTitleList,
+    rateInfo
 }) => {
     // const [supNmList, setSupNmList] = useState([]); //供應商下拉選單
     const dispatch = useDispatch();
@@ -111,6 +112,7 @@ const InvoiceWorkManage = ({
     };
 
     console.log('partyName=>>', partyName, partyNameList);
+    console.log('rateInfo=>', rateInfo);
 
     return (
         <MainCard title="發票工作主檔" sx={{ height: '100%' }}>
@@ -329,7 +331,7 @@ const InvoiceWorkManage = ({
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇原始幣別</InputLabel>
                         <Select value={fromCode} label="幣別" inputProps={{ readOnly: action === '檢視' }} onChange={(e) => setFromCode(e.target.value)}>
-                            {currencyListInfo?.map((i) => (
+                            {codeList?.map((i) => (
                                 <MenuItem key={i.Code} value={i.Code}>
                                     {i.Code}
                                 </MenuItem>

@@ -4,16 +4,7 @@ import { useState, useRef } from 'react';
 import { handleNumber, BootstrapDialogTitle } from 'components/commonFunction';
 import Decimal from 'decimal.js';
 // material-ui
-import {
-    Button,
-    Table,
-    Dialog,
-    DialogContent,
-    DialogActions,
-    TableFooter,
-    Box,
-    TablePagination,
-} from '@mui/material';
+import { Button, Table, Dialog, DialogContent, DialogActions, TableFooter, Box, TablePagination } from '@mui/material';
 import { TableBody, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { styled } from '@mui/material/styles';
@@ -30,19 +21,19 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
         // backgroundColor: theme.palette.common.gary,
         color: theme.palette.common.black,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
+        paddingBottom: '0.2rem'
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
+        paddingBottom: '0.2rem'
     },
     [`&.${tableCellClasses.body}.totalAmount`]: {
         fontSize: 14,
         paddingTop: '0.2rem',
         paddingBottom: '0.2rem',
-        backgroundColor: '#CFD8DC',
-    },
+        backgroundColor: '#CFD8DC'
+    }
 }));
 
 const ToBillDataList = ({ listInfo, page, setPage }) => {
@@ -82,13 +73,13 @@ const ToBillDataList = ({ listInfo, page, setPage }) => {
         let tmpQueryMaster = journalMasterView + tmpQuery;
         fetch(tmpQueryMaster, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
         })
             .then((res) => res.json())
             .then((data) => {
                 fetch(tmpQueryDetail, {
                     method: 'GET',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
                 })
                     .then((res) => res.json())
                     .then((data2) => {
@@ -104,19 +95,12 @@ const ToBillDataList = ({ listInfo, page, setPage }) => {
                                 item.itemCount = index + 1;
                                 acc[keyName].push(item);
                                 return acc;
-                            }, []),
+                            }, [])
                         );
                         data2.forEach((i) => {
-                            tmpFeeAmountPost = new Decimal(tmpFeeAmountPost).add(
-                                new Decimal(i.FeeAmountPost),
-                            );
-                            tmpDifferAmount = new Decimal(tmpDifferAmount).add(
-                                new Decimal(i.Difference),
-                            );
-                            tmpAfterDiffAmount = new Decimal(tmpAfterDiffAmount)
-                                .add(new Decimal(i.FeeAmountPost))
-                                .add(new Decimal(i.Difference))
-                                .minus(new Decimal(i.WHTAmount));
+                            tmpFeeAmountPost = new Decimal(tmpFeeAmountPost).add(new Decimal(i.FeeAmountPost));
+                            tmpDifferAmount = new Decimal(tmpDifferAmount).add(new Decimal(i.Difference));
+                            tmpAfterDiffAmount = new Decimal(tmpAfterDiffAmount).add(new Decimal(i.FeeAmountPost)).add(new Decimal(i.Difference)).minus(new Decimal(i.WHTAmount));
                             codeType.current = i.ToCode;
                         });
                         totalAmount.current = tmpFeeAmountPost;
@@ -131,9 +115,9 @@ const ToBillDataList = ({ listInfo, page, setPage }) => {
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'error',
-                                    message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                                },
-                            }),
+                                    message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                                }
+                            })
                         );
                     });
             })
@@ -143,9 +127,9 @@ const ToBillDataList = ({ listInfo, page, setPage }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -158,10 +142,7 @@ const ToBillDataList = ({ listInfo, page, setPage }) => {
                     幣別：{codeType.current}
                 </Box>
                 <DialogContent>
-                    <TableContainer
-                        component={Paper}
-                        sx={{ maxHeight: window.screen.height * 0.45 }}
-                    >
+                    <TableContainer component={Paper} sx={{ maxHeight: window.screen.height * 0.45 }}>
                         <Table sx={{ minWidth: 300 }} stickyHeader>
                             <TableHead>
                                 <TableRow>
@@ -169,7 +150,7 @@ const ToBillDataList = ({ listInfo, page, setPage }) => {
                                     <StyledTableCell align="center">費用項目</StyledTableCell>
                                     <StyledTableCell align="center">是否為税</StyledTableCell>
                                     <StyledTableCell align="center">費用金額</StyledTableCell>
-                                    <StyledTableCell align="center">記帳段號</StyledTableCell>
+                                    <StyledTableCell align="center">計帳段號</StyledTableCell>
                                     <StyledTableCell align="center">會員</StyledTableCell>
                                     <StyledTableCell align="center">攤分比例</StyledTableCell>
                                     <StyledTableCell align="center">攤分後金額</StyledTableCell>
@@ -180,24 +161,20 @@ const ToBillDataList = ({ listInfo, page, setPage }) => {
                             <TableBody>
                                 {toBillDataInfo.map((rowFirst, idFirst) => {
                                     return rowFirst.map((rowSecond, idSecond) => {
-                                        let afterDiff =
-                                            rowSecond.FeeAmountPost + rowSecond.Difference;
+                                        let afterDiff = rowSecond.FeeAmountPost + rowSecond.Difference;
                                         return (
                                             <TableRow
                                                 key={rowSecond?.FeeItem + idFirst + idSecond}
                                                 sx={{
                                                     '&:last-child td, &:last-child th': {
-                                                        border: 0,
-                                                    },
+                                                        border: 0
+                                                    }
                                                 }}
                                             >
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {rowSecond.itemCount}
@@ -205,10 +182,7 @@ const ToBillDataList = ({ listInfo, page, setPage }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {rowSecond.FeeItem}
@@ -216,10 +190,7 @@ const ToBillDataList = ({ listInfo, page, setPage }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {rowSecond.IsTax ? '是' : '否'}
@@ -227,10 +198,7 @@ const ToBillDataList = ({ listInfo, page, setPage }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {handleNumber(rowSecond.FeeAmountPre)}
@@ -238,10 +206,7 @@ const ToBillDataList = ({ listInfo, page, setPage }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {rowSecond.BillMilestone}
@@ -249,10 +214,7 @@ const ToBillDataList = ({ listInfo, page, setPage }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {rowSecond.PartyName}
@@ -260,10 +222,7 @@ const ToBillDataList = ({ listInfo, page, setPage }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {rowSecond.LBRatio}
@@ -271,10 +230,7 @@ const ToBillDataList = ({ listInfo, page, setPage }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {handleNumber(rowSecond.FeeAmountPost)}
@@ -282,10 +238,7 @@ const ToBillDataList = ({ listInfo, page, setPage }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {rowSecond.Difference}
@@ -293,10 +246,7 @@ const ToBillDataList = ({ listInfo, page, setPage }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {handleNumber(afterDiff)}
@@ -305,9 +255,7 @@ const ToBillDataList = ({ listInfo, page, setPage }) => {
                                         );
                                     });
                                 })}
-                                <TableRow
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
+                                <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <StyledTableCell className="totalAmount" align="center">
                                         Total
                                     </StyledTableCell>
@@ -360,46 +308,20 @@ const ToBillDataList = ({ listInfo, page, setPage }) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {(rowsPerPage > 0
-                            ? listInfo.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            : listInfo
-                        )?.map((row, id) => {
+                        {(rowsPerPage > 0 ? listInfo.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : listInfo)?.map((row, id) => {
                             return (
-                                <TableRow
-                                    key={row.InvoiceWKMaster?.WKMasterID + id}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
+                                <TableRow key={row.InvoiceWKMaster?.WKMasterID + id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <StyledTableCell align="center">{id + 1}</StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row?.InvoiceWKMaster.InvoiceNo}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row?.InvoiceWKMaster.SupplierName}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row?.InvoiceWKMaster.SubmarineCable}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row?.InvoiceWKMaster.WorkTitle}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {dayjs(row?.InvoiceWKMaster.IssueDate).format('YYYY/MM/DD')}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row?.InvoiceWKDetail?.length}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {handleNumber(row.InvoiceWKMaster.TotalAmount)}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.InvoiceWKMaster.Code}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {handleNumber(row.InvoiceWKMaster.ExgTotalAmount)}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.InvoiceWKMaster.ToCode}
-                                    </StyledTableCell>
+                                    <StyledTableCell align="center">{row?.InvoiceWKMaster.InvoiceNo}</StyledTableCell>
+                                    <StyledTableCell align="center">{row?.InvoiceWKMaster.SupplierName}</StyledTableCell>
+                                    <StyledTableCell align="center">{row?.InvoiceWKMaster.SubmarineCable}</StyledTableCell>
+                                    <StyledTableCell align="center">{row?.InvoiceWKMaster.WorkTitle}</StyledTableCell>
+                                    <StyledTableCell align="center">{dayjs(row?.InvoiceWKMaster.IssueDate).format('YYYY/MM/DD')}</StyledTableCell>
+                                    <StyledTableCell align="center">{row?.InvoiceWKDetail?.length}</StyledTableCell>
+                                    <StyledTableCell align="center">{handleNumber(row.InvoiceWKMaster.TotalAmount)}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.InvoiceWKMaster.Code}</StyledTableCell>
+                                    <StyledTableCell align="center">{handleNumber(row.InvoiceWKMaster.ExgTotalAmount)}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.InvoiceWKMaster.ToCode}</StyledTableCell>
                                     <StyledTableCell align="center">
                                         {row?.InvoiceWKMaster.Status === 'VALIDATED'
                                             ? '待立帳'
@@ -422,8 +344,8 @@ const ToBillDataList = ({ listInfo, page, setPage }) => {
                                                 justifyContent: 'center',
                                                 '& button': {
                                                     mx: { sm: 0.3, md: 0.3, lg: 0.6, xl: 1.5 },
-                                                    p: 0,
-                                                },
+                                                    p: 0
+                                                }
                                             }}
                                         >
                                             <Button

@@ -1,19 +1,5 @@
-import { useEffect, useState, useRef } from 'react';
-import {
-    Typography,
-    Grid,
-    Button,
-    FormControl,
-    InputLabel,
-    TextField,
-    Select,
-    Table,
-    MenuItem,
-    RadioGroup,
-    FormControlLabel,
-    Radio,
-    TableCell,
-} from '@mui/material';
+import { useEffect, useState } from 'react';
+import { Typography, Grid, Button, FormControl, InputLabel, TextField, Select, Table, MenuItem, RadioGroup, FormControlLabel, Radio, TableCell } from '@mui/material';
 
 // day
 import Dialog from '@mui/material/Dialog';
@@ -48,32 +34,22 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
         // backgroundColor: theme.palette.common.gary,
         color: theme.palette.common.black,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
+        paddingBottom: '0.2rem'
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
-    },
+        paddingBottom: '0.2rem'
+    }
 }));
 
-const ChosePurpose = ({
-    isPurposeDialogOpen,
-    handleDialogClose,
-    submarineCable,
-    workTitle,
-    fromCode,
-    codeList,
-    currencyExgID,
-    setCurrencyExgID,
-    rateInfo,
-}) => {
+const ChosePurpose = ({ isPurposeDialogOpen, handleDialogClose, submarineCable, workTitle, fromCode, codeList, currencyExgID, setCurrencyExgID, rateInfo }) => {
     const dispatch = useDispatch();
     const [billYM, setBillYM] = useState(null); //入帳單到期日
     const [toCode, setToCode] = useState(''); //兌換幣別代碼
     const [dataList, setDataList] = useState([]);
     const [tempCurrencyExgID, setTempCurrencyExgID] = useState(null);
-    const tempSelectPurpose = useRef({});
+    // const tempSelectPurpose = useRef({});
 
     const initInfo = () => {
         setToCode('');
@@ -82,15 +58,22 @@ const ChosePurpose = ({
 
     const handleChange = (row) => {
         setTempCurrencyExgID(row.CurrencyExgID);
-        tempSelectPurpose.current = {
+        rateInfo.current = {
             Purpose: row.Purpose,
             ExgRate: row.ExgRate,
-            ToCode: row.ToCode,
+            ToCode: row.ToCode
         };
+        // tempSelectPurpose.current = {
+        //     Purpose: row.Purpose,
+        //     ExgRate: row.ExgRate,
+        //     ToCode: row.ToCode
+        // };
     };
 
     const handleSave = () => {
-        rateInfo.current = tempSelectPurpose.current;
+        // console.log('tempSelectPurpose=>>', tempSelectPurpose);
+        console.log('tempCurrencyExgID=>>', tempCurrencyExgID);
+        // rateInfo.current = tempSelectPurpose.current;
         setCurrencyExgID(tempCurrencyExgID);
         setTempCurrencyExgID(null);
         handleDialogClose();
@@ -102,7 +85,7 @@ const ChosePurpose = ({
             SubmarineCable: submarineCable,
             WorkTitle: workTitle,
             FromCode: fromCode,
-            ifEnd: false,
+            ifEnd: false
         };
 
         if (toCode !== '') {
@@ -115,9 +98,9 @@ const ChosePurpose = ({
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
             },
-            body: JSON.stringify(tmpObject),
+            body: JSON.stringify(tmpObject)
         })
             .then((res) => res.json())
             .then((data) => {
@@ -128,9 +111,9 @@ const ChosePurpose = ({
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'success',
-                                message: '查詢成功',
-                            },
-                        }),
+                                message: '查詢成功'
+                            }
+                        })
                     );
                 } else {
                     setDataList(data);
@@ -139,9 +122,9 @@ const ChosePurpose = ({
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'success',
-                                message: '查無資料',
-                            },
-                        }),
+                                message: '查無資料'
+                            }
+                        })
                     );
                 }
             })
@@ -149,7 +132,7 @@ const ChosePurpose = ({
     };
 
     useEffect(() => {
-        tempSelectPurpose.current = {};
+        // tempSelectPurpose.current = {};
         setDataList([]);
     }, [submarineCable, workTitle]);
 
@@ -159,17 +142,13 @@ const ChosePurpose = ({
         }
     }, [isPurposeDialogOpen]);
 
+    console.log('tempCurrencyExgID=>>', tempCurrencyExgID, 'currencyExgID=>>', currencyExgID);
+
     return (
         <Dialog maxWidth="md" fullWidth open={isPurposeDialogOpen}>
             <BootstrapDialogTitle>選擇用途/主旨</BootstrapDialogTitle>
             <DialogContent dividers>
-                <Grid
-                    container
-                    spacing={1}
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                >
+                <Grid container spacing={1} display="flex" justifyContent="center" alignItems="center">
                     <Grid item md={2} display="flex" justifyContent="center" alignItems="center">
                         <Typography variant="h5">帳單到期：</Typography>
                     </Grid>
@@ -194,11 +173,7 @@ const ChosePurpose = ({
                     <Grid item md={2}>
                         <FormControl fullWidth size="small">
                             <InputLabel>選擇兌換幣別</InputLabel>
-                            <Select
-                                value={toCode}
-                                label="幣別"
-                                onChange={(e) => setToCode(e.target.value)}
-                            >
+                            <Select value={toCode} label="幣別" onChange={(e) => setToCode(e.target.value)}>
                                 {codeList.map((i) => (
                                     <MenuItem key={i.Code} value={i.Code}>
                                         {i.Code}
@@ -230,12 +205,7 @@ const ChosePurpose = ({
                                         return (
                                             <TableRow key={row.CurrencyExgID + id}>
                                                 <TableCell width="5%">
-                                                    <RadioGroup
-                                                        row
-                                                        value={tempCurrencyExgID ?? currencyExgID}
-                                                        onChange={() => handleChange(row)}
-                                                        sx={{ justifyContent: 'center' }}
-                                                    >
+                                                    <RadioGroup row value={tempCurrencyExgID ?? currencyExgID} onChange={() => handleChange(row)} sx={{ justifyContent: 'center' }}>
                                                         <FormControlLabel
                                                             value={row.CurrencyExgID}
                                                             sx={{ display: 'contents' }}
@@ -244,9 +214,9 @@ const ChosePurpose = ({
                                                                     sx={{
                                                                         '& .MuiSvgIcon-root': {
                                                                             fontSize: {
-                                                                                xl: 18,
-                                                                            },
-                                                                        },
+                                                                                xl: 18
+                                                                            }
+                                                                        }
                                                                     }}
                                                                 />
                                                             }
@@ -256,9 +226,7 @@ const ChosePurpose = ({
                                                 <TableCell align="center">{row.Purpose}</TableCell>
                                                 <TableCell align="center">{row.ExgRate}</TableCell>
                                                 <TableCell align="center">{row.Note}</TableCell>
-                                                <TableCell align="center">
-                                                    {dayjs(row.CreateTime).format('YYYY/MM/DD')}
-                                                </TableCell>
+                                                <TableCell align="center">{dayjs(row.CreateTime).format('YYYY/MM/DD')}</TableCell>
                                                 <TableCell align="center">{row.Editor}</TableCell>
                                             </TableRow>
                                         );

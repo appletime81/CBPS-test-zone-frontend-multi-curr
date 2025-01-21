@@ -20,13 +20,13 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
         // backgroundColor: theme.palette.common.gary,
         color: theme.palette.common.black,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
+        paddingBottom: '0.2rem'
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
-    },
+        paddingBottom: '0.2rem'
+    }
 }));
 
 const PaymentedDataList = ({ listInfo }) => {
@@ -69,9 +69,10 @@ const PaymentedDataList = ({ listInfo }) => {
                             <StyledTableCell align="center">海纜作業</StyledTableCell>
                             <StyledTableCell align="center">發票到期日</StyledTableCell>
                             <StyledTableCell align="center">總金額</StyledTableCell>
-                            <StyledTableCell align="center">累計實收金額</StyledTableCell>
                             <StyledTableCell align="center">累計實付金額</StyledTableCell>
-                            <StyledTableCell align="center">幣別</StyledTableCell>
+                            <StyledTableCell align="center">實付幣別</StyledTableCell>
+                            <StyledTableCell align="center">累計實收金額</StyledTableCell>
+                            <StyledTableCell align="center">實收幣別</StyledTableCell>
                             <StyledTableCell align="center">Action</StyledTableCell>
                         </TableRow>
                     </TableHead>
@@ -83,47 +84,24 @@ const PaymentedDataList = ({ listInfo }) => {
                             });
 
                             return (
-                                <TableRow
-                                    key={
-                                        row?.InvoiceWKMaster?.WKMasterID +
-                                        row?.InvoiceWKMaster?.InvoiceNo
-                                    }
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
+                                <TableRow key={row?.InvoiceWKMaster?.WKMasterID + row?.InvoiceWKMaster?.InvoiceNo} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <StyledTableCell align="center">{id + 1}</StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row?.InvoiceWKMaster?.InvoiceNo}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row?.InvoiceWKMaster?.SupplierName}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row?.InvoiceWKMaster?.SubmarineCable}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row?.InvoiceWKMaster?.WorkTitle}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {dayjs(row?.InvoiceWKMaster?.DueDate).format('YYYY/MM/DD')}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {handleNumber(row?.InvoiceWKMaster?.TotalAmount)}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {handleNumber(row?.ReceivedAmountSum)}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {handleNumber(row?.InvoiceWKMaster?.PaidAmount)}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {handleNumber(row?.InvoiceWKMaster?.Code)}
-                                    </StyledTableCell>
+                                    <StyledTableCell align="center">{row?.InvoiceWKMaster?.InvoiceNo}</StyledTableCell>
+                                    <StyledTableCell align="center">{row?.InvoiceWKMaster?.SupplierName}</StyledTableCell>
+                                    <StyledTableCell align="center">{row?.InvoiceWKMaster?.SubmarineCable}</StyledTableCell>
+                                    <StyledTableCell align="center">{row?.InvoiceWKMaster?.WorkTitle}</StyledTableCell>
+                                    <StyledTableCell align="center">{dayjs(row?.InvoiceWKMaster?.DueDate).format('YYYY/MM/DD')}</StyledTableCell>
+                                    <StyledTableCell align="center">{handleNumber(row?.InvoiceWKMaster?.TotalAmount)}</StyledTableCell>
+                                    <StyledTableCell align="center">{handleNumber(row?.InvoiceWKMaster?.PaidAmount)}</StyledTableCell>
+                                    <StyledTableCell align="center">{handleNumber(row?.InvoiceWKMaster?.Code)}</StyledTableCell>
+                                    <StyledTableCell align="center">{handleNumber(row?.ReceivedAmountSum)}</StyledTableCell>
+                                    <StyledTableCell align="center">{handleNumber(row?.InvoiceWKMaster?.ToCode)}</StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Box
                                             sx={{
                                                 display: 'flex',
                                                 justifyContent: 'center',
-                                                '& button': { mx: 1, p: 0 },
+                                                '& button': { mx: 1, p: 0 }
                                             }}
                                         >
                                             <Button
@@ -131,11 +109,7 @@ const PaymentedDataList = ({ listInfo }) => {
                                                 size="small"
                                                 variant="outlined"
                                                 onClick={() => {
-                                                    handleDialogOpen(
-                                                        row.BillDetailList,
-                                                        row.InvoiceWKMaster.InvoiceNo,
-                                                        row.InvoiceWKMaster.DueDate,
-                                                    );
+                                                    handleDialogOpen(row.BillDetailList, row.InvoiceWKMaster.InvoiceNo, row.InvoiceWKMaster.DueDate);
                                                 }}
                                             >
                                                 檢視

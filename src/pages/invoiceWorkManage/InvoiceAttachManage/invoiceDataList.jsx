@@ -9,18 +9,7 @@ import { downloadInvoiceWKMaster, downloadInvoiceWKMasterAttachment } from 'comp
 
 // material-ui
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import {
-    Button,
-    Table,
-    Box,
-    TableContainer,
-    TableHead,
-    TableBody,
-    TableFooter,
-    TableRow,
-    Paper,
-    TablePagination,
-} from '@mui/material';
+import { Button, Table, Box, TableContainer, TableHead, TableBody, TableFooter, TableRow, Paper, TablePagination } from '@mui/material';
 import { styled } from '@mui/material/styles';
 // redux
 import { useDispatch } from 'react-redux';
@@ -32,13 +21,13 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
         // backgroundColor: theme.palette.common.gary,
         color: theme.palette.common.black,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
+        paddingBottom: '0.2rem'
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
-    },
+        paddingBottom: '0.2rem'
+    }
 }));
 
 const InvoiceDataList = ({ listInfo, page, setPage }) => {
@@ -91,8 +80,8 @@ const InvoiceDataList = ({ listInfo, page, setPage }) => {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-            },
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+            }
         })
             .then((res) => {
                 if (!res.ok) {
@@ -133,9 +122,9 @@ const InvoiceDataList = ({ listInfo, page, setPage }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '尚未上傳檔案',
-                        },
-                    }),
+                            message: '尚未上傳檔案'
+                        }
+                    })
                 );
                 // 处理错误
             });
@@ -149,8 +138,8 @@ const InvoiceDataList = ({ listInfo, page, setPage }) => {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-            },
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+            }
         })
             .then((res) => {
                 // 解析 content-disposition 来获取文件名
@@ -187,9 +176,9 @@ const InvoiceDataList = ({ listInfo, page, setPage }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '尚未上傳檔案',
-                        },
-                    }),
+                            message: '尚未上傳檔案'
+                        }
+                    })
                 );
                 // 处理错误
             });
@@ -197,22 +186,9 @@ const InvoiceDataList = ({ listInfo, page, setPage }) => {
 
     return (
         <>
-            <InvoiceDetail
-                toCodeType={toCodeType.current}
-                modifyItem={modifyItem}
-                isDetailOpen={isDetailOpen}
-                isDetailClose={isDetailClose}
-            />
-            <InvoiceUpload
-                isUploadOpen={isUploadOpen}
-                handleUploadClose={handleUploadClose}
-                itemID={itemID.current}
-            />
-            <AttachmentUpload
-                isAttachUploadOpen={isAttachUploadOpen}
-                handleAttachUploadClose={handleAttachUploadClose}
-                itemID={itemID.current}
-            />
+            <InvoiceDetail toCodeType={toCodeType.current} modifyItem={modifyItem} isDetailOpen={isDetailOpen} isDetailClose={isDetailClose} />
+            <InvoiceUpload isUploadOpen={isUploadOpen} handleUploadClose={handleUploadClose} itemID={itemID.current} />
+            <AttachmentUpload isAttachUploadOpen={isAttachUploadOpen} handleAttachUploadClose={handleAttachUploadClose} itemID={itemID.current} />
             <TableContainer component={Paper} sx={{ maxHeight: window.screen.height * 0.4 }}>
                 <Table sx={{ minWidth: 300 }} stickyHeader>
                     <TableHead>
@@ -226,17 +202,13 @@ const InvoiceDataList = ({ listInfo, page, setPage }) => {
                             <StyledTableCell align="center">發票到期日</StyledTableCell>
                             <StyledTableCell align="center">明細數量</StyledTableCell>
                             <StyledTableCell align="center">總金額</StyledTableCell>
-                            <StyledTableCell align="center">總金額幣別</StyledTableCell>
                             <StyledTableCell align="center">累計實付金額</StyledTableCell>
-                            <StyledTableCell align="center">累計實付幣別</StyledTableCell>
+                            <StyledTableCell align="center">幣別</StyledTableCell>
                             <StyledTableCell align="center">Action</StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {(rowsPerPage > 0
-                            ? listInfo.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            : listInfo
-                        )?.map((row, itemID) => {
+                        {(rowsPerPage > 0 ? listInfo.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : listInfo)?.map((row, itemID) => {
                             tmpBMArray = [];
                             row.InvoiceWKDetail.forEach((i) => {
                                 if (!tmpBMArray.includes(i.BillMilestone)) {
@@ -245,47 +217,20 @@ const InvoiceDataList = ({ listInfo, page, setPage }) => {
                             });
                             return (
                                 <TableRow
-                                    key={
-                                        row.InvoiceWKMaster?.WKMasterID +
-                                        row.InvoiceWKMaster?.InvoiceNo +
-                                        itemID
-                                    }
+                                    key={row.InvoiceWKMaster?.WKMasterID + row.InvoiceWKMaster?.InvoiceNo + itemID}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                 >
                                     <StyledTableCell align="center">{itemID + 1}</StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.InvoiceWKMaster?.InvoiceNo}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.InvoiceWKMaster?.SupplierName}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.InvoiceWKMaster?.SubmarineCable}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.InvoiceWKMaster?.WorkTitle}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {tmpBMArray.join(',')}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {dayjs(row.InvoiceWKMaster?.DueDate).format('YYYY/MM/DD')}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.InvoiceWKDetail.length}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {handleNumber(row.InvoiceWKMaster.TotalAmount)}{' '}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.InvoiceWKMaster.Code}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {handleNumber(row.InvoiceWKMaster.PaidAmount)}{' '}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.InvoiceWKMaster.ToCode}
-                                    </StyledTableCell>
+                                    <StyledTableCell align="center">{row.InvoiceWKMaster?.InvoiceNo}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.InvoiceWKMaster?.SupplierName}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.InvoiceWKMaster?.SubmarineCable}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.InvoiceWKMaster?.WorkTitle}</StyledTableCell>
+                                    <StyledTableCell align="center">{tmpBMArray.join(',')}</StyledTableCell>
+                                    <StyledTableCell align="center">{dayjs(row.InvoiceWKMaster?.DueDate).format('YYYY/MM/DD')}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.InvoiceWKDetail.length}</StyledTableCell>
+                                    <StyledTableCell align="center">{handleNumber(row.InvoiceWKMaster.TotalAmount)} </StyledTableCell>
+                                    <StyledTableCell align="center">{handleNumber(row.InvoiceWKMaster.PaidAmount)} </StyledTableCell>
+                                    <StyledTableCell align="center">{row.InvoiceWKMaster.Code}</StyledTableCell>
                                     <TableCell align="center">
                                         <Box
                                             sx={{
@@ -293,8 +238,8 @@ const InvoiceDataList = ({ listInfo, page, setPage }) => {
                                                 justifyContent: 'center',
                                                 '& button': {
                                                     mx: { md: 0.2, lg: 0.2 },
-                                                    p: 0,
-                                                },
+                                                    p: 0
+                                                }
                                             }}
                                         >
                                             <Button
@@ -314,9 +259,7 @@ const InvoiceDataList = ({ listInfo, page, setPage }) => {
                                                 variant="outlined"
                                                 size="small"
                                                 onClick={() => {
-                                                    handleUploadOpen(
-                                                        row.InvoiceWKMaster?.WKMasterID,
-                                                    );
+                                                    handleUploadOpen(row.InvoiceWKMaster?.WKMasterID);
                                                 }}
                                             >
                                                 上傳發票
@@ -326,9 +269,7 @@ const InvoiceDataList = ({ listInfo, page, setPage }) => {
                                                 variant="outlined"
                                                 size="small"
                                                 onClick={() => {
-                                                    handleAttachUploadOpen(
-                                                        row.InvoiceWKMaster?.WKMasterID,
-                                                    );
+                                                    handleAttachUploadOpen(row.InvoiceWKMaster?.WKMasterID);
                                                 }}
                                             >
                                                 上傳附件
@@ -348,9 +289,7 @@ const InvoiceDataList = ({ listInfo, page, setPage }) => {
                                                 variant="outlined"
                                                 size="small"
                                                 onClick={() => {
-                                                    handleAttacDownload(
-                                                        row.InvoiceWKMaster?.WKMasterID,
-                                                    );
+                                                    handleAttacDownload(row.InvoiceWKMaster?.WKMasterID);
                                                 }}
                                             >
                                                 下載附件

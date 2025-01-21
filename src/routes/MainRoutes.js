@@ -56,7 +56,6 @@ const BudgetManage = Loadable(lazy(() => import('pages/budgetManage/BudgetManage
 // ==============================|| MAIN ROUTING ||============================== //
 
 const RequireAuth = ({ children, item }) => {
-    console.log('程式起點2=>>', window.location.href.indexOf('code'));
     const dispatch = useDispatch();
     const { isLogin, userInfo, isOL } = useSelector((state) => state.dropdown); //message狀態
     // haha2

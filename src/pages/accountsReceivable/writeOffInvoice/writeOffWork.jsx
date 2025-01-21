@@ -265,21 +265,21 @@ const WriteOffWork = ({ isDialogOpen, handleDialogClose, writeOffInfo, writeOffD
                               .toNumber();
 
                 // 20250106新增銷帳作業Default 設為正常繳款-起
-                if (i.Status === 'INCOMPLETE' && i.ReceiveAmount === 0) {
-                    i.Status = 'OK';
-                    tmpChangeState = new Decimal(i.ReceiveAmount).add(new Decimal(i.ShortAmount)).toNumber();
-                    i.ReceiveAmount = tmpChangeState;
-                    i.BRAmount = new Decimal(tmpChangeState).add(new Decimal(i.BankFee)).toNumber();
-                    i.ShortAmount =
-                        Number(i.FeeAmount) - Number(i.ReceivedAmount) - Number(i.BankFees) - tmpChangeState - Number(i.BankFee) <= 0
-                            ? 0
-                            : new Decimal(i.FeeAmount)
-                                  .minus(new Decimal(i.ReceivedAmount))
-                                  .minus(new Decimal(i.BankFees))
-                                  .minus(new Decimal(tmpChangeState))
-                                  .minus(new Decimal(i.BankFee))
-                                  .toNumber();
-                }
+                // if (i.Status === 'INCOMPLETE' && i.ReceiveAmount === 0) {
+                //     i.Status = 'OK';
+                //     tmpChangeState = new Decimal(i.ReceiveAmount).add(new Decimal(i.ShortAmount)).toNumber();
+                //     i.ReceiveAmount = tmpChangeState;
+                //     i.BRAmount = new Decimal(tmpChangeState).add(new Decimal(i.BankFee)).toNumber();
+                //     i.ShortAmount =
+                //         Number(i.FeeAmount) - Number(i.ReceivedAmount) - Number(i.BankFees) - tmpChangeState - Number(i.BankFee) <= 0
+                //             ? 0
+                //             : new Decimal(i.FeeAmount)
+                //                   .minus(new Decimal(i.ReceivedAmount))
+                //                   .minus(new Decimal(i.BankFees))
+                //                   .minus(new Decimal(tmpChangeState))
+                //                   .minus(new Decimal(i.BankFee))
+                //                   .toNumber();
+                // }
                 // 20250106新增銷帳作業Default 設為正常繳款-終
             });
             orgFeeAmountTotal.current = tmpOrgFeeAmountTotal; //原始費用
