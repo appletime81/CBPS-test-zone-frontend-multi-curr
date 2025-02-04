@@ -31,19 +31,19 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
         color: theme.palette.common.black,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
+        paddingBottom: '0.2rem'
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
+        paddingBottom: '0.2rem'
     },
     [`&.${tableCellClasses.body}.totalAmount`]: {
         fontSize: 14,
         paddingTop: '0.2rem',
         paddingBottom: '0.2rem',
-        backgroundColor: '#CFD8DC',
-    },
+        backgroundColor: '#CFD8DC'
+    }
 }));
 
 const ResearchBillDetail = ({ detailInfo }) => {
@@ -63,7 +63,7 @@ const ResearchBillDetail = ({ detailInfo }) => {
         let tmpQuery = queryToDecutBill + '/BillMasterID=' + id;
         fetch(tmpQuery, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
         })
             .then((res) => res.json())
             .then((data) => {
@@ -86,9 +86,9 @@ const ResearchBillDetail = ({ detailInfo }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -103,25 +103,9 @@ const ResearchBillDetail = ({ detailInfo }) => {
             <Dialog maxWidth="md" fullWidth open={isDialogOpen}>
                 <BootstrapDialogTitle>帳單明細</BootstrapDialogTitle>
                 <DialogContent>
-                    <Grid
-                        container
-                        spacing={1}
-                        display="flex"
-                        justifyContent="center"
-                        alignItems="center"
-                    >
-                        <Grid
-                            item
-                            md={2}
-                            lg={2}
-                            display="flex"
-                            justifyContent="center"
-                            alignItems="center"
-                        >
-                            <Typography
-                                variant="h5"
-                                sx={{ fontSize: { lg: '0.7rem', xl: '0.88rem' } }}
-                            >
+                    <Grid container spacing={1} display="flex" justifyContent="center" alignItems="center">
+                        <Grid item md={2} lg={2} display="flex" justifyContent="center" alignItems="center">
+                            <Typography variant="h5" sx={{ fontSize: { lg: '0.7rem', xl: '0.88rem' } }}>
                                 帳單號碼：
                             </Typography>
                         </Grid>
@@ -132,22 +116,12 @@ const ResearchBillDetail = ({ detailInfo }) => {
                                 variant="outlined"
                                 size="small"
                                 InputProps={{
-                                    readyOnly: true,
+                                    readOnly: true
                                 }}
                             />
                         </Grid>
-                        <Grid
-                            item
-                            md={2}
-                            lg={2}
-                            display="flex"
-                            justifyContent="center"
-                            alignItems="center"
-                        >
-                            <Typography
-                                variant="h5"
-                                sx={{ fontSize: { lg: '0.7rem', xl: '0.88rem' } }}
-                            >
+                        <Grid item md={2} lg={2} display="flex" justifyContent="center" alignItems="center">
+                            <Typography variant="h5" sx={{ fontSize: { lg: '0.7rem', xl: '0.88rem' } }}>
                                 帳單到期日：
                             </Typography>
                         </Grid>
@@ -156,7 +130,7 @@ const ResearchBillDetail = ({ detailInfo }) => {
                                 value={dayjs(billMasterInfo.DueDate).format('YYYY/MM/DD')}
                                 fullWidth
                                 InputProps={{
-                                    readyOnly: true,
+                                    readOnly: true
                                 }}
                                 variant="outlined"
                                 size="small"
@@ -168,25 +142,13 @@ const ResearchBillDetail = ({ detailInfo }) => {
                                 <Table sx={{ minWidth: 300 }} stickyHeader>
                                     <TableHead>
                                         <TableRow>
-                                            <StyledTableCell align="center">
-                                                費用項目
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                計帳段號
-                                            </StyledTableCell>
+                                            <StyledTableCell align="center">費用項目</StyledTableCell>
+                                            <StyledTableCell align="center">計帳段號</StyledTableCell>
                                             <StyledTableCell align="center">會員</StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                應收金額
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                已實收金額
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                已實付金額
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                摘要說明
-                                            </StyledTableCell>
+                                            <StyledTableCell align="center">應收金額</StyledTableCell>
+                                            <StyledTableCell align="center">已實收金額</StyledTableCell>
+                                            <StyledTableCell align="center">已實付金額</StyledTableCell>
+                                            <StyledTableCell align="center">摘要說明</StyledTableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -196,48 +158,30 @@ const ResearchBillDetail = ({ detailInfo }) => {
                                                     key={row.FeeItem + row.PartyName + id}
                                                     sx={{
                                                         '&:last-child td, &:last-child th': {
-                                                            border: 0,
-                                                        },
+                                                            border: 0
+                                                        }
                                                     }}
                                                 >
-                                                    <TableCell align="center">
-                                                        {row.FeeItem}
-                                                    </TableCell>
-                                                    <TableCell align="center">
-                                                        {row.BillMilestone}
-                                                    </TableCell>
-                                                    <TableCell align="center">
-                                                        {row.PartyName}
-                                                    </TableCell>
-                                                    <TableCell align="center">
-                                                        {handleNumber(row.OrgFeeAmount)}
-                                                    </TableCell>
-                                                    <TableCell align="center">
-                                                        {handleNumber(row.ReceivedAmount)}
-                                                    </TableCell>
-                                                    <TableCell align="center">
-                                                        {handleNumber(row.PaidAmount)}
-                                                    </TableCell>
+                                                    <TableCell align="center">{row.FeeItem}</TableCell>
+                                                    <TableCell align="center">{row.BillMilestone}</TableCell>
+                                                    <TableCell align="center">{row.PartyName}</TableCell>
+                                                    <TableCell align="center">{handleNumber(row.OrgFeeAmount)}</TableCell>
+                                                    <TableCell align="center">{handleNumber(row.ReceivedAmount)}</TableCell>
+                                                    <TableCell align="center">{handleNumber(row.PaidAmount)}</TableCell>
                                                     <TableCell align="center">{row.Note}</TableCell>
                                                 </TableRow>
                                             );
                                         })}
                                         <TableRow
                                             sx={{
-                                                '&:last-child td, &:last-child th': { border: 0 },
+                                                '&:last-child td, &:last-child th': { border: 0 }
                                             }}
                                         >
                                             <StyledTableCell className="totalAmount" align="center">
                                                 Total
                                             </StyledTableCell>
-                                            <StyledTableCell
-                                                className="totalAmount"
-                                                align="center"
-                                            />
-                                            <StyledTableCell
-                                                className="totalAmount"
-                                                align="center"
-                                            />
+                                            <StyledTableCell className="totalAmount" align="center" />
+                                            <StyledTableCell className="totalAmount" align="center" />
                                             <StyledTableCell className="totalAmount" align="center">
                                                 {handleNumber(billMasterInfo.FeeAmountSum)}
                                             </StyledTableCell>
@@ -247,10 +191,7 @@ const ResearchBillDetail = ({ detailInfo }) => {
                                             <StyledTableCell className="totalAmount" align="center">
                                                 {handleNumber(totalPaidAmount.current)}
                                             </StyledTableCell>
-                                            <StyledTableCell
-                                                className="totalAmount"
-                                                align="center"
-                                            ></StyledTableCell>
+                                            <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
                                         </TableRow>
                                     </TableBody>
                                 </Table>
@@ -286,28 +227,13 @@ const ResearchBillDetail = ({ detailInfo }) => {
                     <TableBody>
                         {detailInfo?.map((row, id) => {
                             return (
-                                <TableRow
-                                    key={row?.BillingNo + row?.BillMilestone + id}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
-                                    <StyledTableCell align="center">
-                                        {row.BillingNo}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.BillMilestone}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.PartyName}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {dayjs(row.DueDate).format('YYYY/MM/DD')}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        ${handleNumber(row.FeeAmountSum)}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        ${handleNumber(row.ReceivedAmountSum)}
-                                    </StyledTableCell>
+                                <TableRow key={row?.BillingNo + row?.BillMilestone + id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                    <StyledTableCell align="center">{row.BillingNo}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.BillMilestone}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.PartyName}</StyledTableCell>
+                                    <StyledTableCell align="center">{dayjs(row.DueDate).format('YYYY/MM/DD')}</StyledTableCell>
+                                    <StyledTableCell align="center">${handleNumber(row.FeeAmountSum)}</StyledTableCell>
+                                    <StyledTableCell align="center">${handleNumber(row.ReceivedAmountSum)}</StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Box
                                             sx={{
@@ -315,8 +241,8 @@ const ResearchBillDetail = ({ detailInfo }) => {
                                                 justifyContent: 'center',
                                                 '& button': {
                                                     mx: { md: 0.3, lg: 0.7, xl: 1.5 },
-                                                    p: 0,
-                                                },
+                                                    p: 0
+                                                }
                                             }}
                                         >
                                             <Button

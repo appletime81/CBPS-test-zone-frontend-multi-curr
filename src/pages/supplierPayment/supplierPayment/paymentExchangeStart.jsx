@@ -6,19 +6,9 @@ import PropTypes from 'prop-types';
 import { handleNumber, BootstrapDialogTitle } from 'components/commonFunction';
 import Decimal from 'decimal.js';
 import MainCard from 'components/MainCard';
-import NumericFormatCustom from 'components/numericFormatCustom';
 import ChoseRate from './choseRate';
 // material-ui
-import {
-    Typography,
-    Button,
-    Table,
-    Dialog,
-    DialogContent,
-    Grid,
-    DialogActions,
-    TextField,
-} from '@mui/material';
+import { Typography, Button, Table, Dialog, DialogContent, Grid, DialogActions, TextField } from '@mui/material';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
@@ -38,19 +28,19 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
         // backgroundColor: theme.palette.common.gary,
         color: theme.palette.common.black,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
+        paddingBottom: '0.2rem'
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
+        paddingBottom: '0.2rem'
     },
     [`&.${tableCellClasses.body}.totalAmount`]: {
         fontSize: 14,
         paddingTop: '0.2rem',
         paddingBottom: '0.2rem',
-        backgroundColor: '#CFD8DC',
-    },
+        backgroundColor: '#CFD8DC'
+    }
 }));
 
 const PaymentExchangeStart = ({
@@ -63,15 +53,13 @@ const PaymentExchangeStart = ({
     savePaymentEdit,
     queryApi,
     setListInfo,
-    codeInfo,
+    codeInfo
 }) => {
     const dispatch = useDispatch();
     const [isRateDialogOpen, setIsRateDialogOpen] = useState(false);
     const [toPaymentDetailInfo, setToPaymentDetailInfo] = useState([]); //帳單明細檔
-    // const [rate, setRate] = useState('');
     const toPaymentDetailInfoDetail = useRef({});
     const rateInfo = useRef([]); //僅提供前端畫面秀出使用者是選擇哪筆匯率資料。
-    // const [currencyExgID, setCurrencyExgID] = useState(null);
     const feeAmountTotal = useRef(0); //已實收金額
     const receivedAmountTotal = useRef(0); //已實收金額
     const exgOriReceivedAmount = useRef(0); //原幣已換匯累計金額
@@ -106,61 +94,33 @@ const PaymentExchangeStart = ({
 
     const countTotal = (info) => {
         info.forEach((i) => {
-            feeAmountTotal.current = new Decimal(feeAmountTotal.current).add(
-                new Decimal(i.FeeAmount),
-            );
-            receivedAmountTotal.current = new Decimal(receivedAmountTotal.current).add(
-                new Decimal(i.ReceivedAmount),
-            );
-            exgOriReceivedAmount.current = new Decimal(exgOriReceivedAmount.current).add(
-                new Decimal(i.ExgOriReceivedAmount),
-            );
+            feeAmountTotal.current = new Decimal(feeAmountTotal.current).add(new Decimal(i.FeeAmount));
+            receivedAmountTotal.current = new Decimal(receivedAmountTotal.current).add(new Decimal(i.ReceivedAmount));
+            exgOriReceivedAmount.current = new Decimal(exgOriReceivedAmount.current).add(new Decimal(i.ExgOriReceivedAmount));
             toExgAmount.current = new Decimal(toExgAmount.current).add(new Decimal(i.ToExgAmount));
-            exgReceivedAmount.current = new Decimal(exgReceivedAmount.current).add(
-                new Decimal(i.ExgReceivedAmount),
-            );
-            exgDiffAmount.current = new Decimal(exgDiffAmount.current).add(
-                new Decimal(i.ExgDiffAmount),
-            );
+            exgReceivedAmount.current = new Decimal(exgReceivedAmount.current).add(new Decimal(i.ExgReceivedAmount));
+            exgDiffAmount.current = new Decimal(exgDiffAmount.current).add(new Decimal(i.ExgDiffAmount));
         });
     };
 
     const sendInfo = (billDetail) => {
         if (billDetail.choseCurrencyExgID) {
-            console.log('invoiceWKMasterInfo=>>', invoiceWKMasterInfo);
-            console.log('billDetail=>>', billDetail);
-            console.log('billDetail=>>', billDetail.choseCurrencyExgID);
-
-            console.log(
-                'currencyExgID=>>',
-                billDetail.choseCurrencyExgID,
-                billDetail?.CurrencyExgList.find(
-                    (i) => i.CurrencyExgID === billDetail.choseCurrencyExgID,
-                ),
-            );
-            let currencyExg = billDetail?.CurrencyExgList.find(
-                (i) => i.CurrencyExgID === billDetail.choseCurrencyExgID,
-            );
+            let currencyExg = billDetail?.CurrencyExgList.find((i) => i.CurrencyExgID === billDetail.choseCurrencyExgID);
             fetch(paymentExchangeProcess, {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
                 },
                 body: JSON.stringify({
                     InvoiceWKMaster: invoiceWKMasterInfo,
                     BillDetail: billDetail,
-                    CurrencyExg: currencyExg,
-                }),
+                    CurrencyExg: currencyExg
+                })
             })
                 .then((res) => res.json())
                 .then((data) => {
-                    console.log('yessss=>>', data);
-                    const changeIndexValue = toPaymentDetailInfo.findIndex(
-                        (i) =>
-                            i.BillDetailID === data.BillDetailID &&
-                            i.BillMasterID === data.BillMasterID,
-                    );
+                    const changeIndexValue = toPaymentDetailInfo.findIndex((i) => i.BillDetailID === data.BillDetailID && i.BillMasterID === data.BillMasterID);
                     if (changeIndexValue !== -1) {
                         toPaymentDetailInfo[changeIndexValue] = data;
                     }
@@ -169,18 +129,17 @@ const PaymentExchangeStart = ({
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'success',
-                                message: '換匯成功',
-                            },
-                        }),
+                                message: '換匯成功'
+                            }
+                        })
                     );
                     countTotal(toPaymentDetailInfo);
                     fetch(queryApi, {
                         method: 'GET',
-                        Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                        Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
                     })
                         .then((res) => res.json())
                         .then((data) => {
-                            console.log('data=>>', data);
                             if (Array.isArray(data)) {
                                 setListInfo(data);
                             }
@@ -190,9 +149,9 @@ const PaymentExchangeStart = ({
                                         messageStateOpen: {
                                             isOpen: true,
                                             severity: 'info',
-                                            message: '查無資料',
-                                        },
-                                    }),
+                                            message: '查無資料'
+                                        }
+                                    })
                                 );
                                 setListInfo([]);
                             }
@@ -207,9 +166,9 @@ const PaymentExchangeStart = ({
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
         } else {
@@ -218,9 +177,9 @@ const PaymentExchangeStart = ({
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請先填寫匯率資料',
-                    },
-                }),
+                        message: '請先填寫匯率資料'
+                    }
+                })
             );
         }
     };
@@ -240,35 +199,19 @@ const PaymentExchangeStart = ({
                 handleRateDialogClose={handleRateDialogClose}
                 toPaymentDetailInfoDetail={toPaymentDetailInfoDetail.current}
                 rateInfo={rateInfo}
-                // currencyExgID={currencyExgID}
-                // setCurrencyExgID={setCurrencyExgID}
             />
             <Dialog maxWidth="xxl" open={isDialogOpen}>
                 <BootstrapDialogTitle>會員收款換匯作業</BootstrapDialogTitle>
                 <DialogContent>
-                    <Grid
-                        container
-                        spacing={1}
-                        display="flex"
-                        justifyContent="center"
-                        alignItems="center"
-                        sx={{ fontSize: 10 }}
-                    >
+                    <Grid container spacing={1} display="flex" justifyContent="center" alignItems="center" sx={{ fontSize: 10 }}>
                         <Grid item xs={12} sm={12} md={12} lg={12}>
-                            <Grid
-                                container
-                                spacing={1}
-                                display="flex"
-                                justifyContent="center"
-                                alignItems="center"
-                                sx={{ fontSize: 10 }}
-                            >
-                                <Grid item sm={2} md={2} lg={2}>
+                            <Grid container spacing={1} display="flex" justifyContent="center" alignItems="center" sx={{ fontSize: 10 }}>
+                                <Grid item sm={1} md={1} lg={1}>
                                     <Typography
                                         variant="h5"
-                                        align="center"
+                                        align="end"
                                         sx={{
-                                            fontSize: { lg: '0.7rem', xl: '0.88rem' },
+                                            fontSize: { lg: '0.7rem', xl: '0.88rem' }
                                         }}
                                     >
                                         發票號碼：
@@ -281,17 +224,17 @@ const PaymentExchangeStart = ({
                                         variant="outlined"
                                         size="small"
                                         InputProps={{
-                                            readyOnly: true,
+                                            readOnly: true
                                         }}
                                     />
                                 </Grid>
-                                <Grid item xs={2} sm={2} md={2} lg={2}>
+                                <Grid item xs={1} sm={1} md={1} lg={1}>
                                     <Typography
                                         variant="h5"
-                                        align="center"
+                                        align="end"
                                         sx={{
                                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                                            ml: { lg: '0.5rem', xl: '1.5rem' }
                                         }}
                                     >
                                         發票到期日：
@@ -299,24 +242,22 @@ const PaymentExchangeStart = ({
                                 </Grid>
                                 <Grid item xs={2} sm={2} md={2} lg={2}>
                                     <TextField
-                                        value={dayjs(invoiceWKMasterInfo.DueDate).format(
-                                            'YYYY/MM/DD',
-                                        )}
+                                        value={dayjs(invoiceWKMasterInfo.DueDate).format('YYYY/MM/DD')}
                                         fullWidth
                                         InputProps={{
-                                            readyOnly: true,
+                                            readOnly: true
                                         }}
                                         variant="outlined"
                                         size="small"
                                     />
                                 </Grid>
-                                <Grid item xs={2} sm={2} md={2} lg={2}>
+                                <Grid item xs={1} sm={1} md={1} lg={1}>
                                     <Typography
                                         variant="h5"
-                                        align="center"
+                                        align="end"
                                         sx={{
                                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                                            ml: { lg: '0.5rem', xl: '1.5rem' }
                                         }}
                                     >
                                         發票匯率資料：
@@ -327,7 +268,30 @@ const PaymentExchangeStart = ({
                                         value={invoiceWKMasterInfo.Purpose}
                                         fullWidth
                                         InputProps={{
-                                            readyOnly: true,
+                                            readOnly: true
+                                        }}
+                                        variant="outlined"
+                                        size="small"
+                                    />
+                                </Grid>
+                                <Grid item xs={1} sm={1} md={1} lg={1}>
+                                    <Typography
+                                        variant="h5"
+                                        align="end"
+                                        sx={{
+                                            fontSize: { lg: '0.7rem', xl: '0.88rem' },
+                                            ml: { lg: '0.5rem', xl: '1.5rem' }
+                                        }}
+                                    >
+                                        總金額：
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={2} sm={2} md={2} lg={2}>
+                                    <TextField
+                                        value={invoiceWKMasterInfo.TotalAmount}
+                                        fullWidth
+                                        InputProps={{
+                                            readOnly: true
                                         }}
                                         variant="outlined"
                                         size="small"
@@ -338,103 +302,61 @@ const PaymentExchangeStart = ({
                         <Grid item xs={12} sm={12} md={12} lg={12}>
                             <MainCard title="帳單明細列表">
                                 <TableContainer component={Paper} sx={{ maxHeight: 350 }}>
-                                    <Table
-                                        sx={{ minWidth: 300 }}
-                                        stickyHeader
-                                        aria-label="sticky table"
-                                    >
+                                    <Table sx={{ minWidth: 300 }} stickyHeader aria-label="sticky table">
                                         <TableHead>
                                             <TableRow>
-                                                <StyledTableCell align="center">
-                                                    帳單號碼
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    費用項目
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    會員
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    原始費用
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    已實收金額
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    原幣已換匯累計金額
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    待換匯金額
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    換匯後已實收金額
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    換匯匯差
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    匯率資料
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    Action
-                                                </StyledTableCell>
+                                                <StyledTableCell align="center">帳單號碼</StyledTableCell>
+                                                <StyledTableCell align="center">費用項目</StyledTableCell>
+                                                <StyledTableCell align="center">會員</StyledTableCell>
+                                                <StyledTableCell align="center">原始費用</StyledTableCell>
+                                                <StyledTableCell align="center">已實收金額</StyledTableCell>
+                                                <StyledTableCell align="center">原幣已換匯累計金額</StyledTableCell>
+                                                <StyledTableCell align="center">待換匯金額</StyledTableCell>
+                                                <StyledTableCell align="center">換匯後已實收金額</StyledTableCell>
+                                                <StyledTableCell align="center">換匯匯差</StyledTableCell>
+                                                <StyledTableCell align="center">匯率資料</StyledTableCell>
+                                                <StyledTableCell align="center">Action</StyledTableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
                                             {toPaymentDetailInfo?.map((row, id) => {
-                                                const findRateInfo = rateInfo.current.find(
-                                                    (i) =>
-                                                        i.BillDetailID === row.BillDetailID &&
-                                                        i.BillMasterID === row.BillMasterID,
-                                                );
+                                                const findRateInfo = rateInfo.current.find((i) => i.BillDetailID === row.BillDetailID && i.BillMasterID === row.BillMasterID);
                                                 return (
                                                     <TableRow
                                                         key={row.BillingNo + id}
                                                         sx={{
                                                             '&:last-child td, &:last-child th': {
-                                                                border: 0,
-                                                            },
+                                                                border: 0
+                                                            }
                                                         }}
                                                     >
-                                                        <TableCell align="center">
-                                                            {row?.BillingNo}
-                                                        </TableCell>
-                                                        <TableCell align="center">
-                                                            {row.FeeItem}
-                                                        </TableCell>
-                                                        <TableCell align="center">
-                                                            {row.PartyName}
-                                                        </TableCell>
+                                                        <TableCell align="center">{row?.BillingNo}</TableCell>
+                                                        <TableCell align="center">{row.FeeItem}</TableCell>
+                                                        <TableCell align="center">{row.PartyName}</TableCell>
                                                         {/* 原始費用 */}
                                                         <TableCell align="center">
                                                             {/* {handleNumber(row.FeeAmount)}{' '} */}
-                                                            {handleNumber(row.OrgFeeAmount)}{' '}
-                                                            {codeInfo.fromCode}
+                                                            {handleNumber(row.OrgFeeAmount)} {codeInfo.fromCode}
                                                         </TableCell>
                                                         {/* 已實收金額 */}
                                                         <TableCell align="center">
-                                                            {handleNumber(row.ReceivedAmount)}{' '}
-                                                            {codeInfo.fromCode}
+                                                            {handleNumber(row.ReceivedAmount)} {codeInfo.fromCode}
                                                         </TableCell>
                                                         {/* 原幣已換匯累計金額 */}
                                                         <TableCell align="center">
-                                                            {handleNumber(row.ExgOriReceivedAmount)}{' '}
-                                                            {codeInfo.fromCode}
+                                                            {handleNumber(row.ExgOriReceivedAmount)} {codeInfo.fromCode}
                                                         </TableCell>
                                                         {/* 待換匯金額 */}
                                                         <TableCell align="center">
-                                                            {handleNumber(row.ToExgAmount)}{' '}
-                                                            {codeInfo.fromCode}
+                                                            {handleNumber(row.ToExgAmount)} {codeInfo.fromCode}
                                                         </TableCell>
                                                         {/* 換匯後已實收金額 */}
                                                         <TableCell align="center">
-                                                            {handleNumber(row.ExgReceivedAmount)}{' '}
-                                                            {codeInfo.payCode}
+                                                            {handleNumber(row.ExgReceivedAmount)} {codeInfo.payCode}
                                                         </TableCell>
                                                         {/* 換匯匯差 */}
                                                         <TableCell align="center">
-                                                            {handleNumber(row.ExgDiffAmount)}{' '}
-                                                            {codeInfo.payCode}
+                                                            {handleNumber(row.ExgDiffAmount)} {codeInfo.payCode}
                                                         </TableCell>
                                                         <TableCell align="center">
                                                             <TextField
@@ -443,8 +365,7 @@ const PaymentExchangeStart = ({
                                                                 value={findRateInfo?.Purpose || ''}
                                                                 InputProps={{
                                                                     readOnly: true,
-                                                                    onClick: () =>
-                                                                        handleRateDialogOpen(row),
+                                                                    onClick: () => handleRateDialogOpen(row)
                                                                 }}
                                                             />
                                                         </TableCell>
@@ -474,74 +395,35 @@ const PaymentExchangeStart = ({
                                             <TableRow
                                                 sx={{
                                                     '&:last-child td, &:last-child th': {
-                                                        border: 0,
-                                                    },
+                                                        border: 0
+                                                    }
                                                 }}
                                             >
-                                                <StyledTableCell
-                                                    className="totalAmount"
-                                                    align="center"
-                                                >
+                                                <StyledTableCell className="totalAmount" align="center">
                                                     Total
                                                 </StyledTableCell>
-                                                <StyledTableCell
-                                                    className="totalAmount"
-                                                    align="center"
-                                                />
-                                                <StyledTableCell
-                                                    className="totalAmount"
-                                                    align="center"
-                                                />
-                                                <StyledTableCell
-                                                    className="totalAmount"
-                                                    align="center"
-                                                >
-                                                    {handleNumber(feeAmountTotal.current)}{' '}
-                                                    {codeInfo.fromCode}
+                                                <StyledTableCell className="totalAmount" align="center" />
+                                                <StyledTableCell className="totalAmount" align="center" />
+                                                <StyledTableCell className="totalAmount" align="center">
+                                                    {handleNumber(feeAmountTotal.current)} {codeInfo.fromCode}
                                                 </StyledTableCell>
-                                                <StyledTableCell
-                                                    className="totalAmount"
-                                                    align="center"
-                                                >
-                                                    {handleNumber(receivedAmountTotal.current)}{' '}
-                                                    {codeInfo.fromCode}
+                                                <StyledTableCell className="totalAmount" align="center">
+                                                    {handleNumber(receivedAmountTotal.current)} {codeInfo.fromCode}
                                                 </StyledTableCell>
-                                                <StyledTableCell
-                                                    className="totalAmount"
-                                                    align="center"
-                                                >
-                                                    {handleNumber(exgOriReceivedAmount.current)}{' '}
-                                                    {codeInfo.fromCode}
+                                                <StyledTableCell className="totalAmount" align="center">
+                                                    {handleNumber(exgOriReceivedAmount.current)} {codeInfo.fromCode}
                                                 </StyledTableCell>
-                                                <StyledTableCell
-                                                    className="totalAmount"
-                                                    align="center"
-                                                >
-                                                    {handleNumber(toExgAmount.current)}{' '}
-                                                    {codeInfo.fromCode}
+                                                <StyledTableCell className="totalAmount" align="center">
+                                                    {handleNumber(toExgAmount.current)} {codeInfo.fromCode}
                                                 </StyledTableCell>
-                                                <StyledTableCell
-                                                    className="totalAmount"
-                                                    align="center"
-                                                >
-                                                    {handleNumber(exgReceivedAmount.current)}{' '}
-                                                    {codeInfo.payCode}
+                                                <StyledTableCell className="totalAmount" align="center">
+                                                    {handleNumber(exgReceivedAmount.current)} {codeInfo.payCode}
                                                 </StyledTableCell>
-                                                <StyledTableCell
-                                                    className="totalAmount"
-                                                    align="center"
-                                                >
-                                                    {handleNumber(exgDiffAmount.current)}{' '}
-                                                    {codeInfo.payCode}
+                                                <StyledTableCell className="totalAmount" align="center">
+                                                    {handleNumber(exgDiffAmount.current)} {codeInfo.payCode}
                                                 </StyledTableCell>
-                                                <StyledTableCell
-                                                    className="totalAmount"
-                                                    align="center"
-                                                />
-                                                <StyledTableCell
-                                                    className="totalAmount"
-                                                    align="center"
-                                                />
+                                                <StyledTableCell className="totalAmount" align="center" />
+                                                <StyledTableCell className="totalAmount" align="center" />
                                             </TableRow>
                                         </TableBody>
                                     </Table>
@@ -600,7 +482,7 @@ PaymentExchangeStart.propTypes = {
     editPaymentInfo: PropTypes.array,
     savePaymentEdit: PropTypes.func,
     handleDialogClose: PropTypes.func,
-    isDialogOpen: PropTypes.bool,
+    isDialogOpen: PropTypes.bool
 };
 
 export default PaymentExchangeStart;

@@ -5,23 +5,13 @@ import PropTypes from 'prop-types';
 // project import
 import PaymentWork from './paymentWork';
 import PaymentExchangeStart from './paymentExchangeStart';
+import PayExgLog from './payExgLog';
 import { handleNumber } from 'components/commonFunction';
 import { BootstrapDialogTitle } from 'components/commonFunction';
 import Decimal from 'decimal.js';
 
 // material-ui
-import {
-    Button,
-    Table,
-    TextField,
-    Box,
-    Paper,
-    Checkbox,
-    Dialog,
-    DialogContent,
-    Grid,
-    DialogActions,
-} from '@mui/material';
+import { Button, Table, TextField, Box, Paper, Checkbox, Dialog, DialogContent, Grid, DialogActions } from '@mui/material';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
@@ -42,31 +32,23 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
         color: theme.palette.common.black,
         paddingTop: '0.2rem',
         paddingBottom: '0.2rem',
-        border: '1px solid #EEEEEE',
+        border: '1px solid #EEEEEE'
     },
     [`&.${tableCellClasses.body}.totalAmount`]: {
         fontSize: 14,
         paddingTop: '0.2rem',
         paddingBottom: '0.2rem',
-        backgroundColor: '#CFD8DC',
-    },
+        backgroundColor: '#CFD8DC'
+    }
 }));
 
-const ToPaymentDataList = ({
-    listInfo,
-    cbToCn,
-    setCbToCn,
-    isSend,
-    setIsSend,
-    supplierPaymentQuery,
-    queryApi,
-    setListInfo,
-}) => {
+const ToPaymentDataList = ({ listInfo, cbToCn, setCbToCn, isSend, setIsSend, supplierPaymentQuery, queryApi, setListInfo }) => {
     const dispatch = useDispatch();
     const [toPaymentList, setToPaymentList] = useState([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false); //折抵作業
     const [isPaymentExchangeStartOpen, setIsPaymentExchangeStartOpen] = useState(false); //折抵作業
     const [isSendDialogOpen, setIsSendDialogOpen] = useState(false); //折抵作業
+    const [isPayExgLogDialogOpen, setIsPayExgLogDialogOpen] = useState(false); //換匯紀錄
     const billDetailListInfo = useRef([]);
     const invoiceWKMasterInfo = useRef({});
     const actionName = useRef('');
@@ -82,14 +64,10 @@ const ToPaymentDataList = ({
     const codeInfo = useRef({});
 
     const handleChange = (event, supplierName, code) => {
-        if (
-            (currentSupplierName.current === supplierName || currentSupplierName.current === '') &&
-            (currentCode.current === code || currentCode.current === '')
-        ) {
+        if ((currentSupplierName.current === supplierName || currentSupplierName.current === '') && (currentCode.current === code || currentCode.current === '')) {
             if (
                 event.target.checked &&
-                (currentSupplierName.current === supplierName ||
-                    currentSupplierName.current === '') &&
+                (currentSupplierName.current === supplierName || currentSupplierName.current === '') &&
                 (currentCode.current === code || currentCode.current === '')
             ) {
                 currentSupplierName.current = supplierName;
@@ -105,6 +83,11 @@ const ToPaymentDataList = ({
         }
     };
 
+    const handlePayExgLogOpen = (invoiceMasterInfo) => {
+        invoiceWKMasterInfo.current = invoiceMasterInfo;
+        setIsPayExgLogDialogOpen(true);
+    };
+
     const handleListChange = (event) => {
         setFinishList({ ...finishList, [event.target.value]: event.target.checked });
     };
@@ -116,28 +99,32 @@ const ToPaymentDataList = ({
         actionName.current = 'toPayment';
     };
 
-    const handlePaymentExchangeStartOpen = (
-        billDetailInfo,
-        invoiceMasterInfo,
-        fromCode,
-        payCode,
-    ) => {
+    const handleDialogClose = () => {
+        billDetailListInfo.current = [];
+        invoiceWKMasterInfo.current = {};
+        setIsDialogOpen(false);
+        setIsPaymentExchangeStartOpen(false);
+        setIsPayExgLogDialogOpen(false);
+        actionName.current = '';
+    };
+
+    const handlePaymentExchangeStartOpen = (billDetailInfo, invoiceMasterInfo, fromCode, payCode, totalAmount) => {
         billDetailListInfo.current = billDetailInfo;
         invoiceWKMasterInfo.current = invoiceMasterInfo;
         codeInfo.current = {
             fromCode,
-            payCode,
+            payCode
         };
         fetch(paymentExchangeStart, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
             },
             body: JSON.stringify({
                 InvoiceWKMaster: invoiceMasterInfo,
-                BillDetailList: billDetailInfo,
-            }),
+                BillDetailList: billDetailInfo
+            })
         })
             .then((res) => res.json())
             .then((data) => {
@@ -150,19 +137,11 @@ const ToPaymentDataList = ({
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
-    };
-
-    const handleDialogClose = () => {
-        billDetailListInfo.current = [];
-        invoiceWKMasterInfo.current = {};
-        setIsDialogOpen(false);
-        setIsPaymentExchangeStartOpen(false);
-        actionName.current = '';
     };
 
     const savePaymentEdit = (info) => {
@@ -204,15 +183,15 @@ const ToPaymentDataList = ({
             });
         });
         let sendTmpArray = {
-            PaymentList: tmpArray,
+            PaymentList: tmpArray
         };
         fetch(sendPayment, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
             },
-            body: JSON.stringify(sendTmpArray),
+            body: JSON.stringify(sendTmpArray)
         })
             .then((res) => res.json())
             .then(() => {
@@ -226,9 +205,9 @@ const ToPaymentDataList = ({
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -263,13 +242,9 @@ const ToPaymentDataList = ({
         if (isSendDialogOpen) {
             let tmpTotal = 0;
             paymentInfo.forEach((i) => {
-                paidAmount.current = new Decimal(paidAmount.current).add(
-                    new Decimal(i?.InvoiceWKMaster?.PaidAmount),
-                );
+                paidAmount.current = new Decimal(paidAmount.current).add(new Decimal(i?.InvoiceWKMaster?.PaidAmount));
                 tmpTotal = new Decimal(tmpTotal).add(new Decimal(i.InvoiceWKMaster.TotalAmount));
-                payAmount.current = new Decimal(payAmount.current)
-                    .add(new Decimal(i.PayAmount))
-                    .toNumber();
+                payAmount.current = new Decimal(payAmount.current).add(new Decimal(i.PayAmount)).toNumber();
             });
             setTotalAmount(tmpTotal);
         }
@@ -277,6 +252,7 @@ const ToPaymentDataList = ({
 
     return (
         <>
+            <PayExgLog isDialogOpen={isPayExgLogDialogOpen} handleDialogClose={handleDialogClose} invoiceWKMasterInfo={invoiceWKMasterInfo?.current} />
             <PaymentExchangeStart
                 isDialogOpen={isPaymentExchangeStartOpen}
                 handleDialogClose={handleDialogClose}
@@ -301,48 +277,25 @@ const ToPaymentDataList = ({
             <Dialog maxWidth="md" fullWidth open={isSendDialogOpen}>
                 <BootstrapDialogTitle>本次付款資訊</BootstrapDialogTitle>
                 <DialogContent>
-                    <Grid
-                        container
-                        spacing={1}
-                        display="flex"
-                        justifyContent="center"
-                        alignItems="center"
-                    >
+                    <Grid container spacing={1} display="flex" justifyContent="center" alignItems="center">
                         <Grid item xs={12} sm={12} md={12} lg={12}>
                             <Box display="flex" justifyContent="end" sx={{ fontSize: '1rem' }}>
                                 幣別：{sendCode.current}
                             </Box>
-                            <TableContainer
-                                component={Paper}
-                                sx={{ maxHeight: window.screen.height * 0.45 }}
-                            >
+                            <TableContainer component={Paper} sx={{ maxHeight: window.screen.height * 0.45 }}>
                                 <Table sx={{ minWidth: 300 }} stickyHeader>
                                     <TableHead>
                                         <TableRow>
                                             <StyledTableCell align="center">No</StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                發票號碼
-                                            </StyledTableCell>
+                                            <StyledTableCell align="center">發票號碼</StyledTableCell>
                                             <StyledTableCell align="center">供應商</StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                海纜名稱
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                海纜作業
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                發票到期日
-                                            </StyledTableCell>
+                                            <StyledTableCell align="center">海纜名稱</StyledTableCell>
+                                            <StyledTableCell align="center">海纜作業</StyledTableCell>
+                                            <StyledTableCell align="center">發票到期日</StyledTableCell>
                                             <StyledTableCell align="center">總金額</StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                累計實付金額
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                本次付款金額
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                完成付款結案
-                                            </StyledTableCell>
+                                            <StyledTableCell align="center">累計實付金額</StyledTableCell>
+                                            <StyledTableCell align="center">本次付款金額</StyledTableCell>
+                                            <StyledTableCell align="center">完成付款結案</StyledTableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -352,50 +305,24 @@ const ToPaymentDataList = ({
                                                     key={row.InvoiceWKMaster.WKMasterID + id}
                                                     sx={{
                                                         '&:last-child td, &:last-child th': {
-                                                            border: 0,
-                                                        },
+                                                            border: 0
+                                                        }
                                                     }}
                                                 >
                                                     <TableCell align="center">{id + 1}</TableCell>
-                                                    <TableCell align="center">
-                                                        {row.InvoiceWKMaster.InvoiceNo}
-                                                    </TableCell>
-                                                    <TableCell align="center">
-                                                        {row.InvoiceWKMaster.SupplierName}
-                                                    </TableCell>
-                                                    <TableCell align="center">
-                                                        {row.InvoiceWKMaster.SubmarineCable}
-                                                    </TableCell>
-                                                    <TableCell align="center">
-                                                        {row.InvoiceWKMaster.WorkTitle}
-                                                    </TableCell>
-                                                    <TableCell align="center">
-                                                        {dayjs(
-                                                            row.InvoiceWKMaster.IssueDate,
-                                                        ).format('YYYY/MM/DD')}
-                                                    </TableCell>
-                                                    <TableCell align="center">
-                                                        {handleNumber(
-                                                            row.InvoiceWKMaster?.TotalAmount,
-                                                        )}
-                                                    </TableCell>
-                                                    <TableCell align="center">
-                                                        {handleNumber(
-                                                            row?.InvoiceWKMaster?.PaidAmount,
-                                                        )}
-                                                    </TableCell>
-                                                    <TableCell align="center">
-                                                        {handleNumber(row?.PayAmount)}
-                                                    </TableCell>
+                                                    <TableCell align="center">{row.InvoiceWKMaster.InvoiceNo}</TableCell>
+                                                    <TableCell align="center">{row.InvoiceWKMaster.SupplierName}</TableCell>
+                                                    <TableCell align="center">{row.InvoiceWKMaster.SubmarineCable}</TableCell>
+                                                    <TableCell align="center">{row.InvoiceWKMaster.WorkTitle}</TableCell>
+                                                    <TableCell align="center">{dayjs(row.InvoiceWKMaster.IssueDate).format('YYYY/MM/DD')}</TableCell>
+                                                    <TableCell align="center">{handleNumber(row.InvoiceWKMaster?.TotalAmount)}</TableCell>
+                                                    <TableCell align="center">{handleNumber(row?.InvoiceWKMaster?.PaidAmount)}</TableCell>
+                                                    <TableCell align="center">{handleNumber(row?.PayAmount)}</TableCell>
                                                     <TableCell align="center">
                                                         <Checkbox
                                                             value={row.InvoiceWKMaster.InvoiceNo}
                                                             onChange={handleListChange}
-                                                            checked={
-                                                                finishList[
-                                                                    row.InvoiceWKMaster.InvoiceNo
-                                                                ] || false
-                                                            }
+                                                            checked={finishList[row.InvoiceWKMaster.InvoiceNo] || false}
                                                         />
                                                     </TableCell>
                                                 </TableRow>
@@ -403,32 +330,17 @@ const ToPaymentDataList = ({
                                         })}
                                         <TableRow
                                             sx={{
-                                                '&:last-child td, &:last-child th': { border: 0 },
+                                                '&:last-child td, &:last-child th': { border: 0 }
                                             }}
                                         >
                                             <StyledTableCell className="totalAmount" align="center">
                                                 Total
                                             </StyledTableCell>
-                                            <StyledTableCell
-                                                className="totalAmount"
-                                                align="center"
-                                            ></StyledTableCell>
-                                            <StyledTableCell
-                                                className="totalAmount"
-                                                align="center"
-                                            ></StyledTableCell>
-                                            <StyledTableCell
-                                                className="totalAmount"
-                                                align="center"
-                                            ></StyledTableCell>
-                                            <StyledTableCell
-                                                className="totalAmount"
-                                                align="center"
-                                            ></StyledTableCell>
-                                            <StyledTableCell
-                                                className="totalAmount"
-                                                align="center"
-                                            ></StyledTableCell>
+                                            <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
+                                            <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
+                                            <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
+                                            <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
+                                            <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
                                             <StyledTableCell className="totalAmount" align="center">
                                                 {handleNumber(totalAmount)}
                                             </StyledTableCell>
@@ -438,10 +350,7 @@ const ToPaymentDataList = ({
                                             <StyledTableCell className="totalAmount" align="center">
                                                 {handleNumber(payAmount.current)}
                                             </StyledTableCell>
-                                            <StyledTableCell
-                                                className="totalAmount"
-                                                align="center"
-                                            ></StyledTableCell>
+                                            <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
                                         </TableRow>
                                     </TableBody>
                                 </Table>
@@ -453,11 +362,7 @@ const ToPaymentDataList = ({
                     <Button sx={{ mr: '0.05rem' }} variant="contained" onClick={sendPaymentInfo}>
                         確認
                     </Button>
-                    <Button
-                        sx={{ mr: '0.05rem' }}
-                        variant="contained"
-                        onClick={handleIsSendDialogClose}
-                    >
+                    <Button sx={{ mr: '0.05rem' }} variant="contained" onClick={handleIsSendDialogClose}>
                         關閉
                     </Button>
                 </DialogActions>
@@ -489,91 +394,62 @@ const ToPaymentDataList = ({
                             row.PayAmount = 0;
                             row?.BillDetailList &&
                                 row.BillDetailList.forEach((i) => {
-                                    row.PayAmount = new Decimal(row.PayAmount)
-                                        .add(new Decimal(i.PayAmount ? i.PayAmount : 0))
-                                        .toNumber();
+                                    row.PayAmount = new Decimal(row.PayAmount).add(new Decimal(i.PayAmount ? i.PayAmount : 0)).toNumber();
                                 });
-                            console.log('row=>>', row?.BillDetailList);
                             return (
-                                <TableRow
-                                    key={row?.InvoiceWKMaster?.WKMasterID + id}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
+                                <TableRow key={row?.InvoiceWKMaster?.WKMasterID + id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <TableCell align="center">
                                         <Checkbox
                                             value={row?.InvoiceWKMaster?.InvoiceNo}
                                             onChange={(e) => {
-                                                handleChange(
-                                                    e,
-                                                    row?.InvoiceWKMaster?.SupplierName,
-                                                    row?.InvoiceWKMaster?.Code,
-                                                );
+                                                handleChange(e, row?.InvoiceWKMaster?.SupplierName, row?.InvoiceWKMaster?.Code);
                                             }}
-                                            checked={
-                                                cbToCn[row?.InvoiceWKMaster?.InvoiceNo] || false
-                                            }
+                                            checked={cbToCn[row?.InvoiceWKMaster?.InvoiceNo] || false}
                                         />
                                     </TableCell>
                                     <StyledTableCell align="center">{id + 1}</StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row?.InvoiceWKMaster?.InvoiceNo}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row?.InvoiceWKMaster?.SupplierName}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row?.InvoiceWKMaster?.SubmarineCable}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row?.InvoiceWKMaster?.WorkTitle}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {dayjs(row?.InvoiceWKMaster?.DueDate).format('YYYY/MM/DD')}
-                                    </StyledTableCell>
+                                    <StyledTableCell align="center">{row?.InvoiceWKMaster?.InvoiceNo}</StyledTableCell>
+                                    <StyledTableCell align="center">{row?.InvoiceWKMaster?.SupplierName}</StyledTableCell>
+                                    <StyledTableCell align="center">{row?.InvoiceWKMaster?.SubmarineCable}</StyledTableCell>
+                                    <StyledTableCell align="center">{row?.InvoiceWKMaster?.WorkTitle}</StyledTableCell>
+                                    <StyledTableCell align="center">{dayjs(row?.InvoiceWKMaster?.DueDate).format('YYYY/MM/DD')}</StyledTableCell>
                                     {/* 累計實收金額 */}
-                                    <StyledTableCell align="center">
-                                        {handleNumber(row?.ReceivedAmountSum)}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row?.InvoiceWKMaster.ToCode}
-                                    </StyledTableCell>
+                                    <StyledTableCell align="center">{handleNumber(row?.ReceivedAmountSum)}</StyledTableCell>
+                                    <StyledTableCell align="center">{row?.InvoiceWKMaster.ToCode}</StyledTableCell>
                                     {/* 總金額 */}
-                                    <StyledTableCell align="center">
-                                        {handleNumber(row?.InvoiceWKMaster?.TotalAmount)}
-                                    </StyledTableCell>
+                                    <StyledTableCell align="center">{handleNumber(row?.InvoiceWKMaster?.TotalAmount)}</StyledTableCell>
                                     {/* 換匯後累計實收金額 */}
-                                    <StyledTableCell align="center">
-                                        {handleNumber(row?.ExgReceivedAmountSum)}
-                                    </StyledTableCell>
+                                    <StyledTableCell align="center">{handleNumber(row?.ExgReceivedAmountSum)}</StyledTableCell>
                                     {/* 累計實付金額 */}
-                                    <StyledTableCell align="center">
-                                        {handleNumber(row?.InvoiceWKMaster?.PaidAmount)}
-                                    </StyledTableCell>
+                                    <StyledTableCell align="center">{handleNumber(row?.InvoiceWKMaster?.PaidAmount)}</StyledTableCell>
                                     {/* 本次付款金額 */}
-                                    <StyledTableCell align="center">
-                                        {handleNumber(row.PayAmount)}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row?.InvoiceWKMaster?.Code}
-                                    </StyledTableCell>
+                                    <StyledTableCell align="center">{handleNumber(row.PayAmount)}</StyledTableCell>
+                                    <StyledTableCell align="center">{row?.InvoiceWKMaster?.Code}</StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Box
                                             sx={{
                                                 display: 'flex',
                                                 justifyContent: 'center',
-                                                '& button': { mx: 1, p: 0 },
+                                                '& button': { mx: 1, p: 0 }
                                             }}
                                         >
                                             <Button
                                                 color="primary"
                                                 size="small"
                                                 variant="outlined"
+                                                onClick={() => {
+                                                    handlePayExgLogOpen(row.InvoiceWKMaster);
+                                                }}
+                                            >
+                                                換匯紀錄
+                                            </Button>
+                                            <Button
+                                                color="primary"
+                                                size="small"
+                                                variant="outlined"
                                                 disabled={
-                                                    (row?.InvoiceWKMaster?.Code !==
-                                                        row?.InvoiceWKMaster.ToCode &&
-                                                        row?.ToExgAmountSum <= 0) ||
-                                                    row?.InvoiceWKMaster?.Code ===
-                                                        row?.InvoiceWKMaster.ToCode
+                                                    (row?.InvoiceWKMaster?.Code !== row?.InvoiceWKMaster.ToCode && row?.ToExgAmountSum <= 0) ||
+                                                    row?.InvoiceWKMaster?.Code === row?.InvoiceWKMaster.ToCode
                                                 }
                                                 onClick={() => {
                                                     handlePaymentExchangeStartOpen(
@@ -581,6 +457,7 @@ const ToPaymentDataList = ({
                                                         row.InvoiceWKMaster,
                                                         row?.InvoiceWKMaster.ToCode,
                                                         row?.InvoiceWKMaster.Code,
+                                                        row?.InvoiceWKMaster?.TotalAmount
                                                     );
                                                 }}
                                             >
@@ -591,10 +468,7 @@ const ToPaymentDataList = ({
                                                 size="small"
                                                 variant="outlined"
                                                 onClick={() => {
-                                                    handleDialogOpen(
-                                                        row.BillDetailList,
-                                                        row.InvoiceWKMaster,
-                                                    );
+                                                    handleDialogOpen(row.BillDetailList, row.InvoiceWKMaster);
                                                 }}
                                             >
                                                 編輯付款
@@ -607,10 +481,7 @@ const ToPaymentDataList = ({
                                             sx={{ minWidth: 75 }}
                                             value={row.Note}
                                             onChange={(e) => {
-                                                changeNote(
-                                                    e.target.value,
-                                                    row.InvoiceWKMaster.InvoiceNo,
-                                                );
+                                                changeNote(e.target.value, row.InvoiceWKMaster.InvoiceNo);
                                             }}
                                         />
                                     </StyledTableCell>
@@ -630,10 +501,8 @@ export default ToPaymentDataList;
 ToPaymentDataList.propTypes = {
     listInfo: PropTypes.array,
     supplierPaymentQuery: PropTypes.func,
-    // setIsSend:React.SetStateAction<string>,
     actionName: PropTypes.string,
     invoiceNo: PropTypes.string,
     dueDate: PropTypes.string,
-    // handleDialogClose: React.func,
-    isDialogOpen: PropTypes.bool,
+    isDialogOpen: PropTypes.bool
 };

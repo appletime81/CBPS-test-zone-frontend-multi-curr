@@ -222,7 +222,6 @@ const ToDeductWork = ({ isDeductOpen, handleDeductClose, cbData, writeOffInfo, t
 
     const changeDiff = (currAmount, maxValue, value, cbid) => {
         //原始可折抵金額,可折抵金額,目前輸入值
-        let resule = 0;
         let tmpArrayFilter = tmpCBArray.filter((i) => i.CBID === cbid);
         let tmpArray = tmpCBArray.map((i) => i);
         if (tmpArrayFilter.length > 0) {
@@ -230,16 +229,12 @@ const ToDeductWork = ({ isDeductOpen, handleDeductClose, cbData, writeOffInfo, t
                 if (i.CBID === cbid) {
                     if (Number(maxValue) === 0 || Number(value) <= 0) {
                         //如果可折抵金額已經為0 或 輸入數字為負數，則回傳0
-                        resule = Number(currAmount);
                         i.TransAmount = 0;
                     } else if (Number(value) >= Number(maxValue)) {
-                        resule = Number(value) === Number(maxValue) ? Number(value) : Number(maxValue);
                         i.TransAmount = Number(value) === Number(maxValue) ? Number(value) : Number(maxValue);
                     } else if (Number(value) >= Number(currAmount)) {
-                        resule = Number(currAmount);
                         i.TransAmount = Number(currAmount);
                     } else {
-                        resule = Number(value);
                         i.TransAmount = Number(value);
                     }
                 }
@@ -284,7 +279,7 @@ const ToDeductWork = ({ isDeductOpen, handleDeductClose, cbData, writeOffInfo, t
         tmpWriteOffDetailInfo.forEach((i) => {
             if (i.BillMasterID === cbData.current?.BillMasterID && i.BillDetailID === cbData.current?.BillDetailID) {
                 i.CBWriteOffAmount = deductAmount;
-                i.ReceiveAmount = new Decimal(i.ReceiveAmount).minus(new Decimal(deductAmount)); //20250106本次實收需要扣掉CB折抵
+                i.ReceiveAmount = new Decimal(i.ReceiveAmount).minus(new Decimal(deductAmount)).toNumber(); //20250106本次實收需要扣掉CB折抵
             }
         });
         setToWriteOffDetailInfo(tmpWriteOffDetailInfo);

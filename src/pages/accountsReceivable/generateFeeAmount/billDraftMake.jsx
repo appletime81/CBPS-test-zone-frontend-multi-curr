@@ -127,7 +127,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 const BillDraftMake = ({ isDialogOpen, handleDialogClose, billMasterID, pONo, workTitle, code, bmJoin, submarineCableName, issueDateDefault, dueDateDefault, tmpBMArray }) => {
     const dispatch = useDispatch();
     const [dataList, setDataList] = useState([]);
-    const [contact, setContact] = useState('');
+    const [contact, setContact] = useState({ UserID: '', UserName: '' });
     const [contactList, setContactList] = useState([]);
     const [contactInfo, setContactInfo] = useState({});
     const [partyInfo, setPartyInfo] = useState({});
@@ -146,7 +146,7 @@ const BillDraftMake = ({ isDialogOpen, handleDialogClose, billMasterID, pONo, wo
     };
 
     const clearDetail = () => {
-        setContact('');
+        setContact({});
         setLogo(1);
         setSubject1('');
         setSubject3('');
@@ -155,10 +155,10 @@ const BillDraftMake = ({ isDialogOpen, handleDialogClose, billMasterID, pONo, wo
     };
 
     const handleDownload = () => {
-        if (contact !== '') {
+        if (contact) {
             let tmpData = {
                 BillMasterID: billMasterID,
-                UserID: contact,
+                UserID: contact.UserID,
                 IssueDate: dayjs(issueDate).format('YYYY/MM/DD'),
                 DueDate: dayjs(dueDate).format('YYYY/MM/DD'),
                 WorkTitle: subject1,
@@ -213,6 +213,13 @@ const BillDraftMake = ({ isDialogOpen, handleDialogClose, billMasterID, pONo, wo
                 })
             );
         }
+    };
+
+    const handleContact = (e) => {
+        setContact({
+            UserID: e.UserID,
+            UserName: e.UserName
+        });
     };
 
     useEffect(() => {
@@ -290,16 +297,6 @@ const BillDraftMake = ({ isDialogOpen, handleDialogClose, billMasterID, pONo, wo
         }
     }, [billMasterID, isDialogOpen]);
 
-    //     useEffect(() => {
-    //         let tmpAmount = 0;
-    //         detailInfo.forEach((i) => {
-    //             tmpAmount = tmpAmount + i.ShareAmount;
-    //         });
-    //         totalAmountInfo.current = tmpAmount;
-    //     }, [detailInfo]);
-
-    console.log('totalAmountInfo.current=>>', totalAmountInfo.current);
-
     return (
         <Dialog maxWidth="xxl" fullWidth open={isDialogOpen}>
             <BootstrapDialogTitle className="no-print">產製帳單</BootstrapDialogTitle>
@@ -330,9 +327,14 @@ const BillDraftMake = ({ isDialogOpen, handleDialogClose, billMasterID, pONo, wo
                                 <Grid item xs={4} sm={4} md={4} lg={4}>
                                     <FormControl fullWidth size="small">
                                         <InputLabel>選擇聯絡窗口</InputLabel>
-                                        <Select value={contact} label="會員" onChange={(e) => setContact(e.target.value)}>
+                                        <Select
+                                            label="會員"
+                                            value={contact.UserName ? contact : ''}
+                                            onChange={(e) => handleContact(e.target.value)}
+                                            renderValue={(selected) => (selected.UserName ? selected.UserName : '選擇聯絡窗口')}
+                                        >
                                             {contactList.map((i) => (
-                                                <MenuItem key={i.UserName} value={i.UserID}>
+                                                <MenuItem key={i.UserID} value={i}>
                                                     {i.UserName}
                                                 </MenuItem>
                                             ))}
@@ -355,7 +357,6 @@ const BillDraftMake = ({ isDialogOpen, handleDialogClose, billMasterID, pONo, wo
                                             variant="outlined"
                                             value={subject1}
                                             size="small"
-                                            // label="主旨"
                                             inputProps={{ maxLength: 65 }}
                                             onChange={(e) => setSubject1(e.target.value)}
                                         />
@@ -437,9 +438,11 @@ const BillDraftMake = ({ isDialogOpen, handleDialogClose, billMasterID, pONo, wo
                                 </Box>
                                 <Box sx={{ m: 1, width: '20%' }} />
                                 <Box sx={{ m: 1, width: '30%' }}>
+                                    <Box sx={{ fontSize: '12px', textAlign: 'left' }}>{contactInfo?.Company}</Box>
+                                    <Box sx={{ fontSize: '12px', textAlign: 'left' }}>{contact.UserName}</Box>
                                     <Box sx={{ fontSize: '12px', textAlign: 'left' }}>{contactInfo?.Address}</Box>
                                     <Box sx={{ fontSize: '12px', textAlign: 'left' }}>Tel：{contactInfo?.Tel}</Box>
-                                    <Box sx={{ fontSize: '12px', textAlign: 'left' }}>Fax：{contactInfo?.Fax}</Box>
+                                    {/* <Box sx={{ fontSize: '12px', textAlign: 'left' }}>Fax：{contactInfo?.Fax}</Box> */}
                                 </Box>
                             </Box>
                             <Box
@@ -610,7 +613,6 @@ const BillDraftMake = ({ isDialogOpen, handleDialogClose, billMasterID, pONo, wo
                 <Button
                     sx={{ mr: '0.05rem' }}
                     variant="contained"
-                    // disabled={action === 'toDeduct'}
                     onClick={() => {
                         clearDetail();
                     }}
@@ -620,7 +622,6 @@ const BillDraftMake = ({ isDialogOpen, handleDialogClose, billMasterID, pONo, wo
                 <Button
                     sx={{ mr: '0.05rem' }}
                     variant="contained"
-                    // disabled={action === 'toDeduct'}
                     onClick={() => {
                         handleDownload();
                     }}

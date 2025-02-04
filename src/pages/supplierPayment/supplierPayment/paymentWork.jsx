@@ -8,16 +8,7 @@ import Decimal from 'decimal.js';
 import MainCard from 'components/MainCard';
 import NumericFormatCustom from 'components/numericFormatCustom';
 // material-ui
-import {
-    Typography,
-    Button,
-    Table,
-    Dialog,
-    DialogContent,
-    Grid,
-    DialogActions,
-    TextField,
-} from '@mui/material';
+import { Typography, Button, Table, Dialog, DialogContent, Grid, DialogActions, TextField } from '@mui/material';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
@@ -37,38 +28,37 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
         // backgroundColor: theme.palette.common.gary,
         color: theme.palette.common.black,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
+        paddingBottom: '0.2rem'
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
+        paddingBottom: '0.2rem'
     },
     [`&.${tableCellClasses.body}.totalAmount`]: {
         fontSize: 14,
         paddingTop: '0.2rem',
         paddingBottom: '0.2rem',
-        backgroundColor: '#CFD8DC',
-    },
+        backgroundColor: '#CFD8DC'
+    }
 }));
 
-const PaymentWork = ({
-    isDialogOpen,
-    handleDialogClose,
-    editPaymentInfo,
-    actionName,
-    invoiceNo,
-    dueDate,
-    savePaymentEdit,
-    exgRate,
-}) => {
+const PaymentWork = ({ isDialogOpen, handleDialogClose, editPaymentInfo, actionName, invoiceNo, dueDate, savePaymentEdit, exgRate }) => {
     const dispatch = useDispatch();
     const [toPaymentDetailInfo, setToPaymentDetailInfo] = useState([]); //帳單明細檔
-    const exgReceivedAmountTotal = useRef(0); //應收金額
-    const receivedAmountTotal = useRef(0); //已實收金額
-    const paidAmountTotal = useRef(0); //已實付金額
-    const toPaymentAmountTotal = useRef(0); //未付款金額
-    const payAmountTotal = useRef(0); //此次付款金額
+    const exgReceivedAmountTotal = useRef(new Decimal(0)); //應收金額
+    const receivedAmountTotal = useRef(new Decimal(0)); //已實收金額
+    const paidAmountTotal = useRef(new Decimal(0)); //已實付金額
+    const toPaymentAmountTotal = useRef(new Decimal(0)); //未付款金額
+    const payAmountTotal = useRef(new Decimal(0)); //此次付款金額
+
+    const initTotal = () => {
+        exgReceivedAmountTotal.current = new Decimal(0);
+        receivedAmountTotal.current = new Decimal(0);
+        paidAmountTotal.current = new Decimal(0);
+        toPaymentAmountTotal.current = new Decimal(0);
+        payAmountTotal.current = new Decimal(0);
+    };
 
     const changeNote = (note, billMasterID, billDetailID) => {
         let tmpArray = toPaymentDetailInfo.map((i) => i);
@@ -81,7 +71,6 @@ const PaymentWork = ({
     };
 
     const changePayAmount = (payment, billMasterID, billDetailID) => {
-        console.log(payment, typeof new Decimal(payment));
         payAmountTotal.current = 0;
         let tmpArray = toPaymentDetailInfo.map((i) => i);
         tmpArray.forEach((i) => {
@@ -94,7 +83,7 @@ const PaymentWork = ({
                         ? new Decimal(i.PayAmount)
                         : Number(i.ReceivedAmount - i.PaidAmount) > 0
                         ? new Decimal(i.ReceivedAmount).minus(new Decimal(i.PaidAmount))
-                        : new Decimal(0),
+                        : new Decimal(0)
                 )
                 .toNumber();
         });
@@ -106,9 +95,7 @@ const PaymentWork = ({
         let tmpArray = toPaymentDetailInfo.map((i) => i);
         tmpArray.forEach((i) => {
             // i.PayAmount = i.PayAmount ? i.PayAmount : Number(i.ReceivedAmount - i.PaidAmount);
-            i.PayAmount = i.PayAmount
-                ? i.PayAmount
-                : new Decimal(i.ExgReceivedAmount).minus(new Decimal(i.PaidAmount)).toNumber();
+            i.PayAmount = i.PayAmount ? i.PayAmount : new Decimal(i.ExgReceivedAmount).minus(new Decimal(i.PaidAmount)).toNumber();
         });
         savePaymentEdit(tmpArray);
     };
@@ -125,12 +112,10 @@ const PaymentWork = ({
                         isOpen: true,
                         severity: 'info',
                         message: `已實付金額+此次付款金額超出已實收金額${handleNumber(
-                            new Decimal(payAmountTotal.current)
-                                .add(new Decimal(paidAmountTotal.current))
-                                .minus(new Decimal(receivedAmountTotal.current)),
-                        )}`,
-                    },
-                }),
+                            new Decimal(payAmountTotal.current).add(new Decimal(paidAmountTotal.current)).minus(new Decimal(receivedAmountTotal.current))
+                        )}`
+                    }
+                })
             );
         }
     };
@@ -139,25 +124,23 @@ const PaymentWork = ({
         if (isDialogOpen) {
             let tmpArray = JSON.parse(JSON.stringify(editPaymentInfo));
             tmpArray.forEach((i) => {
-                receivedAmountTotal.current = new Decimal(receivedAmountTotal.current).add(
-                    new Decimal(i.ReceivedAmount),
-                );
-                exgReceivedAmountTotal.current = new Decimal(exgReceivedAmountTotal.current).add(
-                    new Decimal(i.ExgReceivedAmount),
-                );
-                paidAmountTotal.current = new Decimal(paidAmountTotal.current).add(
-                    new Decimal(i.PaidAmount),
-                );
-                toPaymentAmountTotal.current = new Decimal(toPaymentAmountTotal.current).add(
-                    i.FeeAmount / exgRate - i.PaidAmount > 0
-                        ? new Decimal(i.FeeAmount / exgRate).minus(new Decimal(i.PaidAmount))
-                        : 0,
-                );
-                payAmountTotal.current = new Decimal(payAmountTotal.current).add(
-                    i.PayAmount
-                        ? i.PayAmount
-                        : new Decimal(i.ExgReceivedAmount).minus(new Decimal(i.PaidAmount)),
-                );
+                const receivedAmount = new Decimal(i.ReceivedAmount || 0);
+                const exgReceivedAmount = new Decimal(i.ExgReceivedAmount || 0);
+                const paidAmount = new Decimal(i.PaidAmount || 0);
+                const feeAmountExg = new Decimal(i.FeeAmount || 0).dividedBy(exgRate); //「換匯後已實收金額」
+
+                receivedAmountTotal.current = receivedAmountTotal.current.plus(receivedAmount);
+                exgReceivedAmountTotal.current = exgReceivedAmountTotal.current.plus(exgReceivedAmount);
+                paidAmountTotal.current = paidAmountTotal.current.plus(paidAmount);
+                const toPayDifference = feeAmountExg.minus(paidAmount).isPositive() ? feeAmountExg.minus(paidAmount) : new Decimal(0);
+                toPaymentAmountTotal.current = toPaymentAmountTotal.current.plus(toPayDifference);
+                //「換匯後已實收金額」-「已實付金額」若大於「未付款金額」，顯示toPayment，否則顯示「換匯後已實收金額」-「已實付金額」
+                const payAmount = i.PayAmount
+                    ? new Decimal(i.PayAmount)
+                    : exgReceivedAmount.minus(paidAmount).greaterThan(toPayDifference)
+                    ? toPayDifference
+                    : exgReceivedAmount.minus(paidAmount);
+                payAmountTotal.current = payAmountTotal.current.plus(payAmount);
             });
             setToPaymentDetailInfo(tmpArray);
         }
@@ -165,33 +148,17 @@ const PaymentWork = ({
 
     return (
         <Dialog maxWidth="xxl" open={isDialogOpen}>
-            <BootstrapDialogTitle>
-                {actionName === 'toPayment' ? '收款明細與編輯付款資訊' : '收款明細與付款資訊'}
-            </BootstrapDialogTitle>
+            <BootstrapDialogTitle>{actionName === 'toPayment' ? '收款明細與編輯付款資訊' : '收款明細與付款資訊'}</BootstrapDialogTitle>
             <DialogContent>
-                <Grid
-                    container
-                    spacing={1}
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                    sx={{ fontSize: 10 }}
-                >
+                <Grid container spacing={1} display="flex" justifyContent="center" alignItems="center" sx={{ fontSize: 10 }}>
                     <Grid item xs={12} sm={12} md={12} lg={12}>
-                        <Grid
-                            container
-                            spacing={1}
-                            display="flex"
-                            justifyContent="center"
-                            alignItems="center"
-                            sx={{ fontSize: 10 }}
-                        >
+                        <Grid container spacing={1} display="flex" justifyContent="center" alignItems="center" sx={{ fontSize: 10 }}>
                             <Grid item sm={1} md={1} lg={1}>
                                 <Typography
                                     variant="h5"
                                     sx={{
                                         fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                        ml: { lg: '0.5rem', xl: '1.5rem' },
+                                        ml: { lg: '0.5rem', xl: '1.5rem' }
                                     }}
                                 >
                                     發票號碼：
@@ -202,7 +169,7 @@ const PaymentWork = ({
                                     value={invoiceNo}
                                     fullWidth
                                     InputProps={{
-                                        readyOnly: true,
+                                        readOnly: true
                                     }}
                                     variant="outlined"
                                     size="small"
@@ -213,7 +180,7 @@ const PaymentWork = ({
                                     variant="h5"
                                     sx={{
                                         fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                        ml: { lg: '0.5rem', xl: '1.5rem' },
+                                        ml: { lg: '0.5rem', xl: '1.5rem' }
                                     }}
                                 >
                                     發票到期日：
@@ -224,7 +191,7 @@ const PaymentWork = ({
                                     value={dayjs(dueDate).format('YYYY/MM/DD')}
                                     fullWidth
                                     InputProps={{
-                                        readyOnly: true,
+                                        readOnly: true
                                     }}
                                     variant="outlined"
                                     size="small"
@@ -236,92 +203,50 @@ const PaymentWork = ({
                     <Grid item xs={12} sm={12} md={12} lg={12}>
                         <MainCard title="帳單明細列表">
                             <TableContainer component={Paper} sx={{ maxHeight: 350 }}>
-                                <Table
-                                    sx={{ minWidth: 300 }}
-                                    stickyHeader
-                                    aria-label="sticky table"
-                                >
+                                <Table sx={{ minWidth: 300 }} stickyHeader aria-label="sticky table">
                                     <TableHead>
                                         <TableRow>
-                                            <StyledTableCell align="center">
-                                                帳單號碼
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                費用項目
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                計帳段號
-                                            </StyledTableCell>
+                                            <StyledTableCell align="center">帳單號碼</StyledTableCell>
+                                            <StyledTableCell align="center">費用項目</StyledTableCell>
+                                            <StyledTableCell align="center">計帳段號</StyledTableCell>
                                             <StyledTableCell align="center">會員</StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                已實收金額
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                換匯後已實收金額
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                已實付金額
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                未付款金額
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                摘要說明
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                此次付款金額
-                                            </StyledTableCell>
+                                            <StyledTableCell align="center">已實收金額</StyledTableCell>
+                                            <StyledTableCell align="center">換匯後已實收金額</StyledTableCell>
+                                            <StyledTableCell align="center">已實付金額</StyledTableCell>
+                                            <StyledTableCell align="center">未付款金額</StyledTableCell>
+                                            <StyledTableCell align="center">摘要說明</StyledTableCell>
+                                            <StyledTableCell align="center">此次付款金額</StyledTableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
                                         {toPaymentDetailInfo?.map((row) => {
-                                            // let toPayment = row.OrgFeeAmount - row.PaidAmount;
-                                            let toPayment =
-                                                // row.FeeAmount / exgRate - row.PaidAmount;
-                                                new Decimal(row.FeeAmount / exgRate)
-                                                    .minus(new Decimal(row.PaidAmount))
-                                                    .toNumber();
-                                            let defaultPayment = new Decimal(row.ExgReceivedAmount)
-                                                .minus(new Decimal(row.PaidAmount))
-                                                .toNumber();
+                                            // 未付款金額
+                                            let toPayment = new Decimal(row.FeeAmount / exgRate).minus(new Decimal(row.PaidAmount)).toNumber();
+                                            //「換匯後已實收金額」-「已實付金額」若大於「未付款金額」，顯示toPayment，否則顯示「換匯後已實收金額」-「已實付金額」
+                                            let defaultPayment =
+                                                row.ExgReceivedAmount - row.PaidAmount > toPayment
+                                                    ? toPayment
+                                                    : new Decimal(row.ExgReceivedAmount).minus(new Decimal(row.PaidAmount)).toNumber();
                                             return (
                                                 <TableRow
-                                                    key={
-                                                        row.InvoiceNo +
-                                                        row?.BillMasterID +
-                                                        row?.BillDetailID
-                                                    }
+                                                    key={row.InvoiceNo + row?.BillMasterID + row?.BillDetailID}
                                                     sx={{
                                                         '&:last-child td, &:last-child th': {
-                                                            border: 0,
-                                                        },
+                                                            border: 0
+                                                        }
                                                     }}
                                                 >
-                                                    <TableCell align="center">
-                                                        {row?.BillingNo}
-                                                    </TableCell>
-                                                    <TableCell align="center">
-                                                        {row.FeeItem}
-                                                    </TableCell>
-                                                    <TableCell align="center">
-                                                        {row.BillMilestone}
-                                                    </TableCell>
-                                                    <TableCell align="center">
-                                                        {row.PartyName}
-                                                    </TableCell>
-                                                    {/* 應收金額 */}
-                                                    {/* <TableCell align="center">
-                                                        {handleNumber(row.OrgFeeAmount)}
-                                                    </TableCell> */}
+                                                    <TableCell align="center">{row?.BillingNo}</TableCell>
+                                                    <TableCell align="center">{row.FeeItem}</TableCell>
+                                                    <TableCell align="center">{row.BillMilestone}</TableCell>
+                                                    <TableCell align="center">{row.PartyName}</TableCell>
                                                     {/* 已實收金額 */}
                                                     <TableCell align="center">
-                                                        {handleNumber(row.ReceivedAmount)}{' '}
-                                                        {row.Code}
+                                                        {handleNumber(row.ReceivedAmount)} {row.Code}
                                                     </TableCell>
                                                     {/* 換匯後已實收金額 */}
                                                     <TableCell align="center">
-                                                        {handleNumber(row?.ExgReceivedAmount)}{' '}
-                                                        {row.PayCode}
+                                                        {handleNumber(row?.ExgReceivedAmount)} {row.PayCode}
                                                     </TableCell>
                                                     {/* 已實付金額 */}
                                                     <TableCell align="center">
@@ -329,10 +254,7 @@ const PaymentWork = ({
                                                     </TableCell>
                                                     {/* 未付款金額 */}
                                                     <TableCell align="center">
-                                                        {toPayment > 0
-                                                            ? handleNumber(toPayment)
-                                                            : 0}{' '}
-                                                        {row.PayCode}
+                                                        {toPayment > 0 ? handleNumber(toPayment) : 0} {row.PayCode}
                                                     </TableCell>
                                                     {actionName === 'toPayment' ? (
                                                         <TableCell align="center">
@@ -341,19 +263,13 @@ const PaymentWork = ({
                                                                 sx={{ minWidth: 75 }}
                                                                 value={row.Note}
                                                                 onChange={(e) => {
-                                                                    changeNote(
-                                                                        e.target.value,
-                                                                        row.BillMasterID,
-                                                                        row.BillDetailID,
-                                                                    );
+                                                                    changeNote(e.target.value, row.BillMasterID, row.BillDetailID);
                                                                 }}
                                                             />
                                                         </TableCell>
                                                     ) : (
                                                         <TableCell align="center">
-                                                            <TableCell align="center">
-                                                                {row.Note}
-                                                            </TableCell>
+                                                            <TableCell align="center">{row.Note}</TableCell>
                                                         </TableCell>
                                                     )}
                                                     {/* 此次付款金額 */}
@@ -365,23 +281,14 @@ const PaymentWork = ({
                                                                 sx={{ minWidth: 75 }}
                                                                 label={row.PayCode}
                                                                 InputProps={{
-                                                                    inputComponent:
-                                                                        NumericFormatCustom,
+                                                                    inputComponent: NumericFormatCustom,
+                                                                    // 使用者輸入的「此次付款金額」若大於「未付款金額」則顯示紅色
+                                                                    style: { color: row.PayAmount > toPayment ? 'red' : 'black' }
                                                                 }}
                                                                 disabled={toPayment <= 0}
-                                                                // row.FeeAmount / exgRate - row.PaidAmount;
-                                                                value={
-                                                                    row.PayAmount ||
-                                                                    row.PayAmount === 0
-                                                                        ? row.PayAmount
-                                                                        : defaultPayment
-                                                                }
+                                                                value={row.PayAmount ?? defaultPayment}
                                                                 onChange={(e) => {
-                                                                    changePayAmount(
-                                                                        e.target.value,
-                                                                        row.BillMasterID,
-                                                                        row.BillDetailID,
-                                                                    );
+                                                                    changePayAmount(e.target.value, row.BillMasterID, row.BillDetailID);
                                                                 }}
                                                             />
                                                         </TableCell>
@@ -391,24 +298,15 @@ const PaymentWork = ({
                                         })}
                                         <TableRow
                                             sx={{
-                                                '&:last-child td, &:last-child th': { border: 0 },
+                                                '&:last-child td, &:last-child th': { border: 0 }
                                             }}
                                         >
                                             <StyledTableCell className="totalAmount" align="center">
                                                 Total
                                             </StyledTableCell>
-                                            <StyledTableCell
-                                                className="totalAmount"
-                                                align="center"
-                                            />
-                                            <StyledTableCell
-                                                className="totalAmount"
-                                                align="center"
-                                            />
-                                            <StyledTableCell
-                                                className="totalAmount"
-                                                align="center"
-                                            />
+                                            <StyledTableCell className="totalAmount" align="center" />
+                                            <StyledTableCell className="totalAmount" align="center" />
+                                            <StyledTableCell className="totalAmount" align="center" />
                                             <StyledTableCell className="totalAmount" align="center">
                                                 {handleNumber(receivedAmountTotal.current)}
                                             </StyledTableCell>
@@ -421,10 +319,7 @@ const PaymentWork = ({
                                             <StyledTableCell className="totalAmount" align="center">
                                                 {handleNumber(toPaymentAmountTotal.current)}
                                             </StyledTableCell>
-                                            <StyledTableCell
-                                                className="totalAmount"
-                                                align="center"
-                                            />
+                                            <StyledTableCell className="totalAmount" align="center" />
                                             <StyledTableCell className="totalAmount" align="center">
                                                 {handleNumber(payAmountTotal.current)}
                                             </StyledTableCell>
@@ -445,11 +340,7 @@ const PaymentWork = ({
                             onClick={() => {
                                 sendInfo();
                                 handleSaveEdit();
-                                exgReceivedAmountTotal.current = 0;
-                                receivedAmountTotal.current = 0;
-                                paidAmountTotal.current = 0;
-                                toPaymentAmountTotal.current = 0;
-                                payAmountTotal.current = 0;
+                                initTotal();
                             }}
                         >
                             儲存
@@ -460,11 +351,7 @@ const PaymentWork = ({
                             onClick={() => {
                                 handleDialogClose();
                                 handleTmpSaveEdit();
-                                exgReceivedAmountTotal.current = 0;
-                                receivedAmountTotal.current = 0;
-                                paidAmountTotal.current = 0;
-                                toPaymentAmountTotal.current = 0;
-                                payAmountTotal.current = 0;
+                                initTotal();
                             }}
                         >
                             關閉
@@ -476,11 +363,7 @@ const PaymentWork = ({
                         variant="contained"
                         onClick={() => {
                             handleDialogClose();
-                            exgReceivedAmountTotal.current = 0;
-                            receivedAmountTotal.current = 0;
-                            paidAmountTotal.current = 0;
-                            toPaymentAmountTotal.current = 0;
-                            payAmountTotal.current = 0;
+                            initTotal();
                         }}
                     >
                         關閉
@@ -498,7 +381,7 @@ PaymentWork.propTypes = {
     editPaymentInfo: PropTypes.array,
     savePaymentEdit: PropTypes.func,
     handleDialogClose: PropTypes.func,
-    isDialogOpen: PropTypes.bool,
+    isDialogOpen: PropTypes.bool
 };
 
 export default PaymentWork;

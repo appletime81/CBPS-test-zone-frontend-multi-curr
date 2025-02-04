@@ -618,10 +618,8 @@ const WriteOffWork = ({ isDialogOpen, handleDialogClose, writeOffInfo, writeOffD
                                                         <TableCell align="center">{handleNumber(row?.DedAmount)}</TableCell>
                                                         {/* 預付稅款 */}
                                                         <TableCell align="center">{handleNumber(row?.WHTAmount)}</TableCell>
-                                                        {/* 應收 */}
-                                                        <TableCell align="center">
-                                                            {handleNumber(new Decimal(row?.FeeAmount || 0).minus(new Decimal(row?.WHTAmount || 0)).toNumber())}
-                                                        </TableCell>
+                                                        {/* 應收，1/23開始不需扣掉WHTAmount */}
+                                                        <TableCell align="center">{handleNumber(row?.FeeAmount || 0)}</TableCell>
                                                         {/* 累計實收 */}
                                                         <TableCell align="center">{handleNumber(row?.ReceivedAmount)}</TableCell>
                                                         {/* 累計手續費 */}
@@ -778,7 +776,8 @@ const WriteOffWork = ({ isDialogOpen, handleDialogClose, writeOffInfo, writeOffD
                                                 </StyledTableCell>
                                                 {/* 應收Total */}
                                                 <StyledTableCell className="totalAmount" align="center">
-                                                    {handleNumber(new Decimal(feeAmountTotal.current).minus(new Decimal(wHTAmountTotal.current).toNumber()))}
+                                                    {/* {handleNumber(new Decimal(feeAmountTotal.current).minus(new Decimal(wHTAmountTotal.current).toNumber()))} */}
+                                                    {handleNumber(new Decimal(feeAmountTotal.current))}
                                                 </StyledTableCell>
                                                 {/* 累計實收Total */}
                                                 <StyledTableCell className="totalAmount" align="center">

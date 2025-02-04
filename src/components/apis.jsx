@@ -1,6 +1,6 @@
 //let env = 'internal-cbpsAlb-1176080923.ap-northeast-1.elb.amazonaws.com'
 // let env = '10.193.130.75:8000';
-let env = '172.28.124.164:8000';
+let env = '127.0.0.1:8000';
 let httpEnv = 'http';
 
 if (process.env.REACT_APP_ENV_FLAGE === 'qa') {
@@ -19,8 +19,7 @@ export const redirectUriQA = 'https://cbpsqa.cht.com.tw';
 export const redirectUriOL = 'https://cbps.cht.com.tw';
 // 'https://internal-cbpsalbfrontend-1323185980.ap-northeast-1.elb.amazonaws.com';
 
-export const accessSSOQA =
-    'https://iam-qa.cht.com.tw/auth/realms/B2E/protocol/openid-connect/token';
+export const accessSSOQA = 'https://iam-qa.cht.com.tw/auth/realms/B2E/protocol/openid-connect/token';
 export const accessSSOOL = 'https://iam.cht.com.tw/auth/realms/B2E/protocol/openid-connect/token';
 
 // Login
@@ -111,6 +110,7 @@ export const sendPayment = `${httpEnv}://${env}/api/v1/payment/submit`;
 export const getPayMasterPayStatement = `${httpEnv}://${env}/api/v1/getPayMaster&PayStatement`;
 export const paymentExchangeStart = `${httpEnv}://${env}/api/v1/payment/exchangeStart`;
 export const paymentExchangeProcess = `${httpEnv}://${env}/api/v1/payment/exchangeProcess`;
+export const getPayExgLog = `${httpEnv}://${env}/api/v1/getPayExgLog`;
 
 // 函稿
 export const getPayDraftStream = `${httpEnv}://${env}/api/v1/getPayDraftStream`;
