@@ -35,13 +35,11 @@ const GenerateFeeAmount = () => {
     const a11yProps = (index) => {
         return {
             id: `simple-tab-${index}`,
-            'aria-controls': `simple-tabpanel-${index}`,
+            'aria-controls': `simple-tabpanel-${index}`
         };
     };
 
-    const handleDialogClose = () => {
-        setIsDialogOpen(false);
-    };
+    const handleDialogClose = () => setIsDialogOpen(false);
     const handleDialogOpen = () => {
         if (Object.values(cbToCn).indexOf(true) > -1) {
             setIsDialogOpen(true); //打開的時候才會觸發合併API
@@ -51,9 +49,9 @@ const GenerateFeeAmount = () => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請至少勾選一筆發票項目',
-                    },
-                }),
+                        message: '請至少勾選一筆發票項目'
+                    }
+                })
             );
         }
     };
@@ -80,7 +78,7 @@ const GenerateFeeAmount = () => {
         }
         fetch(tmpQuery, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
         })
             .then((res) => res.json())
             .then((data) => {
@@ -93,9 +91,9 @@ const GenerateFeeAmount = () => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'info',
-                                message: '查無資料',
-                            },
-                        }),
+                                message: '查無資料'
+                            }
+                        })
                     );
                 }
             })
@@ -105,9 +103,9 @@ const GenerateFeeAmount = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -122,19 +120,7 @@ const GenerateFeeAmount = () => {
                 <ReceivableQuery value={value} setListInfo={setListInfo} queryApi={queryApi} />
             </Grid>
             <Grid item xs={12}>
-                <MainCard
-                    title={`${
-                        value === 0
-                            ? '待合併'
-                            : value === 1
-                            ? '待抵扣'
-                            : value === 2
-                            ? '已抵扣'
-                            : value === 3
-                            ? '已簽核'
-                            : '已作廢'
-                    }帳單資料列表`}
-                >
+                <MainCard title={`${value === 0 ? '待合併' : value === 1 ? '待抵扣' : value === 2 ? '已抵扣' : value === 3 ? '已簽核' : '已作廢'}帳單資料列表`}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider', position: 'relative' }}>
                         <Tabs value={value} onChange={handleChange}>
                             <Tab label="待合併" {...a11yProps(0)} />
@@ -150,7 +136,7 @@ const GenerateFeeAmount = () => {
                                 sx={{
                                     position: 'absolute',
                                     right: 0,
-                                    top: 4,
+                                    top: 4
                                 }}
                                 onClick={handleDialogOpen}
                             >
@@ -170,16 +156,10 @@ const GenerateFeeAmount = () => {
                         />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={1}>
-                        <ToDeductDataList
-                            dataList={listInfo}
-                            receivableQuery={receivableQueryInit}
-                        />
+                        <ToDeductDataList dataList={listInfo} receivableQuery={receivableQueryInit} />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={2}>
-                        <DeductedDataList
-                            dataList={listInfo}
-                            receivableQuery={receivableQueryInit}
-                        />
+                        <DeductedDataList dataList={listInfo} receivableQuery={receivableQueryInit} />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={3}>
                         <SignedDataList dataList={listInfo} receivableQuery={receivableQueryInit} />

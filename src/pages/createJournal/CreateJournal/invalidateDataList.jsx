@@ -26,19 +26,19 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
         // backgroundColor: theme.palette.common.gary,
         color: theme.palette.common.black,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
+        paddingBottom: '0.2rem'
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
+        paddingBottom: '0.2rem'
     },
     [`&.${tableCellClasses.body}.totalAmount`]: {
         fontSize: 14,
         paddingTop: '0.2rem',
         paddingBottom: '0.2rem',
-        backgroundColor: '#CFD8DC',
-    },
+        backgroundColor: '#CFD8DC'
+    }
 }));
 
 const BilledDataList = ({ listInfo }) => {
@@ -66,14 +66,14 @@ const BilledDataList = ({ listInfo }) => {
         let tmpQueryMaster = journalMasterView + tmpQuery;
         fetch(tmpQueryMaster, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
         })
             .then((res) => res.json())
             .then((data) => {
                 // totalAmount.current = data[0].TotalAmount;
                 fetch(tmpQueryDetail, {
                     method: 'GET',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
                 })
                     .then((res) => res.json())
                     .then((data2) => {
@@ -89,18 +89,12 @@ const BilledDataList = ({ listInfo }) => {
                                 item.itemCount = index + 1;
                                 acc[keyName].push(item);
                                 return acc;
-                            }, []),
+                            }, [])
                         );
                         data2.forEach((i) => {
-                            tmpFeeAmountPost = new Decimal(tmpFeeAmountPost).add(
-                                new Decimal(i.FeeAmountPost),
-                            );
-                            tmpDifferAmount = new Decimal(tmpDifferAmount).add(
-                                new Decimal(i.Difference),
-                            );
-                            tmpAfterDiffAmount = tmpAfterDiffAmount = new Decimal(
-                                tmpAfterDiffAmount,
-                            )
+                            tmpFeeAmountPost = new Decimal(tmpFeeAmountPost).add(new Decimal(i.FeeAmountPost));
+                            tmpDifferAmount = new Decimal(tmpDifferAmount).add(new Decimal(i.Difference));
+                            tmpAfterDiffAmount = tmpAfterDiffAmount = new Decimal(tmpAfterDiffAmount)
                                 .add(new Decimal(i.FeeAmountPost))
                                 .add(new Decimal(i.Difference))
                                 .minus(new Decimal(i.WHTAmount));
@@ -118,9 +112,9 @@ const BilledDataList = ({ listInfo }) => {
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'error',
-                                    message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                                },
-                            }),
+                                    message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                                }
+                            })
                         );
                     });
             })
@@ -130,9 +124,9 @@ const BilledDataList = ({ listInfo }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -145,10 +139,7 @@ const BilledDataList = ({ listInfo }) => {
                     幣別：{codeType.current}
                 </Box>
                 <DialogContent>
-                    <TableContainer
-                        component={Paper}
-                        sx={{ maxHeight: window.screen.height * 0.4 }}
-                    >
+                    <TableContainer component={Paper} sx={{ maxHeight: window.screen.height * 0.4 }}>
                         <Table sx={{ minWidth: 300 }} stickyHeader>
                             <TableHead>
                                 <TableRow>
@@ -166,30 +157,20 @@ const BilledDataList = ({ listInfo }) => {
                             <TableBody>
                                 {toBillDataInfo.map((rowFirst, idFirst) => {
                                     return rowFirst.map((rowSecond, idSecond) => {
-                                        let afterDiff = new Decimal(rowSecond.FeeAmountPost)
-                                            .add(new Decimal(rowSecond.Difference))
-                                            .minus(new Decimal(rowSecond.WHTAmount));
+                                        let afterDiff = new Decimal(rowSecond.FeeAmountPost).add(new Decimal(rowSecond.Difference)).minus(new Decimal(rowSecond.WHTAmount));
                                         return (
                                             <TableRow
-                                                key={
-                                                    rowSecond.PartyName +
-                                                    rowSecond.LBRatio +
-                                                    idFirst +
-                                                    idSecond
-                                                }
+                                                key={rowSecond.PartyName + rowSecond.LBRatio + idFirst + idSecond}
                                                 sx={{
                                                     '&:last-child td, &:last-child th': {
-                                                        border: 0,
-                                                    },
+                                                        border: 0
+                                                    }
                                                 }}
                                             >
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {rowSecond.itemCount}
@@ -197,10 +178,7 @@ const BilledDataList = ({ listInfo }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {rowSecond.FeeItem}
@@ -208,10 +186,7 @@ const BilledDataList = ({ listInfo }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {handleNumber(rowSecond.FeeAmountPre)}
@@ -219,10 +194,7 @@ const BilledDataList = ({ listInfo }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {rowSecond.PartyName}
@@ -230,10 +202,7 @@ const BilledDataList = ({ listInfo }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {rowSecond.LBRatio}%
@@ -241,10 +210,7 @@ const BilledDataList = ({ listInfo }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {handleNumber(rowSecond.FeeAmountPost)}
@@ -252,10 +218,7 @@ const BilledDataList = ({ listInfo }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {/* {rowSecond.WHTAmount} */}
@@ -264,10 +227,7 @@ const BilledDataList = ({ listInfo }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {rowSecond.Difference}
@@ -275,10 +235,7 @@ const BilledDataList = ({ listInfo }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {handleNumber(afterDiff)}
@@ -287,35 +244,18 @@ const BilledDataList = ({ listInfo }) => {
                                         );
                                     });
                                 })}
-                                <TableRow
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
+                                <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <StyledTableCell className="totalAmount" align="center">
                                         Total
                                     </StyledTableCell>
-                                    <StyledTableCell
-                                        className="totalAmount"
-                                        align="center"
-                                    ></StyledTableCell>
-                                    <StyledTableCell
-                                        className="totalAmount"
-                                        align="center"
-                                    ></StyledTableCell>
-                                    <StyledTableCell
-                                        className="totalAmount"
-                                        align="center"
-                                    ></StyledTableCell>
-                                    <StyledTableCell
-                                        className="totalAmount"
-                                        align="center"
-                                    ></StyledTableCell>
+                                    <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
+                                    <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
+                                    <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
+                                    <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
                                     <StyledTableCell className="totalAmount" align="center">
                                         {handleNumber(totalAmount.current)}
                                     </StyledTableCell>
-                                    <StyledTableCell
-                                        className="totalAmount"
-                                        align="center"
-                                    ></StyledTableCell>
+                                    <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
                                     <StyledTableCell className="totalAmount" align="center">
                                         {handleNumber(differAmount.current)}
                                     </StyledTableCell>
@@ -357,41 +297,18 @@ const BilledDataList = ({ listInfo }) => {
                     <TableBody>
                         {listInfo?.map((row, id) => {
                             return (
-                                <TableRow
-                                    key={row.InvoiceWKMaster?.InvoiceNo + id}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
+                                <TableRow key={row.InvoiceWKMaster?.InvoiceNo + id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <StyledTableCell align="center">{id + 1}</StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.InvoiceWKMaster.InvoiceNo}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.InvoiceWKMaster.SupplierName}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.InvoiceWKMaster.SubmarineCable}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.InvoiceWKMaster.WorkTitle}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {dayjs(row.InvoiceWKMaster.IssueDate).format('YYYY/MM/DD')}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.InvoiceWKDetail.length}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {handleNumber(row.InvoiceWKMaster.TotalAmount)}{' '}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.InvoiceWKMaster.Code}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {handleNumber(row.InvoiceWKMaster.ExgTotalAmount)}{' '}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.InvoiceWKMaster.ToCode}
-                                    </StyledTableCell>
+                                    <StyledTableCell align="center">{row.InvoiceWKMaster.InvoiceNo}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.InvoiceWKMaster.SupplierName}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.InvoiceWKMaster.SubmarineCable}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.InvoiceWKMaster.WorkTitle}</StyledTableCell>
+                                    <StyledTableCell align="center">{dayjs(row.InvoiceWKMaster.IssueDate).format('YYYY/MM/DD')}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.InvoiceWKDetail.length}</StyledTableCell>
+                                    <StyledTableCell align="center">{handleNumber(row.InvoiceWKMaster.TotalAmount)} </StyledTableCell>
+                                    <StyledTableCell align="center">{row.InvoiceWKMaster.Code}</StyledTableCell>
+                                    <StyledTableCell align="center">{handleNumber(row.InvoiceWKMaster.ExgTotalAmount)} </StyledTableCell>
+                                    <StyledTableCell align="center">{row.InvoiceWKMaster.ToCode}</StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Box
                                             sx={{
@@ -399,8 +316,8 @@ const BilledDataList = ({ listInfo }) => {
                                                 justifyContent: 'center',
                                                 '& button': {
                                                     mx: { sm: 0.3, md: 0.3, lg: 0.6, xl: 1.5 },
-                                                    p: 0,
-                                                },
+                                                    p: 0
+                                                }
                                             }}
                                         >
                                             <Button

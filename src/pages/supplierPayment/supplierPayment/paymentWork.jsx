@@ -61,42 +61,52 @@ const PaymentWork = ({ isDialogOpen, handleDialogClose, editPaymentInfo, actionN
     };
 
     const changeNote = (note, billMasterID, billDetailID) => {
-        let tmpArray = toPaymentDetailInfo.map((i) => i);
-        tmpArray.forEach((i) => {
-            if (i.BillMasterID === billMasterID && i.BillDetailID === billDetailID) {
-                i.Note = note;
-            }
-        });
-        setToPaymentDetailInfo(tmpArray);
+        setToPaymentDetailInfo((prev) => prev.map((i) => (i.BillMasterID === billMasterID && i.BillDetailID === billDetailID ? { ...i, Note: note } : i)));
     };
 
     const changePayAmount = (payment, billMasterID, billDetailID) => {
-        payAmountTotal.current = 0;
-        let tmpArray = toPaymentDetailInfo.map((i) => i);
-        tmpArray.forEach((i) => {
-            if (i.BillMasterID === billMasterID && i.BillDetailID === billDetailID) {
-                i.PayAmount = Number(payment);
-            }
-            payAmountTotal.current = new Decimal(payAmountTotal.current)
-                .add(
-                    i.PayAmount
-                        ? new Decimal(i.PayAmount)
-                        : Number(i.ReceivedAmount - i.PaidAmount) > 0
-                        ? new Decimal(i.ReceivedAmount).minus(new Decimal(i.PaidAmount))
-                        : new Decimal(0)
-                )
-                .toNumber();
+        setToPaymentDetailInfo((prev) => {
+            let newPayAmountTotal = new Decimal(0);
+            const updatedInfo = prev.map((i) => {
+                let newPayAmount = i.PayAmount;
+                if (i.BillMasterID === billMasterID && i.BillDetailID === billDetailID) {
+                    newPayAmount = Number(payment);
+                }
+                const remainingAmount = new Decimal(i.ReceivedAmount).minus(new Decimal(i.PaidAmount));
+                const payAmount = newPayAmount ? new Decimal(newPayAmount) : Decimal.max(remainingAmount, 0);
+                newPayAmountTotal = newPayAmountTotal.plus(payAmount);
+                return { ...i, PayAmount: newPayAmount };
+            });
+            payAmountTotal.current = newPayAmountTotal;
+            // setTotals((prevTotals) => ({ ...prevTotals, payAmountTotal: newPayAmountTotal }));
+            return updatedInfo;
         });
-        setToPaymentDetailInfo(tmpArray);
     };
+    // const changePayAmount = (payment, billMasterID, billDetailID) => {
+    //     payAmountTotal.current = 0;
+    //     let tmpArray = toPaymentDetailInfo.map((i) => i);
+    //     tmpArray.forEach((i) => {
+    //         if (i.BillMasterID === billMasterID && i.BillDetailID === billDetailID) {
+    //             i.PayAmount = Number(payment);
+    //         }
+    //         payAmountTotal.current = new Decimal(payAmountTotal.current)
+    //             .add(
+    //                 i.PayAmount
+    //                     ? new Decimal(i.PayAmount)
+    //                     : Number(i.ReceivedAmount - i.PaidAmount) > 0
+    //                     ? new Decimal(i.ReceivedAmount).minus(new Decimal(i.PaidAmount))
+    //                     : new Decimal(0)
+    //             )
+    //             .toNumber();
+    //     });
+    //     setToPaymentDetailInfo(tmpArray);
+    // };
 
     const handleSaveEdit = () => {
-        // haha
-        let tmpArray = toPaymentDetailInfo.map((i) => i);
-        tmpArray.forEach((i) => {
-            // i.PayAmount = i.PayAmount ? i.PayAmount : Number(i.ReceivedAmount - i.PaidAmount);
-            i.PayAmount = i.PayAmount ? i.PayAmount : new Decimal(i.ExgReceivedAmount).minus(new Decimal(i.PaidAmount)).toNumber();
-        });
+        let tmpArray = toPaymentDetailInfo.map((i) => (i.PayAmount = i.PayAmount ? i.PayAmount : new Decimal(i.ExgReceivedAmount).minus(new Decimal(i.PaidAmount)).toNumber()));
+        // tmpArray.forEach((i) => {
+        //     i.PayAmount = i.PayAmount ? i.PayAmount : new Decimal(i.ExgReceivedAmount).minus(new Decimal(i.PaidAmount)).toNumber();
+        // });
         savePaymentEdit(tmpArray);
     };
 
@@ -121,29 +131,30 @@ const PaymentWork = ({ isDialogOpen, handleDialogClose, editPaymentInfo, actionN
     };
 
     useEffect(() => {
-        if (isDialogOpen) {
-            let tmpArray = JSON.parse(JSON.stringify(editPaymentInfo));
-            tmpArray.forEach((i) => {
-                const receivedAmount = new Decimal(i.ReceivedAmount || 0);
-                const exgReceivedAmount = new Decimal(i.ExgReceivedAmount || 0);
-                const paidAmount = new Decimal(i.PaidAmount || 0);
-                const feeAmountExg = new Decimal(i.FeeAmount || 0).dividedBy(exgRate); //「換匯後已實收金額」
+        if (!isDialogOpen) return;
+        const updatedPaymentInfo = editPaymentInfo.map((i) => {
+            // let toPayment = new Decimal(row.FeeAmount / exgRate).minus(new Decimal(row.PaidAmount)).toNumber();
+            const receivedAmount = new Decimal(i.ReceivedAmount || 0);
+            const exgReceivedAmount = new Decimal(i.ExgReceivedAmount || 0);
+            const paidAmount = new Decimal(i.PaidAmount || 0);
+            // const feeAmountExg = new Decimal(i.FeeAmount || 0).dividedBy(exgRate); //「換匯後已實收金額」
 
-                receivedAmountTotal.current = receivedAmountTotal.current.plus(receivedAmount);
-                exgReceivedAmountTotal.current = exgReceivedAmountTotal.current.plus(exgReceivedAmount);
-                paidAmountTotal.current = paidAmountTotal.current.plus(paidAmount);
-                const toPayDifference = feeAmountExg.minus(paidAmount).isPositive() ? feeAmountExg.minus(paidAmount) : new Decimal(0);
-                toPaymentAmountTotal.current = toPaymentAmountTotal.current.plus(toPayDifference);
-                //「換匯後已實收金額」-「已實付金額」若大於「未付款金額」，顯示toPayment，否則顯示「換匯後已實收金額」-「已實付金額」
-                const payAmount = i.PayAmount
-                    ? new Decimal(i.PayAmount)
-                    : exgReceivedAmount.minus(paidAmount).greaterThan(toPayDifference)
-                    ? toPayDifference
-                    : exgReceivedAmount.minus(paidAmount);
-                payAmountTotal.current = payAmountTotal.current.plus(payAmount);
-            });
-            setToPaymentDetailInfo(tmpArray);
-        }
+            receivedAmountTotal.current = receivedAmountTotal.current.plus(receivedAmount);
+            exgReceivedAmountTotal.current = exgReceivedAmountTotal.current.plus(exgReceivedAmount);
+            paidAmountTotal.current = paidAmountTotal.current.plus(paidAmount);
+
+            // const toPayDifference = Decimal.max(feeAmountExg.minus(paidAmount), 0);
+            // toPaymentAmountTotal.current = toPaymentAmountTotal.current.plus(toPayDifference);
+            toPaymentAmountTotal.current = toPaymentAmountTotal.current.plus(i.UnPaidAmount);
+
+            //「換匯後已實收金額」-「已實付金額」若大於「未付款金額」，顯示toPayment，否則顯示「換匯後已實收金額」-「已實付金額」
+            const payAmount = i.PayAmount ? new Decimal(i.PayAmount) : Decimal.min(exgReceivedAmount.minus(paidAmount), i.UnPaidAmount);
+
+            payAmountTotal.current = payAmountTotal.current.plus(payAmount);
+
+            return { ...i, payAmount };
+        });
+        setToPaymentDetailInfo(updatedPaymentInfo);
     }, [isDialogOpen]);
 
     return (
@@ -215,17 +226,17 @@ const PaymentWork = ({ isDialogOpen, handleDialogClose, editPaymentInfo, actionN
                                             <StyledTableCell align="center">已實付金額</StyledTableCell>
                                             <StyledTableCell align="center">未付款金額</StyledTableCell>
                                             <StyledTableCell align="center">摘要說明</StyledTableCell>
-                                            <StyledTableCell align="center">此次付款金額</StyledTableCell>
+                                            {actionName === 'toPayment' ? <StyledTableCell align="center">此次付款金額</StyledTableCell> : null}
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
                                         {toPaymentDetailInfo?.map((row) => {
-                                            // 未付款金額
-                                            let toPayment = new Decimal(row.FeeAmount / exgRate).minus(new Decimal(row.PaidAmount)).toNumber();
+                                            // 未付款金額(20250214，康迪表示直接抓key為"UnPaidAmount")
+                                            // let toPayment = new Decimal(row.FeeAmount / exgRate).minus(new Decimal(row.PaidAmount)).toNumber();
                                             //「換匯後已實收金額」-「已實付金額」若大於「未付款金額」，顯示toPayment，否則顯示「換匯後已實收金額」-「已實付金額」
                                             let defaultPayment =
-                                                row.ExgReceivedAmount - row.PaidAmount > toPayment
-                                                    ? toPayment
+                                                row.ExgReceivedAmount - row.PaidAmount > row.UnPaidAmount
+                                                    ? row.UnPaidAmount
                                                     : new Decimal(row.ExgReceivedAmount).minus(new Decimal(row.PaidAmount)).toNumber();
                                             return (
                                                 <TableRow
@@ -254,7 +265,8 @@ const PaymentWork = ({ isDialogOpen, handleDialogClose, editPaymentInfo, actionN
                                                     </TableCell>
                                                     {/* 未付款金額 */}
                                                     <TableCell align="center">
-                                                        {toPayment > 0 ? handleNumber(toPayment) : 0} {row.PayCode}
+                                                        {/* {toPayment > 0 ? handleNumber(toPayment) : 0} {row.PayCode} */}
+                                                        {handleNumber(row.UnPaidAmount) ?? 0}
                                                     </TableCell>
                                                     {actionName === 'toPayment' ? (
                                                         <TableCell align="center">
@@ -283,9 +295,9 @@ const PaymentWork = ({ isDialogOpen, handleDialogClose, editPaymentInfo, actionN
                                                                 InputProps={{
                                                                     inputComponent: NumericFormatCustom,
                                                                     // 使用者輸入的「此次付款金額」若大於「未付款金額」則顯示紅色
-                                                                    style: { color: row.PayAmount > toPayment ? 'red' : 'black' }
+                                                                    style: { color: row.PayAmount > row.UnPaidAmount ? 'red' : 'black' }
                                                                 }}
-                                                                disabled={toPayment <= 0}
+                                                                disabled={row.UnPaidAmount <= 0}
                                                                 value={row.PayAmount ?? defaultPayment}
                                                                 onChange={(e) => {
                                                                     changePayAmount(e.target.value, row.BillMasterID, row.BillDetailID);
@@ -320,9 +332,11 @@ const PaymentWork = ({ isDialogOpen, handleDialogClose, editPaymentInfo, actionN
                                                 {handleNumber(toPaymentAmountTotal.current)}
                                             </StyledTableCell>
                                             <StyledTableCell className="totalAmount" align="center" />
-                                            <StyledTableCell className="totalAmount" align="center">
-                                                {handleNumber(payAmountTotal.current)}
-                                            </StyledTableCell>
+                                            {actionName === 'toPayment' ? (
+                                                <StyledTableCell className="totalAmount" align="center">
+                                                    {handleNumber(payAmountTotal.current)}
+                                                </StyledTableCell>
+                                            ) : null}
                                         </TableRow>
                                     </TableBody>
                                 </Table>

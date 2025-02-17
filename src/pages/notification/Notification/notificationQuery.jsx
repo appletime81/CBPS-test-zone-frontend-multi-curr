@@ -16,13 +16,7 @@ import { setMessageStateOpen } from 'store/reducers/dropdown';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
-const NotificationQuery = ({
-    setListInfo,
-    partiesList,
-    submarineCableList,
-    value,
-    workTitleList,
-}) => {
+const NotificationQuery = ({ setListInfo, partiesList, submarineCableList, value, workTitleList }) => {
     const dispatch = useDispatch();
     const [submarineCable, setSubmarineCable] = useState('All'); //海纜名稱
     const [workTitle, setWorkTitle] = useState('All'); //海纜作業
@@ -61,9 +55,9 @@ const NotificationQuery = ({
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
             },
-            body: JSON.stringify(tmpObject),
+            body: JSON.stringify(tmpObject)
         })
             .then((res) => res.json())
             .then((data) => {
@@ -75,9 +69,9 @@ const NotificationQuery = ({
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -96,7 +90,7 @@ const NotificationQuery = ({
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                            ml: { lg: '0.5rem', xl: '1.5rem' }
                         }}
                     >
                         海纜名稱：
@@ -104,15 +98,8 @@ const NotificationQuery = ({
                 </Grid>
                 <Grid item md={2} lg={2}>
                     <FormControl fullWidth size="small">
-                        <InputLabel size="small" id="billMilestone">
-                            選擇海纜名稱
-                        </InputLabel>
-                        <Select
-                            size="small"
-                            value={submarineCable}
-                            label="填寫海纜名稱"
-                            onChange={(e) => setSubmarineCable(e.target.value)}
-                        >
+                        <InputLabel>選擇海纜名稱</InputLabel>
+                        <Select size="small" value={submarineCable} label="填寫海纜名稱" onChange={(e) => setSubmarineCable(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {submarineCableList.map((i) => (
                                 <MenuItem key={i} value={i}>
@@ -127,7 +114,7 @@ const NotificationQuery = ({
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                            ml: { lg: '0.5rem', xl: '1.5rem' }
                         }}
                     >
                         海纜作業：
@@ -135,15 +122,8 @@ const NotificationQuery = ({
                 </Grid>
                 <Grid item md={2} lg={2}>
                     <FormControl fullWidth size="small">
-                        <InputLabel size="small" id="billMilestone">
-                            選擇海纜作業
-                        </InputLabel>
-                        <Select
-                            size="small"
-                            value={workTitle}
-                            label="填寫海纜作業"
-                            onChange={(e) => setWorkTitle(e.target.value)}
-                        >
+                        <InputLabel>選擇海纜作業</InputLabel>
+                        <Select size="small" value={workTitle} label="填寫海纜作業" onChange={(e) => setWorkTitle(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {workTitleList.map((i) => (
                                 <MenuItem key={i.Title} value={i.Title}>
@@ -160,7 +140,7 @@ const NotificationQuery = ({
                                 variant="h5"
                                 sx={{
                                     fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                    ml: { lg: '0.5rem', xl: '1.5rem' },
+                                    ml: { lg: '0.5rem', xl: '1.5rem' }
                                 }}
                             >
                                 會員名稱：
@@ -169,11 +149,7 @@ const NotificationQuery = ({
                         <Grid item md={2} lg={2} xl={2}>
                             <FormControl fullWidth size="small">
                                 <InputLabel>選擇會員</InputLabel>
-                                <Select
-                                    value={partyNameQuery}
-                                    label="會員名稱"
-                                    onChange={(e) => setPartyNameQuery(e.target.value)}
-                                >
+                                <Select value={partyNameQuery} label="會員名稱" onChange={(e) => setPartyNameQuery(e.target.value)}>
                                     <MenuItem value={'All'}>All</MenuItem>
                                     {partiesList.map((i) => (
                                         <MenuItem key={i} value={i}>
@@ -190,7 +166,7 @@ const NotificationQuery = ({
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                            ml: { lg: '0.5rem', xl: '1.5rem' }
                         }}
                     >
                         規則英文名稱：
@@ -198,14 +174,7 @@ const NotificationQuery = ({
                 </Grid>
                 <Grid item md={2} lg={2}>
                     <FormControl fullWidth size="small">
-                        <TextField
-                            fullWidth
-                            variant="outlined"
-                            value={ruleName}
-                            size="small"
-                            label="填寫規則名稱"
-                            onChange={(e) => setRuleName(e.target.value)}
-                        />
+                        <TextField fullWidth variant="outlined" value={ruleName} size="small" label="填寫規則名稱" onChange={(e) => setRuleName(e.target.value)} />
                     </FormControl>
                 </Grid>
                 {value === 1 ? (
@@ -215,7 +184,7 @@ const NotificationQuery = ({
                                 variant="h5"
                                 sx={{
                                     fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                    ml: { lg: '0.5rem', xl: '1.5rem' },
+                                    ml: { lg: '0.5rem', xl: '1.5rem' }
                                 }}
                             >
                                 規則中文名稱：
@@ -223,14 +192,7 @@ const NotificationQuery = ({
                         </Grid>
                         <Grid item md={2} lg={2}>
                             <FormControl fullWidth size="small">
-                                <TextField
-                                    fullWidth
-                                    variant="outlined"
-                                    value={ruleCName}
-                                    size="small"
-                                    label="填寫規則名稱"
-                                    onChange={(e) => setRuleCName(e.target.value)}
-                                />
+                                <TextField fullWidth variant="outlined" value={ruleCName} size="small" label="填寫規則名稱" onChange={(e) => setRuleCName(e.target.value)} />
                             </FormControl>
                         </Grid>
                     </>
@@ -257,7 +219,7 @@ NotificationQuery.propTypes = {
     partiesList: PropTypes.array,
     submarineCableList: PropTypes.array,
     workTitleList: PropTypes.array,
-    queryApi: PropTypes.string,
+    queryApi: PropTypes.string
 };
 
 export default NotificationQuery;

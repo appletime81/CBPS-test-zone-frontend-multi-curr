@@ -1,16 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-    Typography,
-    Grid,
-    Button,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    FormControlLabel,
-    FormGroup,
-    Checkbox,
-} from '@mui/material';
+import { Typography, Grid, Button, FormControl, InputLabel, Select, MenuItem, FormControlLabel, FormGroup, Checkbox } from '@mui/material';
 
 // project import
 import MainCard from 'components/MainCard';
@@ -67,10 +56,10 @@ const LiabilityQuery = ({ setListInfo, currencyListInfo, submarineCableList, que
             tmpObject.Purpose = purpose;
         }
         if (code && code !== 'All') {
-            tmpObject.Code = code;
+            tmpObject.FromCode = code;
         }
         if (toCode && toCode !== 'All') {
-            tmpObject.Tocode = toCode;
+            tmpObject.ToCode = toCode;
         }
         if (ifEnd?.true && !ifEnd?.false) {
             tmpObject.ifEnd = true;
@@ -83,9 +72,9 @@ const LiabilityQuery = ({ setListInfo, currencyListInfo, submarineCableList, que
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
             },
-            body: JSON.stringify(tmpObject),
+            body: JSON.stringify(tmpObject)
         })
             .then((res) => res.json())
             .then((data) => {
@@ -96,9 +85,9 @@ const LiabilityQuery = ({ setListInfo, currencyListInfo, submarineCableList, que
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'info',
-                                message: '查詢成功',
-                            },
-                        }),
+                                message: '查詢成功'
+                            }
+                        })
                     );
                 } else {
                     setListInfo([]);
@@ -107,9 +96,9 @@ const LiabilityQuery = ({ setListInfo, currencyListInfo, submarineCableList, que
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'info',
-                                message: '查無資料',
-                            },
-                        }),
+                                message: '查無資料'
+                            }
+                        })
                     );
                 }
             })
@@ -129,7 +118,7 @@ const LiabilityQuery = ({ setListInfo, currencyListInfo, submarineCableList, que
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                            ml: { lg: '0.5rem', xl: '1.5rem' }
                         }}
                     >
                         海纜名稱：
@@ -137,15 +126,8 @@ const LiabilityQuery = ({ setListInfo, currencyListInfo, submarineCableList, que
                 </Grid>
                 <Grid item md={2} lg={2}>
                     <FormControl fullWidth size="small">
-                        <InputLabel size="small" id="billMilestone">
-                            選擇海纜名稱
-                        </InputLabel>
-                        <Select
-                            size="small"
-                            value={submarineCable}
-                            label="填寫海纜名稱"
-                            onChange={(e) => setSubmarineCable(e.target.value)}
-                        >
+                        <InputLabel>選擇海纜名稱</InputLabel>
+                        <Select size="small" value={submarineCable} label="填寫海纜名稱" onChange={(e) => setSubmarineCable(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {submarineCableList.map((i) => (
                                 <MenuItem key={i} value={i}>
@@ -160,7 +142,7 @@ const LiabilityQuery = ({ setListInfo, currencyListInfo, submarineCableList, que
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                            ml: { lg: '0.5rem', xl: '1.5rem' }
                         }}
                     >
                         海纜作業：
@@ -168,15 +150,8 @@ const LiabilityQuery = ({ setListInfo, currencyListInfo, submarineCableList, que
                 </Grid>
                 <Grid item md={2} lg={2}>
                     <FormControl fullWidth size="small">
-                        <InputLabel size="small" id="billMilestone">
-                            選擇海纜作業
-                        </InputLabel>
-                        <Select
-                            size="small"
-                            value={workTitle}
-                            label="填寫海纜作業"
-                            onChange={(e) => setWorkTitle(e.target.value)}
-                        >
+                        <InputLabel>選擇海纜作業</InputLabel>
+                        <Select size="small" value={workTitle} label="填寫海纜作業" onChange={(e) => setWorkTitle(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             <MenuItem value={'Upgrade'}>Upgrade</MenuItem>
                             <MenuItem value={'Construction'}>Construction</MenuItem>
@@ -189,7 +164,7 @@ const LiabilityQuery = ({ setListInfo, currencyListInfo, submarineCableList, que
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                            ml: { lg: '0.5rem', xl: '1.5rem' }
                         }}
                     >
                         出帳日期：
@@ -215,28 +190,21 @@ const LiabilityQuery = ({ setListInfo, currencyListInfo, submarineCableList, que
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                            ml: { lg: '0.5rem', xl: '1.5rem' }
                         }}
                     >
                         主旨/用途：
                     </Typography>
                 </Grid>
                 <Grid item md={2} lg={2} xl={2}>
-                    <TextField
-                        fullWidth
-                        variant="outlined"
-                        value={purpose}
-                        size="small"
-                        inputProps={{ maxLength: 65 }}
-                        onChange={(e) => setPurpose(e.target.value)}
-                    />
+                    <TextField fullWidth variant="outlined" value={purpose} size="small" inputProps={{ maxLength: 65 }} onChange={(e) => setPurpose(e.target.value)} />
                 </Grid>
                 <Grid item md={1} lg={1} xl={1}>
                     <Typography
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                            ml: { lg: '0.5rem', xl: '1.5rem' }
                         }}
                     >
                         原始幣別：
@@ -260,7 +228,7 @@ const LiabilityQuery = ({ setListInfo, currencyListInfo, submarineCableList, que
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                            ml: { lg: '0.5rem', xl: '1.5rem' }
                         }}
                     >
                         兌換幣別：
@@ -284,7 +252,7 @@ const LiabilityQuery = ({ setListInfo, currencyListInfo, submarineCableList, que
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                            ml: { lg: '0.5rem', xl: '1.5rem' }
                         }}
                     >
                         終止狀態：
@@ -294,25 +262,11 @@ const LiabilityQuery = ({ setListInfo, currencyListInfo, submarineCableList, que
                     {/* <FormControl> */}
                     <FormGroup row value={ifEnd}>
                         <FormControlLabel
-                            control={
-                                <Checkbox
-                                    name={'true'}
-                                    onChange={handleChange}
-                                    checked={ifEnd.true}
-                                    sx={{ '& .MuiSvgIcon-root': { fontSize: { lg: 14, xl: 20 } } }}
-                                />
-                            }
+                            control={<Checkbox name={'true'} onChange={handleChange} checked={ifEnd.true} sx={{ '& .MuiSvgIcon-root': { fontSize: { lg: 14, xl: 20 } } }} />}
                             label="終止"
                         />
                         <FormControlLabel
-                            control={
-                                <Checkbox
-                                    name={'false'}
-                                    onChange={handleChange}
-                                    checked={ifEnd.false}
-                                    sx={{ '& .MuiSvgIcon-root': { fontSize: { lg: 14, xl: 20 } } }}
-                                />
-                            }
+                            control={<Checkbox name={'false'} onChange={handleChange} checked={ifEnd.false} sx={{ '& .MuiSvgIcon-root': { fontSize: { lg: 14, xl: 20 } } }} />}
                             label="未終止"
                         />
                     </FormGroup>
@@ -336,7 +290,7 @@ LiabilityQuery.propTypes = {
     partyList: PropTypes.array,
     submarineCableList: PropTypes.array,
     workTitleList: PropTypes.array,
-    queryApi: PropTypes.string,
+    queryApi: PropTypes.string
 };
 
 export default LiabilityQuery;

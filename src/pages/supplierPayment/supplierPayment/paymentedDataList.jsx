@@ -57,6 +57,7 @@ const PaymentedDataList = ({ listInfo }) => {
                 actionName={actionName.current}
                 invoiceNo={invoiceNoEdit.current}
                 dueDate={dueDateEdit.current}
+                exgRate={1}
             />
             <TableContainer component={Paper} sx={{ maxHeight: window.screen.height * 0.45 }}>
                 <Table sx={{ minWidth: 300 }} stickyHeader>
@@ -112,7 +113,7 @@ const PaymentedDataList = ({ listInfo }) => {
                                                     handleDialogOpen(row.BillDetailList, row.InvoiceWKMaster.InvoiceNo, row.InvoiceWKMaster.DueDate);
                                                 }}
                                             >
-                                                檢視
+                                                檢視付款明細
                                             </Button>
                                         </Box>
                                     </StyledTableCell>

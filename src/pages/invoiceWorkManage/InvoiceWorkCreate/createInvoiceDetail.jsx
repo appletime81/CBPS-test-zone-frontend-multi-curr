@@ -7,16 +7,7 @@ import NumericFormatCustom from 'components/numericFormatCustom';
 import { handleNumber } from 'components/commonFunction';
 
 // material-ui
-import {
-    Typography,
-    Grid,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    Button,
-    Table,
-} from '@mui/material';
+import { Typography, Grid, FormControl, InputLabel, Select, MenuItem, Button, Table } from '@mui/material';
 import { StyledEngineProvider, CssVarsProvider } from '@mui/joy/styles';
 import Textarea from '@mui/joy/Textarea';
 
@@ -44,7 +35,7 @@ const CreateInvoiceDetail = ({
     setFeeItem,
     feeAmount,
     setFeeAmount,
-    isTax,
+    isTax
 }) => {
     const [isEdit, setIsEdit] = useState(false);
     const editItem = useRef(0);
@@ -59,13 +50,13 @@ const CreateInvoiceDetail = ({
             // backgroundColor: theme.palette.common.gary,
             color: theme.palette.common.black,
             paddingTop: '0.2rem',
-            paddingBottom: '0.2rem',
+            paddingBottom: '0.2rem'
         },
         [`&.${tableCellClasses.body}`]: {
             fontSize: 14,
             paddingTop: '0.2rem',
-            paddingBottom: '0.2rem',
-        },
+            paddingBottom: '0.2rem'
+        }
     }));
 
     const infoCheck = () => {
@@ -75,9 +66,9 @@ const CreateInvoiceDetail = ({
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入計帳段號',
-                    },
-                }),
+                        message: '請輸入計帳段號'
+                    }
+                })
             );
             return false;
         }
@@ -87,9 +78,9 @@ const CreateInvoiceDetail = ({
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入費用項目',
-                    },
-                }),
+                        message: '請輸入費用項目'
+                    }
+                })
             );
             return false;
         }
@@ -99,9 +90,9 @@ const CreateInvoiceDetail = ({
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入費用金額',
-                    },
-                }),
+                        message: '請輸入費用金額'
+                    }
+                })
             );
             return false;
         }
@@ -161,14 +152,7 @@ const CreateInvoiceDetail = ({
     const copyTax = (info) => {
         let tmpArray = invoiceDetailInfo.map((i) => i);
         console.log(info);
-        tmpArray.push(
-            createData(
-                '(tax)' + info.FeeItem.trim(),
-                info.BillMilestone,
-                1,
-                Number(info.FeeAmount / 10),
-            ),
-        );
+        tmpArray.push(createData('(tax)' + info.FeeItem.trim(), info.BillMilestone, 1, Number(info.FeeAmount / 10)));
         // tmpArray.reverse();
         setInvoiceDetailInfo([...tmpArray]);
         itemDetailInitial();
@@ -188,7 +172,7 @@ const CreateInvoiceDetail = ({
                         variant="h5"
                         align="center"
                         sx={{
-                            fontSize: { lg: '0.7rem', xl: '0.88rem' },
+                            fontSize: { lg: '0.7rem', xl: '0.88rem' }
                         }}
                     >
                         計帳段號：
@@ -196,15 +180,8 @@ const CreateInvoiceDetail = ({
                 </Grid>
                 <Grid item sm={6} md={4} lg={4}>
                     <FormControl fullWidth>
-                        <InputLabel size="small" id="billMilestone">
-                            選擇計帳段號
-                        </InputLabel>
-                        <Select
-                            value={billMilestone}
-                            label="計帳段號"
-                            size="small"
-                            onChange={(e) => setBillMilestone(e.target.value)}
-                        >
+                        <InputLabel>選擇計帳段號</InputLabel>
+                        <Select value={billMilestone} label="計帳段號" size="small" onChange={(e) => setBillMilestone(e.target.value)}>
                             {bmStoneList.map((i) => (
                                 <MenuItem key={i} value={i}>
                                     {i}
@@ -218,7 +195,7 @@ const CreateInvoiceDetail = ({
                         variant="h5"
                         align="center"
                         sx={{
-                            fontSize: { lg: '0.7rem', xl: '0.88rem' },
+                            fontSize: { lg: '0.7rem', xl: '0.88rem' }
                         }}
                     >
                         費用金額：
@@ -232,7 +209,7 @@ const CreateInvoiceDetail = ({
                         size="small"
                         label="填寫費用金額(限制包含小數點16位數)"
                         InputProps={{
-                            inputComponent: NumericFormatCustom,
+                            inputComponent: NumericFormatCustom
                         }}
                         onChange={(e) => {
                             if (e.target.value.length <= 16) {
@@ -248,7 +225,7 @@ const CreateInvoiceDetail = ({
                         size="small"
                         align="center"
                         sx={{
-                            fontSize: { lg: '0.7rem', xl: '0.88rem' },
+                            fontSize: { lg: '0.7rem', xl: '0.88rem' }
                         }}
                     >
                         費用項目：
@@ -257,62 +234,27 @@ const CreateInvoiceDetail = ({
                 <Grid item sm={6} md={10} lg={10}>
                     <StyledEngineProvider injectFirst>
                         <CssVarsProvider>
-                            <Textarea
-                                required
-                                value={feeItem}
-                                placeholder="填寫費用項目"
-                                minRows={2}
-                                maxRows={2}
-                                onChange={(e) => setFeeItem(e.target.value)}
-                            />
+                            <Textarea required value={feeItem} placeholder="填寫費用項目" minRows={2} maxRows={2} onChange={(e) => setFeeItem(e.target.value)} />
                         </CssVarsProvider>
                     </StyledEngineProvider>
                 </Grid>
                 {/* row3 */}
-                <Grid
-                    item
-                    sm={12}
-                    md={12}
-                    lg={12}
-                    display="flex"
-                    justifyContent="end"
-                    alignItems="center"
-                >
+                <Grid item sm={12} md={12} lg={12} display="flex" justifyContent="end" alignItems="center">
                     {isEdit ? (
-                        <Button
-                            size="small"
-                            sx={{ mr: '0.25rem' }}
-                            variant="contained"
-                            onClick={itemDetailSave}
-                        >
+                        <Button size="small" sx={{ mr: '0.25rem' }} variant="contained" onClick={itemDetailSave}>
                             儲存
                         </Button>
                     ) : (
-                        <Button
-                            size="small"
-                            sx={{ mr: '0.25rem' }}
-                            variant="contained"
-                            onClick={itemDetailAdd}
-                        >
+                        <Button size="small" sx={{ mr: '0.25rem' }} variant="contained" onClick={itemDetailAdd}>
                             新增
                         </Button>
                     )}
                     {isEdit ? (
-                        <Button
-                            size="small"
-                            sx={{ ml: '0.25rem' }}
-                            variant="contained"
-                            onClick={itemDetailCancel}
-                        >
+                        <Button size="small" sx={{ ml: '0.25rem' }} variant="contained" onClick={itemDetailCancel}>
                             關閉
                         </Button>
                     ) : (
-                        <Button
-                            size="small"
-                            sx={{ ml: '0.25rem' }}
-                            variant="contained"
-                            onClick={itemDetailInitial}
-                        >
+                        <Button size="small" sx={{ ml: '0.25rem' }} variant="contained" onClick={itemDetailInitial}>
                             清除
                         </Button>
                     )}
@@ -331,22 +273,13 @@ const CreateInvoiceDetail = ({
                             </TableHead>
                             <TableBody>
                                 {invoiceDetailInfo?.map((row, id) => (
-                                    <TableRow
-                                        key={id + row.FeeItem + row.BillMilestone}
-                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                    >
+                                    <TableRow key={id + row.FeeItem + row.BillMilestone} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                         <StyledTableCell component="th" scope="row">
                                             {row.FeeItem}
                                         </StyledTableCell>
-                                        <StyledTableCell align="center">
-                                            {row.BillMilestone}
-                                        </StyledTableCell>
-                                        <StyledTableCell align="center">
-                                            {row.IsTax === 1 ? '是' : '否'}
-                                        </StyledTableCell>
-                                        <StyledTableCell align="center">
-                                            {handleNumber(row.FeeAmount)}
-                                        </StyledTableCell>
+                                        <StyledTableCell align="center">{row.BillMilestone}</StyledTableCell>
+                                        <StyledTableCell align="center">{row.IsTax === 1 ? '是' : '否'}</StyledTableCell>
+                                        <StyledTableCell align="center">{handleNumber(row.FeeAmount)}</StyledTableCell>
                                         <StyledTableCell align="center">
                                             {row.FeeItem.includes('(tax)') ? null : (
                                                 <Button

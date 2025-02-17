@@ -13,12 +13,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import dayjs from 'dayjs';
-import {
-    journalDetailView,
-    journalMasterView,
-    updateInvoice,
-    updateInvoiceMaster,
-} from 'components/apis.jsx';
+import { journalDetailView, journalMasterView, updateInvoice, updateInvoiceMaster } from 'components/apis.jsx';
 
 // redux
 import { useDispatch } from 'react-redux';
@@ -29,19 +24,19 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
         // backgroundColor: theme.palette.common.gary,
         color: theme.palette.common.black,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
+        paddingBottom: '0.2rem'
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
+        paddingBottom: '0.2rem'
     },
     [`&.${tableCellClasses.body}.totalAmount`]: {
         fontSize: 14,
         paddingTop: '0.2rem',
         paddingBottom: '0.2rem',
-        backgroundColor: '#CFD8DC',
-    },
+        backgroundColor: '#CFD8DC'
+    }
 }));
 
 const BilledDataList = ({ listInfo, apiQuery }) => {
@@ -69,13 +64,13 @@ const BilledDataList = ({ listInfo, apiQuery }) => {
         let tmpQueryMaster = journalMasterView + tmpQuery;
         fetch(tmpQueryMaster, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
         })
             .then((res) => res.json())
             .then(() => {
                 fetch(tmpQueryDetail, {
                     method: 'GET',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
                 })
                     .then((res) => res.json())
                     .then((data2) => {
@@ -91,19 +86,12 @@ const BilledDataList = ({ listInfo, apiQuery }) => {
                                 item.itemCount = index + 1;
                                 acc[keyName].push(item);
                                 return acc;
-                            }, []),
+                            }, [])
                         );
                         data2.forEach((i) => {
-                            tmpFeeAmountPost = new Decimal(tmpFeeAmountPost).add(
-                                new Decimal(i.FeeAmountPost),
-                            );
-                            tmpDifferAmount = new Decimal(tmpDifferAmount).add(
-                                new Decimal(i.Difference),
-                            );
-                            tmpAfterDiffAmount = new Decimal(tmpAfterDiffAmount)
-                                .add(new Decimal(i.FeeAmountPost))
-                                .add(new Decimal(i.Difference))
-                                .minus(new Decimal(i.WHTAmount));
+                            tmpFeeAmountPost = new Decimal(tmpFeeAmountPost).add(new Decimal(i.FeeAmountPost));
+                            tmpDifferAmount = new Decimal(tmpDifferAmount).add(new Decimal(i.Difference));
+                            tmpAfterDiffAmount = new Decimal(tmpAfterDiffAmount).add(new Decimal(i.FeeAmountPost)).add(new Decimal(i.Difference)).minus(new Decimal(i.WHTAmount));
                             codeType.current = i.ToCode;
                         });
                         totalAmount.current = tmpFeeAmountPost;
@@ -119,9 +107,9 @@ const BilledDataList = ({ listInfo, apiQuery }) => {
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'error',
-                                    message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                                },
-                            }),
+                                    message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                                }
+                            })
                         );
                     });
             })
@@ -131,9 +119,9 @@ const BilledDataList = ({ listInfo, apiQuery }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -141,15 +129,15 @@ const BilledDataList = ({ listInfo, apiQuery }) => {
     const billDataViewInvalid = (WKMasterID) => {
         let tmpArray = {
             WKMasterID: WKMasterID,
-            Status: 'INVALID',
+            Status: 'INVALID'
         };
         fetch(updateInvoice, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
             },
-            body: JSON.stringify(tmpArray),
+            body: JSON.stringify(tmpArray)
         })
             .then((res) => res.json())
             .then(() => {
@@ -161,18 +149,18 @@ const BilledDataList = ({ listInfo, apiQuery }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         fetch(updateInvoiceMaster, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
             },
-            body: JSON.stringify(tmpArray),
+            body: JSON.stringify(tmpArray)
         })
             .then((res) => res.json())
             .then(() => {
@@ -181,9 +169,9 @@ const BilledDataList = ({ listInfo, apiQuery }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'success',
-                            message: '作廢成功',
-                        },
-                    }),
+                            message: '作廢成功'
+                        }
+                    })
                 );
             })
             .catch(() => {
@@ -192,9 +180,9 @@ const BilledDataList = ({ listInfo, apiQuery }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         apiQuery();
@@ -208,10 +196,7 @@ const BilledDataList = ({ listInfo, apiQuery }) => {
                     幣別：{codeType.current}
                 </Box>
                 <DialogContent>
-                    <TableContainer
-                        component={Paper}
-                        sx={{ maxHeight: window.screen.height * 0.45 }}
-                    >
+                    <TableContainer component={Paper} sx={{ maxHeight: window.screen.height * 0.45 }}>
                         <Table sx={{ minWidth: 300 }} stickyHeader>
                             <TableHead>
                                 <TableRow>
@@ -229,29 +214,20 @@ const BilledDataList = ({ listInfo, apiQuery }) => {
                             <TableBody>
                                 {toBillDataInfo.map((rowFirst, idFirst) => {
                                     return rowFirst.map((rowSecond, idSecond) => {
-                                        let afterDiff = new Decimal(rowSecond.FeeAmountPost)
-                                            .add(new Decimal(rowSecond.Difference))
-                                            .minus(new Decimal(rowSecond.WHTAmount));
+                                        let afterDiff = new Decimal(rowSecond.FeeAmountPost).add(new Decimal(rowSecond.Difference)).minus(new Decimal(rowSecond.WHTAmount));
                                         return (
                                             <TableRow
-                                                key={
-                                                    rowSecond.itemCount +
-                                                    rowSecond.PartyName +
-                                                    rowSecond.LBRatio
-                                                }
+                                                key={rowSecond.itemCount + rowSecond.PartyName + rowSecond.LBRatio}
                                                 sx={{
                                                     '&:last-child td, &:last-child th': {
-                                                        border: 0,
-                                                    },
+                                                        border: 0
+                                                    }
                                                 }}
                                             >
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {rowSecond.itemCount}
@@ -259,10 +235,7 @@ const BilledDataList = ({ listInfo, apiQuery }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {rowSecond.FeeItem}
@@ -270,10 +243,7 @@ const BilledDataList = ({ listInfo, apiQuery }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {handleNumber(rowSecond.FeeAmountPre)}
@@ -281,10 +251,7 @@ const BilledDataList = ({ listInfo, apiQuery }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {rowSecond.PartyName}
@@ -292,10 +259,7 @@ const BilledDataList = ({ listInfo, apiQuery }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {rowSecond.LBRatio}
@@ -303,10 +267,7 @@ const BilledDataList = ({ listInfo, apiQuery }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {handleNumber(rowSecond.FeeAmountPost)}
@@ -314,10 +275,7 @@ const BilledDataList = ({ listInfo, apiQuery }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {rowSecond.IsTax ? '是' : '否'}
@@ -325,10 +283,7 @@ const BilledDataList = ({ listInfo, apiQuery }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {rowSecond.Difference}
@@ -336,10 +291,7 @@ const BilledDataList = ({ listInfo, apiQuery }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {handleNumber(afterDiff)}
@@ -348,35 +300,18 @@ const BilledDataList = ({ listInfo, apiQuery }) => {
                                         );
                                     });
                                 })}
-                                <TableRow
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
+                                <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <StyledTableCell className="totalAmount" align="center">
                                         Total
                                     </StyledTableCell>
-                                    <StyledTableCell
-                                        className="totalAmount"
-                                        align="center"
-                                    ></StyledTableCell>
-                                    <StyledTableCell
-                                        className="totalAmount"
-                                        align="center"
-                                    ></StyledTableCell>
-                                    <StyledTableCell
-                                        className="totalAmount"
-                                        align="center"
-                                    ></StyledTableCell>
-                                    <StyledTableCell
-                                        className="totalAmount"
-                                        align="center"
-                                    ></StyledTableCell>
+                                    <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
+                                    <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
+                                    <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
+                                    <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
                                     <StyledTableCell className="totalAmount" align="center">
                                         {handleNumber(totalAmount.current)}
                                     </StyledTableCell>
-                                    <StyledTableCell
-                                        className="totalAmount"
-                                        align="center"
-                                    ></StyledTableCell>
+                                    <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
                                     <StyledTableCell className="totalAmount" align="center">
                                         {handleNumber(differAmount.current)}
                                     </StyledTableCell>
@@ -418,41 +353,18 @@ const BilledDataList = ({ listInfo, apiQuery }) => {
                     <TableBody>
                         {listInfo?.map((row, id) => {
                             return (
-                                <TableRow
-                                    key={row?.InvoiceWKMaster?.InvoiceNo + id}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
+                                <TableRow key={row?.InvoiceWKMaster?.InvoiceNo + id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <StyledTableCell align="center">{id + 1}</StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row?.InvoiceWKMaster?.InvoiceNo}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row?.InvoiceWKMaster?.SupplierName}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row?.InvoiceWKMaster?.SubmarineCable}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row?.InvoiceWKMaster?.WorkTitle}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {dayjs(row?.InvoiceWKMaster.IssueDate).format('YYYY/MM/DD')}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row?.InvoiceWKDetail.length}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {handleNumber(row.InvoiceWKMaster.TotalAmount)}{' '}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.InvoiceWKMaster.Code}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {handleNumber(row.InvoiceWKMaster.ExgTotalAmount)}{' '}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.InvoiceWKMaster.ToCode}
-                                    </StyledTableCell>
+                                    <StyledTableCell align="center">{row?.InvoiceWKMaster?.InvoiceNo}</StyledTableCell>
+                                    <StyledTableCell align="center">{row?.InvoiceWKMaster?.SupplierName}</StyledTableCell>
+                                    <StyledTableCell align="center">{row?.InvoiceWKMaster?.SubmarineCable}</StyledTableCell>
+                                    <StyledTableCell align="center">{row?.InvoiceWKMaster?.WorkTitle}</StyledTableCell>
+                                    <StyledTableCell align="center">{dayjs(row?.InvoiceWKMaster.IssueDate).format('YYYY/MM/DD')}</StyledTableCell>
+                                    <StyledTableCell align="center">{row?.InvoiceWKDetail.length}</StyledTableCell>
+                                    <StyledTableCell align="center">{handleNumber(row.InvoiceWKMaster.TotalAmount)} </StyledTableCell>
+                                    <StyledTableCell align="center">{row.InvoiceWKMaster.Code}</StyledTableCell>
+                                    <StyledTableCell align="center">{handleNumber(row.InvoiceWKMaster.ExgTotalAmount)} </StyledTableCell>
+                                    <StyledTableCell align="center">{row.InvoiceWKMaster.ToCode}</StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Box
                                             sx={{
@@ -460,8 +372,8 @@ const BilledDataList = ({ listInfo, apiQuery }) => {
                                                 justifyContent: 'center',
                                                 '& button': {
                                                     mx: { sm: 0.3, md: 0.3, lg: 0.6, xl: 1.5 },
-                                                    p: 0,
-                                                },
+                                                    p: 0
+                                                }
                                             }}
                                         >
                                             <Button
@@ -477,9 +389,7 @@ const BilledDataList = ({ listInfo, apiQuery }) => {
                                                 color="error"
                                                 variant="outlined"
                                                 onClick={() => {
-                                                    billDataViewInvalid(
-                                                        row.InvoiceWKMaster.WKMasterID,
-                                                    );
+                                                    billDataViewInvalid(row.InvoiceWKMaster.WKMasterID);
                                                 }}
                                             >
                                                 作廢

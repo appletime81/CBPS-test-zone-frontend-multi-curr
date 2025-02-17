@@ -20,19 +20,19 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
         color: theme.palette.common.black,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
+        paddingBottom: '0.2rem'
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
+        paddingBottom: '0.2rem'
     },
     [`&.${tableCellClasses.body}.totalAmount`]: {
         fontSize: 14,
         paddingTop: '0.2rem',
         paddingBottom: '0.2rem',
-        backgroundColor: '#CFD8DC',
-    },
+        backgroundColor: '#CFD8DC'
+    }
 }));
 
 const ToBillDataList = ({ listInfo, apiQuery }) => {
@@ -63,7 +63,7 @@ const ToBillDataList = ({ listInfo, apiQuery }) => {
         console.log('tmpQuery=>>', tmpQuery);
         fetch(tmpQuery, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
         })
             .then((res) => res.json())
             .then((data) => {
@@ -78,15 +78,13 @@ const ToBillDataList = ({ listInfo, apiQuery }) => {
                             item.itemCount = index + 1;
                             acc[keyName].push(item);
                             return acc;
-                        }, []),
+                        }, [])
                     );
                     setToBillDataInfo(reduceArray);
                     toBillDataMain.current = data.InvoiceMaster;
                     setTotalAmount(data.TotalAmount.toString());
                     data.InvoiceDetail.forEach((i) => {
-                        tmpAmount = new Decimal(tmpAmount)
-                            .add(new Decimal(i.FeeAmountPost))
-                            .add(new Decimal(i.Difference));
+                        tmpAmount = new Decimal(tmpAmount).add(new Decimal(i.FeeAmountPost)).add(new Decimal(i.Difference));
                         codeType.current = i.ToCode;
                     });
                     setCurrentAmount(tmpAmount);
@@ -102,9 +100,9 @@ const ToBillDataList = ({ listInfo, apiQuery }) => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'info',
-                                message: '沒有攤分資料',
-                            },
-                        }),
+                                message: '沒有攤分資料'
+                            }
+                        })
                     );
                 }
             })
@@ -114,9 +112,9 @@ const ToBillDataList = ({ listInfo, apiQuery }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -128,9 +126,7 @@ const ToBillDataList = ({ listInfo, apiQuery }) => {
         tmpArray[idFirst][idSecond].Difference = Number(diff);
         tmpArray.forEach((PartyNameArray) => {
             PartyNameArray.forEach((i) => {
-                tmpAmount = new Decimal(tmpAmount)
-                    .add(new Decimal(i.FeeAmountPost))
-                    .add(new Decimal(i.Difference));
+                tmpAmount = new Decimal(tmpAmount).add(new Decimal(i.FeeAmountPost)).add(new Decimal(i.Difference));
                 tmpDifferAmount = new Decimal(tmpDifferAmount).add(new Decimal(i.Difference));
             });
         });
@@ -146,16 +142,16 @@ const ToBillDataList = ({ listInfo, apiQuery }) => {
             let tmpData = {
                 TotalAmount: totalAmount,
                 InvoiceMaster: tmpArray,
-                InvoiceDetail: [].concat(...toBillDataInfo),
+                InvoiceDetail: [].concat(...toBillDataInfo)
             };
             console.log('tmpData=>>', tmpData);
             fetch(addInvoiceMasterInvoiceDetail, {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
                 },
-                body: JSON.stringify(tmpData),
+                body: JSON.stringify(tmpData)
             })
                 .then((res) => res.json())
                 .then(() => {
@@ -164,9 +160,9 @@ const ToBillDataList = ({ listInfo, apiQuery }) => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'success',
-                                message: '送出立帳成功',
-                            },
-                        }),
+                                message: '送出立帳成功'
+                            }
+                        })
                     );
                     apiQuery();
                     handleDialogClose();
@@ -177,9 +173,9 @@ const ToBillDataList = ({ listInfo, apiQuery }) => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
         } else {
@@ -188,9 +184,9 @@ const ToBillDataList = ({ listInfo, apiQuery }) => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '目前金額不等於發票總金額',
-                    },
-                }),
+                        message: '目前金額不等於發票總金額'
+                    }
+                })
             );
         }
     };
@@ -222,30 +218,20 @@ const ToBillDataList = ({ listInfo, apiQuery }) => {
                             <TableBody>
                                 {toBillDataInfo.map((rowFirst, idFirst) => {
                                     return rowFirst.map((rowSecond, idSecond) => {
-                                        let afterDiff = new Decimal(rowSecond.FeeAmountPost)
-                                            .add(new Decimal(rowSecond.Difference))
-                                            .minus(new Decimal(rowSecond.WHTAmount));
+                                        let afterDiff = new Decimal(rowSecond.FeeAmountPost).add(new Decimal(rowSecond.Difference)).minus(new Decimal(rowSecond.WHTAmount));
                                         return (
                                             <TableRow
-                                                key={
-                                                    idFirst +
-                                                    rowSecond.FeeAmountPre +
-                                                    rowSecond?.LBRatio +
-                                                    rowSecond.itemCount
-                                                }
+                                                key={idFirst + rowSecond.FeeAmountPre + rowSecond?.LBRatio + rowSecond.itemCount}
                                                 sx={{
                                                     '&:last-child td, &:last-child th': {
-                                                        border: 0,
-                                                    },
+                                                        border: 0
+                                                    }
                                                 }}
                                             >
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {rowSecond.itemCount}
@@ -253,10 +239,7 @@ const ToBillDataList = ({ listInfo, apiQuery }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {rowSecond.FeeItem}
@@ -264,10 +247,7 @@ const ToBillDataList = ({ listInfo, apiQuery }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {handleNumber(rowSecond.FeeAmountPre)}
@@ -275,10 +255,7 @@ const ToBillDataList = ({ listInfo, apiQuery }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {rowSecond.BillMilestone}
@@ -286,10 +263,7 @@ const ToBillDataList = ({ listInfo, apiQuery }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {rowSecond.PartyName}
@@ -297,10 +271,7 @@ const ToBillDataList = ({ listInfo, apiQuery }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {rowSecond.LBRatio}%
@@ -308,10 +279,7 @@ const ToBillDataList = ({ listInfo, apiQuery }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {handleNumber(rowSecond.FeeAmountPost)}
@@ -319,10 +287,7 @@ const ToBillDataList = ({ listInfo, apiQuery }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {/* {rowSecond.WHTAmount} */}
@@ -331,10 +296,7 @@ const ToBillDataList = ({ listInfo, apiQuery }) => {
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     <TextField
@@ -344,21 +306,14 @@ const ToBillDataList = ({ listInfo, apiQuery }) => {
                                                         type="number"
                                                         style={{ width: '50%' }}
                                                         onChange={(e) => {
-                                                            changeDiff(
-                                                                e.target.value,
-                                                                idFirst,
-                                                                idSecond,
-                                                            );
+                                                            changeDiff(e.target.value, idFirst, idSecond);
                                                         }}
                                                     />
                                                 </TableCell>
                                                 <TableCell
                                                     align="center"
                                                     sx={{
-                                                        borderTop:
-                                                            idFirst !== 0 && idSecond === 0
-                                                                ? '0.5px solid black'
-                                                                : null,
+                                                        borderTop: idFirst !== 0 && idSecond === 0 ? '0.5px solid black' : null
                                                     }}
                                                 >
                                                     {handleNumber(afterDiff)}
@@ -367,39 +322,19 @@ const ToBillDataList = ({ listInfo, apiQuery }) => {
                                         );
                                     });
                                 })}
-                                <TableRow
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
+                                <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <StyledTableCell className="totalAmount" align="center">
                                         Total
                                     </StyledTableCell>
-                                    <StyledTableCell
-                                        className="totalAmount"
-                                        align="center"
-                                    ></StyledTableCell>
-                                    <StyledTableCell
-                                        className="totalAmount"
-                                        align="center"
-                                    ></StyledTableCell>
-                                    <StyledTableCell
-                                        className="totalAmount"
-                                        align="center"
-                                    ></StyledTableCell>
-                                    <StyledTableCell
-                                        className="totalAmount"
-                                        align="center"
-                                    ></StyledTableCell>
-                                    <StyledTableCell
-                                        className="totalAmount"
-                                        align="center"
-                                    ></StyledTableCell>
+                                    <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
+                                    <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
+                                    <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
+                                    <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
+                                    <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
                                     <StyledTableCell className="totalAmount" align="center">
                                         {handleNumber(feeAmountPostAmount.current)}
                                     </StyledTableCell>
-                                    <StyledTableCell
-                                        className="totalAmount"
-                                        align="center"
-                                    ></StyledTableCell>
+                                    <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
                                     <StyledTableCell className="totalAmount" align="center">
                                         {handleNumber(differAmount.current)}
                                     </StyledTableCell>
@@ -444,41 +379,18 @@ const ToBillDataList = ({ listInfo, apiQuery }) => {
                     <TableBody>
                         {listInfo?.map((row, id) => {
                             return (
-                                <TableRow
-                                    key={row.InvoiceWKMaster?.InvoiceNo + id}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
+                                <TableRow key={row.InvoiceWKMaster?.InvoiceNo + id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <StyledTableCell align="center">{id + 1}</StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.InvoiceWKMaster.InvoiceNo}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.InvoiceWKMaster.SupplierName}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.InvoiceWKMaster.SubmarineCable}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.InvoiceWKMaster.WorkTitle}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {dayjs(row.InvoiceWKMaster.IssueDate).format('YYYY/MM/DD')}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.InvoiceWKDetail.length}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {handleNumber(row.InvoiceWKMaster.TotalAmount)}{' '}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.InvoiceWKMaster.Code}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {handleNumber(row.InvoiceWKMaster.ExgTotalAmount)}{' '}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.InvoiceWKMaster.ToCode}
-                                    </StyledTableCell>
+                                    <StyledTableCell align="center">{row.InvoiceWKMaster.InvoiceNo}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.InvoiceWKMaster.SupplierName}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.InvoiceWKMaster.SubmarineCable}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.InvoiceWKMaster.WorkTitle}</StyledTableCell>
+                                    <StyledTableCell align="center">{dayjs(row.InvoiceWKMaster.IssueDate).format('YYYY/MM/DD')}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.InvoiceWKDetail.length}</StyledTableCell>
+                                    <StyledTableCell align="center">{handleNumber(row.InvoiceWKMaster.TotalAmount)} </StyledTableCell>
+                                    <StyledTableCell align="center">{row.InvoiceWKMaster.Code}</StyledTableCell>
+                                    <StyledTableCell align="center">{handleNumber(row.InvoiceWKMaster.ExgTotalAmount)} </StyledTableCell>
+                                    <StyledTableCell align="center">{row.InvoiceWKMaster.ToCode}</StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Box
                                             sx={{
@@ -486,8 +398,8 @@ const ToBillDataList = ({ listInfo, apiQuery }) => {
                                                 justifyContent: 'center',
                                                 '& button': {
                                                     mx: { md: 0.3, lg: 0.6, xl: 1.5 },
-                                                    p: 0,
-                                                },
+                                                    p: 0
+                                                }
                                             }}
                                         >
                                             <Button

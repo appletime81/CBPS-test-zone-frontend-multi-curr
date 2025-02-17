@@ -17,7 +17,7 @@ import { addWorkTitle, deleteWorkTitle, getWorkTitle, updateWorkTitle } from 'co
 import { useDispatch } from 'react-redux';
 import { setMessageStateOpen } from 'store/reducers/dropdown';
 
-const WorkTitleDataList = ({ infoList, setInfoList, getWorkTitleList }) => {
+const WorkTitleDataList = ({ infoList, setInfoList }) => {
     const dispatch = useDispatch();
     const [title, setTitle] = useState(''); //海纜名稱
     const [titleCode, setTitleCode] = useState(''); //代碼
@@ -33,13 +33,13 @@ const WorkTitleDataList = ({ infoList, setInfoList, getWorkTitleList }) => {
             color: theme.palette.common.black,
             paddingTop: '0rem',
             paddingBottom: '0rem',
-            fontSize: '0.7rem',
+            fontSize: '0.7rem'
         },
         [`&.${tableCellClasses.body}`]: {
             paddingTop: '0.1rem',
             paddingBottom: '0.1rem',
-            fontSize: '0.7rem',
-        },
+            fontSize: '0.7rem'
+        }
     }));
 
     const infoCheck = () => {
@@ -49,9 +49,9 @@ const WorkTitleDataList = ({ infoList, setInfoList, getWorkTitleList }) => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入海纜作業名稱',
-                    },
-                }),
+                        message: '請輸入海纜作業名稱'
+                    }
+                })
             );
             return false;
         }
@@ -61,9 +61,9 @@ const WorkTitleDataList = ({ infoList, setInfoList, getWorkTitleList }) => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入海纜作業代號',
-                    },
-                }),
+                        message: '請輸入海纜作業代號'
+                    }
+                })
             );
             return false;
         }
@@ -88,9 +88,9 @@ const WorkTitleDataList = ({ infoList, setInfoList, getWorkTitleList }) => {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
             },
-            body: JSON.stringify({}),
+            body: JSON.stringify({})
         })
             .then((res) => res.json())
             .then((data) => {
@@ -108,9 +108,9 @@ const WorkTitleDataList = ({ infoList, setInfoList, getWorkTitleList }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -120,15 +120,15 @@ const WorkTitleDataList = ({ infoList, setInfoList, getWorkTitleList }) => {
             let tmpArray = {
                 TitleCode: titleCode,
                 Title: title,
-                Note: note,
+                Note: note
             };
             fetch(addWorkTitle, {
                 method: 'POST',
                 body: JSON.stringify(tmpArray),
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-                },
+                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                }
             })
                 .then((res) => res.json())
                 .then((data) => {
@@ -138,9 +138,9 @@ const WorkTitleDataList = ({ infoList, setInfoList, getWorkTitleList }) => {
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'error',
-                                    message: data.alert_msg,
-                                },
-                            }),
+                                    message: data.alert_msg
+                                }
+                            })
                         );
                     } else {
                         dispatch(
@@ -148,9 +148,9 @@ const WorkTitleDataList = ({ infoList, setInfoList, getWorkTitleList }) => {
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'error',
-                                    message: '新增失敗',
-                                },
-                            }),
+                                    message: '新增失敗'
+                                }
+                            })
                         );
                     }
                     if (data.TitleID) {
@@ -159,9 +159,9 @@ const WorkTitleDataList = ({ infoList, setInfoList, getWorkTitleList }) => {
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'success',
-                                    message: '新增海纜資料成功',
-                                },
-                            }),
+                                    message: '新增海纜資料成功'
+                                }
+                            })
                         );
                         infoInit();
                         queryWorkTitleInfo();
@@ -173,9 +173,9 @@ const WorkTitleDataList = ({ infoList, setInfoList, getWorkTitleList }) => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
         }
@@ -187,8 +187,8 @@ const WorkTitleDataList = ({ infoList, setInfoList, getWorkTitleList }) => {
             body: JSON.stringify({ TitleID: titleID }),
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-            },
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+            }
         })
             .then((res) => res.json())
             .then((data) => {
@@ -198,9 +198,9 @@ const WorkTitleDataList = ({ infoList, setInfoList, getWorkTitleList }) => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: data.alert_msg,
-                            },
-                        }),
+                                message: data.alert_msg
+                            }
+                        })
                     );
                 } else {
                     dispatch(
@@ -208,9 +208,9 @@ const WorkTitleDataList = ({ infoList, setInfoList, getWorkTitleList }) => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'success',
-                                message: '刪除海纜資料成功',
-                            },
-                        }),
+                                message: '刪除海纜資料成功'
+                            }
+                        })
                     );
                     queryWorkTitleInfo();
                 }
@@ -221,9 +221,9 @@ const WorkTitleDataList = ({ infoList, setInfoList, getWorkTitleList }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -242,9 +242,9 @@ const WorkTitleDataList = ({ infoList, setInfoList, getWorkTitleList }) => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入海纜作業名稱',
-                    },
-                }),
+                        message: '請輸入海纜作業名稱'
+                    }
+                })
             );
             return false;
         }
@@ -257,15 +257,15 @@ const WorkTitleDataList = ({ infoList, setInfoList, getWorkTitleList }) => {
                 TitleID: titleIDEdit.current,
                 TitleCode: titleCodeEdit,
                 Title: titleEdit,
-                Note: noteEdit,
+                Note: noteEdit
             };
             fetch(updateWorkTitle, {
                 method: 'POST',
                 body: JSON.stringify(tmpArray),
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-                },
+                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                }
             })
                 .then((res) => res.json())
                 .then((data) => {
@@ -275,9 +275,9 @@ const WorkTitleDataList = ({ infoList, setInfoList, getWorkTitleList }) => {
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'error',
-                                    message: data.alert_msg,
-                                },
-                            }),
+                                    message: data.alert_msg
+                                }
+                            })
                         );
                     } else {
                         dispatch(
@@ -285,9 +285,9 @@ const WorkTitleDataList = ({ infoList, setInfoList, getWorkTitleList }) => {
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'success',
-                                    message: '更新海纜作業資料成功',
-                                },
-                            }),
+                                    message: '更新海纜作業資料成功'
+                                }
+                            })
                         );
                         editInfoInit();
                         queryWorkTitleInfo();
@@ -299,9 +299,9 @@ const WorkTitleDataList = ({ infoList, setInfoList, getWorkTitleList }) => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
         }
@@ -327,7 +327,7 @@ const WorkTitleDataList = ({ infoList, setInfoList, getWorkTitleList }) => {
                                     sx={{
                                         display: 'flex',
                                         justifyContent: 'center',
-                                        '& button': { mx: { md: 0.6, lg: 1, xl: 1.8 }, p: 0 },
+                                        '& button': { mx: { md: 0.6, lg: 1, xl: 1.8 }, p: 0 }
                                     }}
                                 >
                                     <Button color="success" variant="outlined" onClick={addInfo}>
@@ -366,10 +366,7 @@ const WorkTitleDataList = ({ infoList, setInfoList, getWorkTitleList }) => {
                         </TableRow>
                         {infoList?.map((row, id) => {
                             return (
-                                <TableRow
-                                    key={row.TitleCode + id}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
+                                <TableRow key={row.TitleCode + id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     {row.TitleID !== titleIDEdit.current ? (
                                         <>
                                             <StyledTableCell align="center">
@@ -379,8 +376,8 @@ const WorkTitleDataList = ({ infoList, setInfoList, getWorkTitleList }) => {
                                                         justifyContent: 'center',
                                                         '& button': {
                                                             mx: { md: 0.6, lg: 1, xl: 1.8 },
-                                                            p: 0,
-                                                        },
+                                                            p: 0
+                                                        }
                                                     }}
                                                 >
                                                     <Button
@@ -403,18 +400,10 @@ const WorkTitleDataList = ({ infoList, setInfoList, getWorkTitleList }) => {
                                                     </Button>
                                                 </Box>
                                             </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                {id + 1}
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                {row.TitleCode}
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                {row.Title}
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                {row.Note}
-                                            </StyledTableCell>
+                                            <StyledTableCell align="center">{id + 1}</StyledTableCell>
+                                            <StyledTableCell align="center">{row.TitleCode}</StyledTableCell>
+                                            <StyledTableCell align="center">{row.Title}</StyledTableCell>
+                                            <StyledTableCell align="center">{row.Note}</StyledTableCell>
                                         </>
                                     ) : (
                                         <>
@@ -425,8 +414,8 @@ const WorkTitleDataList = ({ infoList, setInfoList, getWorkTitleList }) => {
                                                         justifyContent: 'center',
                                                         '& button': {
                                                             mx: { md: 0.6, lg: 1, xl: 1.8 },
-                                                            p: 0,
-                                                        },
+                                                            p: 0
+                                                        }
                                                     }}
                                                 >
                                                     <Button
@@ -450,9 +439,7 @@ const WorkTitleDataList = ({ infoList, setInfoList, getWorkTitleList }) => {
                                                 </Box>
                                             </StyledTableCell>
                                             <TableCell align="center">{id + 1}</TableCell>
-                                            <StyledTableCell align="center">
-                                                {row.TitleCode}
-                                            </StyledTableCell>
+                                            <StyledTableCell align="center">{row.TitleCode}</StyledTableCell>
                                             <TableCell align="center">
                                                 <TextField
                                                     size="small"

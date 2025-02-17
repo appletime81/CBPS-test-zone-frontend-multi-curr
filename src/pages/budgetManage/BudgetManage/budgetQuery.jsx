@@ -10,16 +10,17 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { TextField } from '@mui/material/index';
 
 //api
-import { queryLiability, dropdownmenuBillMilestone } from 'components/apis.jsx';
+import { queryLiability } from 'components/apis.jsx';
 
 // redux
 import { useDispatch } from 'react-redux';
 import { setMessageStateOpen } from 'store/reducers/dropdown';
 
-const LiabilityQuery = ({ setListInfo, partyList, submarineCableList, queryApi, workTitleList }) => {
+const LiabilityQuery = ({ setListInfo, submarineCableList, queryApi, workTitleList }) => {
     const dispatch = useDispatch();
     const [billMilestone, setBillMilestone] = useState('All'); //計帳段號
     const [partyName, setPartyName] = useState('All'); //會員名稱
@@ -27,7 +28,8 @@ const LiabilityQuery = ({ setListInfo, partyList, submarineCableList, queryApi, 
     const [submarineCable, setSubmarineCable] = useState('All'); //海纜名稱
     const [workTitle, setWorkTitle] = useState('All'); //海纜作業
     const [invoiceStatus, setInvoiceStatus] = useState({ TRUE: false, FALSE: false }); //處理狀態
-    const [bmStoneList, setBmStoneList] = useState([]); //計帳段號下拉選單(需要選擇海纜名稱或海纜作業才能出現)
+    const [invoiceNo, setInvoiceNo] = useState(''); //發票號碼
+    const [issueDate, setIssueDate] = useState(new Date()); //發票日期
 
     const initQuery = () => {
         setBillMilestone('All');
@@ -38,7 +40,8 @@ const LiabilityQuery = ({ setListInfo, partyList, submarineCableList, queryApi, 
         setInvoiceStatus({ TRUE: false, FALSE: false });
     };
 
-    const liabilityQuery = async () => {
+    const budgetQuery = async () => {
+        // 尚未開發
         let tmpQuery = '/';
         if (billMilestone !== 'All') tmpQuery += `BillMilestone=${billMilestone}&`;
 
@@ -64,50 +67,8 @@ const LiabilityQuery = ({ setListInfo, partyList, submarineCableList, queryApi, 
         }
     };
 
-    const handleChange = (event) => {
-        setInvoiceStatus({ ...invoiceStatus, [event.target.name]: event.target.checked });
-    };
-
-    useEffect(() => {
-        let tmpObject = {};
-        if (submarineCable !== '' && submarineCable !== 'All') {
-            tmpObject.SubmarineCable = submarineCable;
-        }
-        if (workTitle !== '' && workTitle !== 'All') {
-            tmpObject.WorkTitle = workTitle;
-        }
-        console.log('tmpObject=>>', tmpObject);
-        fetch(dropdownmenuBillMilestone, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
-            },
-            body: JSON.stringify(tmpObject)
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                console.log('data抓取成功=>>', data);
-                if (Array.isArray(data)) {
-                    setBmStoneList(data);
-                }
-            })
-            .catch(() => {
-                dispatch(
-                    setMessageStateOpen({
-                        messageStateOpen: {
-                            isOpen: true,
-                            severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
-                        }
-                    })
-                );
-            });
-        // }
-    }, [submarineCable, workTitle]);
-
     return (
-        <MainCard title="Liability條件查詢" sx={{ width: '100%' }}>
+        <MainCard title="預算費用條件查詢" sx={{ width: '100%' }}>
             <Grid container display="flex" justifyContent="center" alignItems="center" spacing={2}>
                 {/* row1 */}
                 <Grid item xs={2} sm={2} md={1} lg={1} display="flex">
@@ -124,11 +85,11 @@ const LiabilityQuery = ({ setListInfo, partyList, submarineCableList, queryApi, 
                 <Grid item xs={4} sm={4} md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇海纜名稱</InputLabel>
-                        <Select value={submarineCable} onChange={(e) => setSubmarineCable(e.target.value)}>
-                            <MenuItem value="All">All</MenuItem>
-                            {submarineCableList.map((item) => (
-                                <MenuItem key={item} value={item}>
-                                    {item}
+                        <Select size="small" value={submarineCable} label="填寫海纜名稱" onChange={(e) => setSubmarineCable(e.target.value)}>
+                            <MenuItem value={'All'}>All</MenuItem>
+                            {submarineCableList.map((i) => (
+                                <MenuItem key={i} value={i}>
+                                    {i}
                                 </MenuItem>
                             ))}
                         </Select>
@@ -158,61 +119,33 @@ const LiabilityQuery = ({ setListInfo, partyList, submarineCableList, queryApi, 
                         </Select>
                     </FormControl>
                 </Grid>
-                <Grid item xs={2} sm={2} md={1} lg={1} xl={1}>
+                <Grid item xs={2} sm={2} md={1} lg={1}>
                     <Typography
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0.5rem', xl: '1.5rem' }
+                            ml: { lg: '0rem', xl: '1.5rem' }
                         }}
                     >
-                        建立日期：
+                        年份：
                     </Typography>
                 </Grid>
-                <Grid item xs={10} sm={10} md={5} lg={5} xl={5}>
-                    <LocalizationProvider dateAdapter={AdapterDayjs} localeText={{ start: '起始日', end: '結束日' }}>
-                        <DateRangePicker
-                            inputFormat="YYYY/MM/DD"
-                            value={createDate}
-                            onChange={(e) => {
-                                setCreateDate(e);
-                            }}
-                            renderInput={(startProps, endProps) => (
-                                <>
-                                    <TextField fullWidth size="small" {...startProps} />
-                                    <Box sx={{ mx: 1 }}> to </Box>
-                                    <TextField fullWidth size="small" {...endProps} />
-                                </>
-                            )}
-                        />
-                    </LocalizationProvider>
-                </Grid>
-                {/* row2 */}
-                <Grid item xs={2} sm={2} md={1} lg={1} xl={1}>
-                    <Typography
-                        variant="h5"
-                        sx={{
-                            fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0.5rem', xl: '1.5rem' }
-                        }}
-                    >
-                        計帳段號：
-                    </Typography>
-                </Grid>
-                <Grid item xs={4} sm={4} md={2} lg={2} xl={2}>
-                    <FormControl fullWidth size="small">
-                        <InputLabel>選擇計帳段號</InputLabel>
-                        <Select value={billMilestone} label="計帳段號" onChange={(e) => setBillMilestone(e.target.value)}>
-                            <MenuItem value={'All'}>All</MenuItem>
-                            {bmStoneList?.map((i) => (
-                                <MenuItem key={i} value={i}>
-                                    {i}
-                                </MenuItem>
-                            ))}
-                        </Select>
+                <Grid item xs={4} sm={4} md={2} lg={2}>
+                    <FormControl>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DesktopDatePicker
+                                inputFormat="YYYY/MM/DD"
+                                value={issueDate}
+                                onChange={(e) => {
+                                    setIssueDate(e);
+                                }}
+                                renderInput={(params) => <TextField size="small" {...params} />}
+                            />
+                        </LocalizationProvider>
                     </FormControl>
                 </Grid>
-                <Grid item xs={2} sm={2} md={1} lg={1} xl={1}>
+                <Grid item xs={6} sm={6} md={3} lg={3} />
+                <Grid item xs={2} sm={2} md={1} lg={1}>
                     <Typography
                         variant="h5"
                         sx={{
@@ -220,20 +153,12 @@ const LiabilityQuery = ({ setListInfo, partyList, submarineCableList, queryApi, 
                             ml: { lg: '0.5rem', xl: '1.5rem' }
                         }}
                     >
-                        會員名稱：
+                        項目序號：
                     </Typography>
                 </Grid>
-                <Grid item xs={4} sm={4} md={2} lg={2} xl={2}>
+                <Grid item xs={4} sm={4} md={2} lg={2}>
                     <FormControl fullWidth size="small">
-                        <InputLabel>選擇會員</InputLabel>
-                        <Select value={partyName} label="會員名稱" onChange={(e) => setPartyName(e.target.value)}>
-                            <MenuItem value={'All'}>All</MenuItem>
-                            {partyList.map((i) => (
-                                <MenuItem key={i} value={i}>
-                                    {i}
-                                </MenuItem>
-                            ))}
-                        </Select>
+                        <TextField fullWidth variant="outlined" value={invoiceNo} size="small" label="填寫發票號碼" onChange={(e) => setInvoiceNo(e.target.value)} />
                     </FormControl>
                 </Grid>
                 <Grid item xs={2} sm={2} md={1} lg={1}>
@@ -244,27 +169,16 @@ const LiabilityQuery = ({ setListInfo, partyList, submarineCableList, queryApi, 
                             ml: { lg: '0.5rem', xl: '1.5rem' }
                         }}
                     >
-                        終止狀態：
+                        項目名稱：
                     </Typography>
                 </Grid>
                 <Grid item xs={4} sm={4} md={2} lg={2}>
-                    <FormGroup row value={invoiceStatus}>
-                        <FormControlLabel
-                            control={
-                                <Checkbox name={'TRUE'} onChange={handleChange} checked={invoiceStatus.TRUE} sx={{ '& .MuiSvgIcon-root': { fontSize: { lg: 14, xl: 20 } } }} />
-                            }
-                            label="終止"
-                        />
-                        <FormControlLabel
-                            control={
-                                <Checkbox name={'FALSE'} onChange={handleChange} checked={invoiceStatus.FALSE} sx={{ '& .MuiSvgIcon-root': { fontSize: { lg: 14, xl: 20 } } }} />
-                            }
-                            label="未終止"
-                        />
-                    </FormGroup>
+                    <FormControl fullWidth size="small">
+                        <TextField fullWidth variant="outlined" value={invoiceNo} size="small" label="填寫發票號碼" onChange={(e) => setInvoiceNo(e.target.value)} />
+                    </FormControl>
                 </Grid>
-                <Grid item md={3} lg={3} display="flex" justifyContent="end" alignItems="center">
-                    <Button sx={{ mr: '0.5rem' }} variant="contained" onClick={liabilityQuery}>
+                <Grid item xs={6} md={6} lg={6} display="flex" justifyContent="end" alignItems="center">
+                    <Button sx={{ mr: '0.5rem' }} variant="contained" onClick={budgetQuery}>
                         查詢
                     </Button>
                     <Button variant="contained" onClick={initQuery}>
@@ -278,7 +192,6 @@ const LiabilityQuery = ({ setListInfo, partyList, submarineCableList, queryApi, 
 
 LiabilityQuery.propTypes = {
     setListInfo: PropTypes.func,
-    // bmStoneList: PropTypes.array,
     partyList: PropTypes.array,
     submarineCableList: PropTypes.array,
     workTitleList: PropTypes.array,
