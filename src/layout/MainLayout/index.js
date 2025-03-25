@@ -122,9 +122,11 @@ const MainLayout = () => {
 
     useEffect(() => {
         //haha1
-        const getExpireTime = localStorage.getItem('expireTimeCBP');
+        console.log('haha1=>>');
+        const getExpireTime = localStorage.getItem('expireTimeCBPS');
         if (window.location.href.indexOf('code') !== -1) {
             if (dayjs(getExpireTime).diff(new Date(), 'minute') > 0) {
+                console.log('12345678');
                 // 傳送使用者資料取得權限
                 let accessToken = localStorage.getItem('accessToken');
                 fetch(checktokenForLDAP, {
@@ -175,12 +177,11 @@ const MainLayout = () => {
                         );
                     });
             } else {
+                console.log('87654321');
                 const accessCode = window.location.href.split('code=')[1];
                 let tmpArray = {
                     client_id: isOL ? 'CBPS-CBPS.OL.I' : 'CBPS.QA.I',
                     redirect_uri: isOL ? redirectUriOL : redirectUriQA,
-                    // redirect_uri:
-                    //     'c2be8338-3cce-494d-880f-9b47773246f9.c7fc3a89-861f-4ece-9362-eb1814c0b5c2.4d93c876-915e-4ed3-bd09-968595f302c8',
                     code: accessCode,
                     grant_type: 'authorization_code'
                 };
@@ -204,7 +205,6 @@ const MainLayout = () => {
                                     }
                                 })
                             );
-                            // localStorage.setItem('expireTime', dayjs().add(31, 'minute'));
                             // 傳送使用者資料取得權限
                             fetch(checktokenForLDAP, {
                                 method: 'POST',
@@ -268,6 +268,7 @@ const MainLayout = () => {
                     });
             }
         } else if (dayjs(getExpireTime).diff(new Date(), 'minute') > 0 && localStorage.getItem('accessToken')) {
+            console.log('111111111');
             // 傳送使用者資料取得權限
             let accessToken = localStorage.getItem('accessToken');
             fetch(checktokenForLDAP, {

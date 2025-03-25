@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Grid, Button, FormControl, InputLabel, Select, MenuItem, Box, FormControlLabel, FormGroup, Checkbox } from '@mui/material';
+import { Typography, Grid, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
 // project import
 import MainCard from 'components/MainCard';
@@ -9,63 +9,73 @@ import MainCard from 'components/MainCard';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
-import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { TextField } from '@mui/material/index';
 
 //api
-import { queryLiability } from 'components/apis.jsx';
+import { getLevels } from 'components/apis.jsx';
 
 // redux
 import { useDispatch } from 'react-redux';
 import { setMessageStateOpen } from 'store/reducers/dropdown';
 
-const LiabilityQuery = ({ setListInfo, submarineCableList, queryApi, workTitleList }) => {
+const BudgetQuery = ({ setListInfo, submarineCableList, queryApi, workTitleList }) => {
     const dispatch = useDispatch();
-    const [billMilestone, setBillMilestone] = useState('All'); //計帳段號
-    const [partyName, setPartyName] = useState('All'); //會員名稱
-    const [createDate, setCreateDate] = useState([null, null]); //建立日期
     const [submarineCable, setSubmarineCable] = useState('All'); //海纜名稱
     const [workTitle, setWorkTitle] = useState('All'); //海纜作業
-    const [invoiceStatus, setInvoiceStatus] = useState({ TRUE: false, FALSE: false }); //處理狀態
-    const [invoiceNo, setInvoiceNo] = useState(''); //發票號碼
-    const [issueDate, setIssueDate] = useState(new Date()); //發票日期
+    const [budget_fee_item_name, setBudget_fee_item_name] = useState(''); //項目名稱
+    const [bBudget_fee_item_seq, setBudget_fee_item_seq] = useState(''); //費用項目
+    const [budget_year, setBudget_year] = useState(dayjs().startOf('year')); //發票日期
 
     const initQuery = () => {
-        setBillMilestone('All');
-        setPartyName('All');
-        setCreateDate([null, null]);
         setSubmarineCable('All');
         setWorkTitle('All');
-        setInvoiceStatus({ TRUE: false, FALSE: false });
     };
+
+    const fetchData = useCallback(
+        async (url, method = 'GET', body = null) => {
+            const headers = {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') ?? ''}`
+            };
+            const options = {
+                method,
+                headers,
+                ...(body && { body: JSON.stringify(body) })
+            };
+            try {
+                const response = await fetch(url, options);
+                return await response.json();
+            } catch (error) {
+                dispatch(setMessageStateOpen({ messageStateOpen: { isOpen: true, severity: 'error', message: '網路異常，請檢查網路連線或與系統窗口聯絡' } }));
+                throw error;
+            }
+        },
+        [dispatch]
+    );
 
     const budgetQuery = async () => {
-        // 尚未開發
-        let tmpQuery = '/';
-        if (billMilestone !== 'All') tmpQuery += `BillMilestone=${billMilestone}&`;
-
-        if (partyName !== 'All') tmpQuery += `PartyName=${partyName}&`;
-        if (submarineCable !== 'All') tmpQuery += `SubmarineCable=${submarineCable}&`;
-        if (workTitle !== 'All') tmpQuery += `WorkTitle=${workTitle}&`;
-        if (createDate[0]) tmpQuery += `startCreateDate=${dayjs(createDate[0]).format('YYYYMMDD')}&`;
-        if (createDate[1]) tmpQuery += `endCreateDate=${dayjs(createDate[1]).format('YYYYMMDD')}&`;
-        if (invoiceStatus.TRUE && !invoiceStatus.FALSE) tmpQuery += 'End=true&';
-        if (invoiceStatus.FALSE && !invoiceStatus.TRUE) tmpQuery += 'End=false&';
-        tmpQuery = tmpQuery.endsWith('&') ? tmpQuery.slice(0, -1) : tmpQuery + 'all';
-        tmpQuery = queryLiability + tmpQuery;
-        queryApi.current = tmpQuery;
+        let tmpArray = {};
+        if (submarineCable !== 'All') {
+            tmpArray.SubmarineCable = submarineCable;
+        }
+        if (workTitle !== 'All') {
+            tmpArray.WorkTitle = workTitle;
+        }
+        if (Object.keys(tmpArray).length !== 0) {
+            tmpArray.budget_year = dayjs().startOf('year').format('YYYY');
+        }
+        queryApi.current = tmpArray;
         try {
-            const response = await fetch(tmpQuery, {
-                method: 'GET',
-                headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') }
-            });
-            const data = await response.json();
-            setListInfo(data);
-        } catch {
-            dispatch(setMessageStateOpen({ messageStateOpen: { isOpen: true, severity: 'error', message: '網路異常，請檢查網路連線或與系統窗口聯絡' } }));
+            const budgetListData = await fetchData(getLevels, 'POST', tmpArray);
+            console.log('budgetListData=>>', budgetListData);
+            setListInfo(budgetListData || []);
+        } catch (error) {
+            console.error('Error fetching supplier list:', error);
         }
     };
+
+    console.log('budget_year=>>', dayjs(budget_year).format('YYYY').toString());
 
     return (
         <MainCard title="預算費用條件查詢" sx={{ width: '100%' }}>
@@ -134,10 +144,11 @@ const LiabilityQuery = ({ setListInfo, submarineCableList, queryApi, workTitleLi
                     <FormControl>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DesktopDatePicker
-                                inputFormat="YYYY/MM/DD"
-                                value={issueDate}
+                                // inputFormat="YYYY/MM/DD"
+                                views={['year']} // 只顯示年份選擇
+                                value={budget_year}
                                 onChange={(e) => {
-                                    setIssueDate(e);
+                                    setBudget_year(e);
                                 }}
                                 renderInput={(params) => <TextField size="small" {...params} />}
                             />
@@ -158,7 +169,14 @@ const LiabilityQuery = ({ setListInfo, submarineCableList, queryApi, workTitleLi
                 </Grid>
                 <Grid item xs={4} sm={4} md={2} lg={2}>
                     <FormControl fullWidth size="small">
-                        <TextField fullWidth variant="outlined" value={invoiceNo} size="small" label="填寫發票號碼" onChange={(e) => setInvoiceNo(e.target.value)} />
+                        <TextField
+                            fullWidth
+                            variant="outlined"
+                            value={bBudget_fee_item_seq}
+                            size="small"
+                            label="填寫發票號碼"
+                            onChange={(e) => setBudget_fee_item_seq(e.target.value)}
+                        />
                     </FormControl>
                 </Grid>
                 <Grid item xs={2} sm={2} md={1} lg={1}>
@@ -174,7 +192,14 @@ const LiabilityQuery = ({ setListInfo, submarineCableList, queryApi, workTitleLi
                 </Grid>
                 <Grid item xs={4} sm={4} md={2} lg={2}>
                     <FormControl fullWidth size="small">
-                        <TextField fullWidth variant="outlined" value={invoiceNo} size="small" label="填寫發票號碼" onChange={(e) => setInvoiceNo(e.target.value)} />
+                        <TextField
+                            fullWidth
+                            variant="outlined"
+                            value={budget_fee_item_name}
+                            size="small"
+                            label="填寫發票號碼"
+                            onChange={(e) => setBudget_fee_item_name(e.target.value)}
+                        />
                     </FormControl>
                 </Grid>
                 <Grid item xs={6} md={6} lg={6} display="flex" justifyContent="end" alignItems="center">
@@ -190,7 +215,7 @@ const LiabilityQuery = ({ setListInfo, submarineCableList, queryApi, workTitleLi
     );
 };
 
-LiabilityQuery.propTypes = {
+BudgetQuery.propTypes = {
     setListInfo: PropTypes.func,
     partyList: PropTypes.array,
     submarineCableList: PropTypes.array,
@@ -198,4 +223,4 @@ LiabilityQuery.propTypes = {
     queryApi: PropTypes.object
 };
 
-export default LiabilityQuery;
+export default BudgetQuery;

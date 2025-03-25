@@ -1,5 +1,21 @@
 import { useEffect, useState } from 'react';
-import { Typography, Grid, Button, FormControl, InputLabel, Select, MenuItem, TextField, Checkbox, Autocomplete, Table } from '@mui/material';
+import {
+    Typography,
+    Grid,
+    Button,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    TextField,
+    Checkbox,
+    Autocomplete,
+    Table,
+    TableBody,
+    TableHead,
+    TableContainer,
+    TableRow
+} from '@mui/material';
 
 // day
 import Dialog from '@mui/material/Dialog';
@@ -11,7 +27,6 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
 // table
-import { TableBody, TableHead, TableContainer, TableRow } from '@mui/material';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
@@ -209,7 +224,7 @@ const LiabilityAdd = ({
     };
 
     //刪除
-    const deletelistInfoItem = (deleteItem) => {
+    const deleteListInfoItem = (deleteItem) => {
         let tmpArray = listInfo.map((i) => i);
         tmpArray.splice(deleteItem, 1);
         setListInfo([...tmpArray]);
@@ -664,14 +679,14 @@ const LiabilityAdd = ({
                                                 >
                                                     <StyledTableCell align="center">{row.BillMilestone}</StyledTableCell>
                                                     <StyledTableCell align="center">{row.PartyName}</StyledTableCell>
-                                                    <StyledTableCell align="center">{`${row.LBRatio}%`}</StyledTableCell>
+                                                    <StyledTableCell align="center">{row.LBRatio}%</StyledTableCell>
                                                     <StyledTableCell align="center">{row.SubmarineCable}</StyledTableCell>
                                                     <StyledTableCell align="center">{row.WorkTitle}</StyledTableCell>
                                                     <StyledTableCell align="center">
                                                         <Button
                                                             color="error"
                                                             onClick={() => {
-                                                                deletelistInfoItem(id);
+                                                                deleteListInfoItem(id);
                                                             }}
                                                         >
                                                             刪除

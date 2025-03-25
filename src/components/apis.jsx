@@ -23,6 +23,7 @@ export const accessSSOQA = 'https://iam-qa.cht.com.tw/auth/realms/B2E/protocol/o
 export const accessSSOOL = 'https://iam.cht.com.tw/auth/realms/B2E/protocol/openid-connect/token';
 
 // Login
+export const genToken = `${httpEnv}://${env}/api/v1/gen_token`;
 export const generatetoken = `${httpEnv}://${env}/api/v1/generatetoken`;
 export const checktoken = `${httpEnv}://${env}/api/v1/checktoken`;
 export const checktokenForLDAP = `${httpEnv}://${env}/api/v1/checktokenForLDAP`;
@@ -206,3 +207,8 @@ export const updateCurrencyData = `${httpEnv}://${env}/api/v1/update_currency_da
 export const deleteCurrencyData = `${httpEnv}://${env}/api/v1/delete_currency_data`;
 export const updateCurrencyExchangeData = `${httpEnv}://${env}/api/v1/update_currency_exchange_data`;
 export const corporatesView = `${httpEnv}://${env}/api/v1/Corporates/view`;
+
+// 預算管理
+export const getLevels = `${httpEnv}://${env}/api/v1/get_levels`;
+export const updateLevels = `${httpEnv}://${env}/api/v1/update_levels`;
+export const addLevelsFromFrontend = `${httpEnv}://${env}/api/v1/add_levels_from_frontend`;

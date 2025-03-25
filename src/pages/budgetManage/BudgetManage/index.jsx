@@ -8,7 +8,7 @@ import BudgetDataList from './budgetDataList';
 import BudgetAdd from './budgetAdd';
 
 // api
-import { dropdownmenuParties, queryLiability, compareLiability, addLiabilityapi, updateLiability, dropdownmenuSubmarineCable, getWorkTitle } from 'components/apis.jsx';
+import { dropdownmenuParties, compareLiability, addLiabilityapi, dropdownmenuSubmarineCable, getWorkTitle, getCurrencyData, getLevels } from 'components/apis.jsx';
 
 // redux
 import { useDispatch } from 'react-redux';
@@ -18,61 +18,56 @@ const BudgetManage = () => {
     const dispatch = useDispatch();
     const [listInfo, setListInfo] = useState([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false); //新增編輯Liability
-    const [dialogAction, setDialogAction] = useState('');
+    const [submarineCableList, setSubmarineCableList] = useState([]); //海纜名稱下拉選單
     const [workTitleList, setWorkTitleList] = useState([]); //海纜作業下拉選單
-    const [billMilestone, setBillMilestone] = useState(''); //計帳段號
-    const [workTitle, setWorkTitle] = useState(''); //海纜作業
-    const [submarineCable, setSubmarineCable] = useState(''); //海纜名稱
-    const [partyName, setPartyName] = useState([]); //會員名稱
-    const [lBRatio, setLBRatio] = useState(0); //攤分比例
-    const [editItem, setEditItem] = useState(NaN); //編輯項目
-    const [note, setNote] = useState(''); //備註
-    const [modifyNote, setModifyNote] = useState(''); //異動原因
+    const [currencyListInfo, setCurrencyListInfo] = useState([]); //幣別下拉選單
+    const [dialogAction, setDialogAction] = useState('');
+    const [dataDetail, setDataDetail] = useState([]); //編輯項目
 
     const [partyList, setPartyList] = useState([]); //會員名稱下拉選單
-    const [submarineCableList, setSubmarineCableList] = useState([]); //海纜名稱下拉選單
-    const lBRawID = useRef(0); //LBRawID
-    const queryApi = useRef(`${queryLiability}/all`);
+    const queryApi = useRef({});
 
     const handleDialogOpen = () => {
         setIsDialogOpen(true);
-        setDialogAction('add');
+        setDialogAction('Add');
     };
 
     const handleDialogClose = () => setIsDialogOpen(false);
 
-    const itemDetailInitial = () => {
-        setBillMilestone('');
-        setPartyName([]);
-        setLBRatio('');
-        setModifyNote('');
-    };
+    const fetchQueryData = useCallback(
+        async (url, method = 'GET', body = null) => {
+            const headers = {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') ?? ''}`
+            };
+            const options = {
+                method,
+                headers,
+                ...(body && { body: JSON.stringify(body) })
+            };
+            try {
+                const response = await fetch(url, options);
+                return await response.json();
+            } catch (error) {
+                dispatch(setMessageStateOpen({ messageStateOpen: { isOpen: true, severity: 'error', message: '網路異常，請檢查網路連線或與系統窗口聯絡' } }));
+                throw error;
+            }
+        },
+        [dispatch]
+    );
 
-    const apiQuery = () => {
-        fetch(queryApi.current, {
-            method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                console.log('查詢成功=>>', data);
-                setListInfo(data);
-            })
-            .catch(() => {
-                dispatch(
-                    setMessageStateOpen({
-                        messageStateOpen: {
-                            isOpen: true,
-                            severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
-                        }
-                    })
-                );
-            });
+    const budgetQuery = async () => {
+        try {
+            const budgetListData = await fetchQueryData(getLevels, 'POST', queryApi.current);
+            console.log('budgetListData=>>', budgetListData);
+            setListInfo(budgetListData || []);
+        } catch (error) {
+            console.error('Error fetching supplier list:', error);
+        }
     };
 
     //新增
-    const addLiability = (list, setAdd) => {
+    const addBudget = (list, setAdd) => {
         let tmpNumber = 0;
         list.forEach((e) => {
             tmpNumber = Number(e.LBRatio) + Number(tmpNumber);
@@ -173,91 +168,22 @@ const BudgetManage = () => {
         }
     };
 
-    //編輯
-    const editlistInfoItem = () => {
-        let tmpArray = listInfo[editItem];
-        console.log('', editItem, tmpArray);
-        if (tmpArray) {
-            setBillMilestone(tmpArray?.BillMilestone);
-            setPartyName([tmpArray?.PartyName]);
-            setLBRatio(tmpArray?.LBRatio);
-            setWorkTitle(tmpArray?.WorkTitle);
-            setSubmarineCable(tmpArray?.SubmarineCable);
-            setModifyNote(tmpArray?.ModifyNote);
-            lBRawID.current = tmpArray?.LBRawID;
-        }
-    };
-
-    //儲存編輯
-    const saveEdit = () => {
-        let tmpArray = {
-            LBRawID: listInfo[editItem].LBRawID,
-            SubmarineCable: listInfo[editItem].SubmarineCable,
-            BillMilestone: listInfo[editItem].BillMilestone,
-            PartyName: listInfo[editItem].PartyName,
-            WorkTitle: listInfo[editItem].WorkTitle,
-            LBRatio: Number(lBRatio).toFixed(10),
-            Note: note,
-            ModifyNote: modifyNote ? modifyNote : ''
-        };
-        fetch(updateLiability, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
-            },
-            body: JSON.stringify(tmpArray)
-        })
-            .then((res) => res.json())
-            .then(() => {
-                dispatch(
-                    setMessageStateOpen({
-                        messageStateOpen: {
-                            isOpen: true,
-                            severity: 'success',
-                            message: '儲存成功'
-                        }
-                    })
-                );
-                apiQuery();
-                setEditItem(NaN);
-                handleDialogClose();
-            })
-            .catch(() => {
-                dispatch(
-                    setMessageStateOpen({
-                        messageStateOpen: {
-                            isOpen: true,
-                            severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
-                        }
-                    })
-                );
-            });
-    };
-
-    useEffect(() => {
-        itemDetailInitial();
-        if (editItem >= 0) {
-            editlistInfoItem();
-            setIsDialogOpen(true);
-        }
-    }, [editItem]);
-
     const fetchData = useCallback(async () => {
         try {
-            const [parties, workTitles, submarineCables] = await Promise.all([
+            const [parties, workTitles, submarineCables, currencies] = await Promise.all([
                 fetch(dropdownmenuParties).then((res) => res.json()),
                 fetch(getWorkTitle, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({})
                 }).then((res) => res.json()),
-                fetch(dropdownmenuSubmarineCable).then((res) => res.json())
+                fetch(dropdownmenuSubmarineCable).then((res) => res.json()),
+                fetch(getCurrencyData).then((res) => res.json())
             ]);
             setPartyList(Array.isArray(parties) ? parties : []);
             setWorkTitleList(Array.isArray(workTitles) ? workTitles : []);
             setSubmarineCableList(Array.isArray(submarineCables) ? submarineCables : []);
+            setCurrencyListInfo(Array.isArray(currencies) ? currencies : []);
         } catch (error) {
             dispatch(
                 setMessageStateOpen({
@@ -282,28 +208,15 @@ const BudgetManage = () => {
                     + 新增費用項目
                 </Button>
                 <BudgetAdd
-                    handleDialogClose={handleDialogClose}
-                    addLiability={addLiability}
-                    saveEdit={saveEdit}
-                    partyName={partyName}
-                    setPartyName={setPartyName}
                     isDialogOpen={isDialogOpen}
-                    billMilestone={billMilestone}
-                    setBillMilestone={setBillMilestone}
-                    workTitle={workTitle}
-                    setWorkTitle={setWorkTitle}
-                    submarineCable={submarineCable}
-                    setSubmarineCable={setSubmarineCable}
+                    handleDialogClose={handleDialogClose}
+                    addBudget={addBudget}
+                    submarineCableList={submarineCableList}
+                    workTitleList={workTitleList}
+                    currencyListInfo={currencyListInfo}
                     dialogAction={dialogAction}
-                    lBRatio={lBRatio}
-                    setLBRatio={setLBRatio}
-                    modifyNote={modifyNote}
-                    setModifyNote={setModifyNote}
-                    note={note}
-                    setNote={setNote}
-                    setEditItem={setEditItem}
-                    lBRawID={lBRawID}
-                    apiQuery={apiQuery}
+                    dataDetail={dataDetail}
+                    budgetQuery={budgetQuery}
                 />
             </Grid>
             <Grid item xs={12}>
@@ -311,7 +224,13 @@ const BudgetManage = () => {
             </Grid>
             <Grid item xs={12}>
                 <MainCard title="預算費用項目查詢結果">
-                    <BudgetDataList listInfo={listInfo} setDialogAction={setDialogAction} setIsDialogOpen={setIsDialogOpen} setEditItem={setEditItem} apiQuery={apiQuery} />
+                    <BudgetDataList
+                        listInfo={listInfo}
+                        setIsDialogOpen={setIsDialogOpen}
+                        setDataDetail={setDataDetail}
+                        budgetQuery={budgetQuery}
+                        setDialogAction={setDialogAction}
+                    />
                 </MainCard>
             </Grid>
         </Grid>

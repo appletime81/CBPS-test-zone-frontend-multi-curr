@@ -13,7 +13,16 @@ import { activeItem } from 'store/reducers/menu';
 import ChosePurpose from './chosePurpose';
 
 // api
-import { supplierNameListForInvoice, submarineCableInfoList, billMilestoneList, generateInvoice, getCurrencyData, dropdownmenuParties, getWorkTitle } from 'components/apis.jsx';
+import {
+    supplierNameListForInvoice,
+    submarineCableInfoList,
+    billMilestoneList,
+    generateInvoice,
+    getCurrencyData,
+    dropdownmenuParties,
+    getWorkTitle,
+    getLevels
+} from 'components/apis.jsx';
 import { handleNumber } from 'components/commonFunction';
 
 // redux
@@ -49,7 +58,8 @@ const InvoiceWorkManage = () => {
         partyNameList: [], //會員下拉選單
         bmStoneList: [], //計帳段號下拉選單
         workTitleList: [], //海纜作業下拉選單
-        codeList: [] //幣別下拉選單
+        codeList: [], //幣別下拉選單
+        budgetList: [] //預算下拉選單
     });
     const [supplierName, setSupplierName] = useState(''); //供應商
     const [invoiceNo, setInvoiceNo] = useState(''); //發票號碼
@@ -77,6 +87,10 @@ const InvoiceWorkManage = () => {
     const [listInfo, setListInfo] = useState([]);
     const [isListEdit, setIsListEdit] = useState(false);
     const [isPurposeDialogOpen, setIsPurposeDialogOpen] = useState(false);
+    const [budgetInfo, setBudgetInfo] = useState({
+        budget_year: '',
+        budget_fee_item_seq: ''
+    });
     const dispatch = useDispatch();
 
     const fetchData = useCallback(
@@ -119,6 +133,12 @@ const InvoiceWorkManage = () => {
         setInvoiceDetailInfo([]);
         itemDetailInitial();
         setCurrencyExgID(null);
+    };
+
+    const itemInfoInitialAfterAdd = () => {
+        setInvoiceNo('');
+        setTotalAmount('');
+        setPartyName('');
     };
 
     const itemDetailInitial = () => {
@@ -314,7 +334,7 @@ const InvoiceWorkManage = () => {
             };
             tmpList.push(combineArray);
             setListInfo([...tmpList]);
-            itemInfoInitial();
+            itemInfoInitialAfterAdd();
         }
     };
 
@@ -536,8 +556,15 @@ const InvoiceWorkManage = () => {
         if (workTitle && submarineCable) {
             const fetchSupplierList = async () => {
                 try {
-                    const data = await fetchData(`${supplierNameListForInvoice}SubmarineCable=${submarineCable}&WorkTitle=${workTitle}`);
-                    setDropdownLists((prev) => ({ ...prev, supNmList: data }));
+                    const supNmListData = await fetchData(`${supplierNameListForInvoice}SubmarineCable=${submarineCable}&WorkTitle=${workTitle}`);
+                    const budgetListData = await fetchData(getLevels, 'POST', {
+                        SubmarineCable: submarineCable,
+                        WorkTitle: workTitle,
+                        budget_year: dayjs(issueDate).format('YYYY')
+                    });
+                    console.log('budgetListData=>>', budgetListData);
+                    setDropdownLists((prev) => ({ ...prev, supNmList: supNmListData || [] }));
+                    setDropdownLists((prev) => ({ ...prev, budgetList: budgetListData[0]?.data || [] }));
                 } catch (error) {
                     console.error('Error fetching supplier list:', error);
                 }
@@ -550,6 +577,8 @@ const InvoiceWorkManage = () => {
             setCurrencyExgID(null);
         }
     }, [workTitle, submarineCable]);
+
+    console.log('dropdownLists=>>', dropdownLists);
 
     //海纜名稱或海纜作業更動時，則更動供應商及匯率資料
     useEffect(() => {
@@ -652,6 +681,8 @@ const InvoiceWorkManage = () => {
         }
     }, [editItem]);
 
+    console.log('dropdownLists=>>', dropdownLists);
+
     return (
         <>
             <ChosePurpose
@@ -713,6 +744,7 @@ const InvoiceWorkManage = () => {
                                     invoiceDetailInfo={invoiceDetailInfo}
                                     setInvoiceDetailInfo={setInvoiceDetailInfo}
                                     bmStoneList={bmStoneList}
+                                    budgetList={dropdownLists.budgetList}
                                     itemDetailInitial={itemDetailInitial}
                                     billMilestone={billMilestone}
                                     setBillMilestone={setBillMilestone}
@@ -721,6 +753,8 @@ const InvoiceWorkManage = () => {
                                     feeAmount={feeAmount}
                                     setFeeAmount={setFeeAmount}
                                     isTax={isTax}
+                                    budgetInfo={budgetInfo}
+                                    setBudgetInfo={setBudgetInfo}
                                 />
                             </Grid>
                             {/* 按鈕 */}

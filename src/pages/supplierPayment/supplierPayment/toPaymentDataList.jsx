@@ -226,7 +226,7 @@ const ToPaymentDataList = ({ listInfo, cbToCn, setCbToCn, isSend, setIsSend, sup
                 if (cbToCn[i.InvoiceWKMaster.InvoiceNo]) {
                     tmpArray.push(i);
                 }
-                i.Note = i.Note ? i.Note : '';
+                i.Note = i.Note ?? '';
             });
             tmpArray.forEach((i) => {
                 i.Status = 'PARTIAL';
@@ -249,6 +249,8 @@ const ToPaymentDataList = ({ listInfo, cbToCn, setCbToCn, isSend, setIsSend, sup
             setTotalAmount(tmpTotal);
         }
     }, [isSendDialogOpen]);
+
+    console.log('toPaymentList=>>', toPaymentList);
 
     return (
         <>

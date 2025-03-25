@@ -42,6 +42,11 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 const PayExgLog = ({ isDialogOpen, handleDialogClose, invoiceWKMasterInfo }) => {
     const dispatch = useDispatch();
     const [payExgLogList, setPayExgLogList] = useState([]); //帳單明細檔
+    const [totalAmount, setTotalAmount] = useState({
+        OriAmountTotal: 0,
+        ExgAmountTotal: 0,
+        ExgDiffAmountTotal: 0
+    });
 
     const getPayExgLogList = async () => {
         if (!invoiceWKMasterInfo.InvoiceNo) return;
@@ -55,7 +60,22 @@ const PayExgLog = ({ isDialogOpen, handleDialogClose, invoiceWKMasterInfo }) => 
                 body: JSON.stringify({ InvoiceNo: invoiceWKMasterInfo.InvoiceNo })
             });
             const data = await response.json();
-            setPayExgLogList(Array.isArray(data) ? data : []);
+            const list = Array.isArray(data) ? data : [];
+            setPayExgLogList(list);
+            const totals = list.reduce(
+                (acc, row) => {
+                    acc.OriAmountTotal += Number(row.OriAmount) || 0;
+                    acc.ExgAmountTotal += Number(row.ExgAmount) || 0;
+                    acc.ExgDiffAmountTotal += Number(row.ExgDiffAmount) || 0;
+                    return acc;
+                },
+                {
+                    OriAmountTotal: 0,
+                    ExgAmountTotal: 0,
+                    ExgDiffAmountTotal: 0
+                }
+            );
+            setTotalAmount(totals);
         } catch (error) {
             setPayExgLogList([]);
             dispatch(
@@ -188,6 +208,23 @@ const PayExgLog = ({ isDialogOpen, handleDialogClose, invoiceWKMasterInfo }) => 
                                                 </TableRow>
                                             );
                                         })}
+                                        <TableRow>
+                                            <StyledTableCell className="totalAmount" align="center">
+                                                Total
+                                            </StyledTableCell>
+                                            <StyledTableCell className="totalAmount" align="center">
+                                                {handleNumber(totalAmount.OriAmountTotal)}
+                                            </StyledTableCell>
+                                            <StyledTableCell className="totalAmount"></StyledTableCell>
+                                            <StyledTableCell className="totalAmount" align="center">
+                                                {handleNumber(totalAmount.ExgAmountTotal)}
+                                            </StyledTableCell>
+                                            <StyledTableCell className="totalAmount"></StyledTableCell>
+                                            <StyledTableCell className="totalAmount" align="center">
+                                                {handleNumber(totalAmount.ExgDiffAmountTotal)}
+                                            </StyledTableCell>
+                                            <StyledTableCell className="totalAmount"></StyledTableCell>
+                                        </TableRow>
                                     </TableBody>
                                 </Table>
                             </TableContainer>

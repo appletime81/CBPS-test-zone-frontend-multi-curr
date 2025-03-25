@@ -3,6 +3,7 @@ import { useState, useRef } from 'react';
 // project import
 import { handleNumber } from 'components/commonFunction';
 import PaymentWork from './paymentWork';
+import PayExgLog from './payExgLog';
 // material-ui
 import { Button, Table, Box } from '@mui/material';
 import TableBody from '@mui/material/TableBody';
@@ -35,6 +36,9 @@ const PaymentedDataList = ({ listInfo }) => {
     const invoiceNoEdit = useRef('');
     const dueDateEdit = useRef('');
     const actionName = useRef('');
+    const invoiceWKMasterInfo = useRef({});
+    const [isPayExgLogDialogOpen, setIsPayExgLogDialogOpen] = useState(false); //換匯紀錄
+
     const handleDialogOpen = (info, invoiceNo, dueDate) => {
         editPaymentInfo.current = info;
         invoiceNoEdit.current = invoiceNo;
@@ -48,8 +52,19 @@ const PaymentedDataList = ({ listInfo }) => {
         setIsDialogOpen(false);
         actionName.current = '';
     };
+    const handlePayExgLogOpen = (invoiceMasterInfo) => {
+        invoiceWKMasterInfo.current = invoiceMasterInfo;
+        setIsPayExgLogDialogOpen(true);
+    };
+
+    const handlePayExgLogDialogClose = () => {
+        invoiceWKMasterInfo.current = {};
+        setIsPayExgLogDialogOpen(false);
+    };
+
     return (
         <>
+            <PayExgLog isDialogOpen={isPayExgLogDialogOpen} handleDialogClose={handlePayExgLogDialogClose} invoiceWKMasterInfo={invoiceWKMasterInfo?.current} />
             <PaymentWork
                 isDialogOpen={isDialogOpen}
                 handleDialogClose={handleDialogClose}
@@ -105,6 +120,16 @@ const PaymentedDataList = ({ listInfo }) => {
                                                 '& button': { mx: 1, p: 0 }
                                             }}
                                         >
+                                            <Button
+                                                color="primary"
+                                                size="small"
+                                                variant="outlined"
+                                                onClick={() => {
+                                                    handlePayExgLogOpen(row.InvoiceWKMaster);
+                                                }}
+                                            >
+                                                檢視換匯紀錄
+                                            </Button>
                                             <Button
                                                 color="primary"
                                                 size="small"

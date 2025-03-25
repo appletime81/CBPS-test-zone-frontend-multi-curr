@@ -1,25 +1,9 @@
 import { useEffect, useState } from 'react';
-import {
-    Typography,
-    Grid,
-    Button,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    Box,
-} from '@mui/material';
+import { Typography, Grid, Button, FormControl, InputLabel, Select, MenuItem, Box } from '@mui/material';
 
 // project import
 import MainCard from 'components/MainCard';
-import {
-    queryToCombineInvo,
-    queryToDecutBill,
-    quertDeductedData,
-    dropdownmenuParties,
-    submarineCableInfoList,
-    getWorkTitle,
-} from 'components/apis';
+import { queryToCombineInvo, queryToDecutBill, quertDeductedData, dropdownmenuParties, submarineCableInfoList, getWorkTitle, dropdownmenuBillMilestone } from 'components/apis';
 // day
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -45,10 +29,12 @@ const ReceivableQuery = ({ value, setListInfo, queryApi }) => {
     const [submarineCable, setSubmarineCable] = useState('All'); //海纜名稱
     const [invoiceNo, setInvoiceNo] = useState(''); //發票號碼
     const [billingNo, setBillingNo] = useState(''); //帳單號碼
+    const [billMilestone, setBillMilestone] = useState('');
     const [supNmList, setSupNmList] = useState([]); //供應商下拉選單
     const [submarineCableList, setSubmarineCableList] = useState([]); //海纜名稱下拉選單
     const [partiesList, setPartiesList] = useState([]); //會員下拉選單
     const [workTitleList, setWorkTitleList] = useState([]); //海纜作業下拉選單
+    const [bmStoneList, setBmStoneList] = useState([]); //計帳段號下拉選單
 
     const initInfo = () => {
         setIssueDate([null, null]);
@@ -81,35 +67,17 @@ const ReceivableQuery = ({ value, setListInfo, queryApi }) => {
         if (workTitle && workTitle !== 'All') {
             tmpQuery = tmpQuery + 'WorkTitle=' + workTitle + '&';
         }
+        if (billMilestone && billMilestone !== 'All' && value === 0) {
+            tmpQuery = tmpQuery + 'BillMilestone=' + billMilestone + '&';
+        }
         if (issueDate[0] && issueDate[1]) {
-            tmpQuery =
-                tmpQuery +
-                'startIssueDate=' +
-                dayjs(issueDate[0]).format('YYYYMMDD') +
-                '&' +
-                'endIssueDate=' +
-                dayjs(issueDate[1]).format('YYYYMMDD') +
-                '&';
+            tmpQuery = tmpQuery + 'startIssueDate=' + dayjs(issueDate[0]).format('YYYYMMDD') + '&endIssueDate=' + dayjs(issueDate[1]).format('YYYYMMDD') + '&';
         }
         if (issueDate[0] && !issueDate[1]) {
-            tmpQuery =
-                tmpQuery +
-                'startIssueDate=' +
-                dayjs(issueDate[0]).format('YYYYMMDD') +
-                '&' +
-                'endIssueDate=' +
-                dayjs(new Date()).format('YYYYMMDD') +
-                '&';
+            tmpQuery = tmpQuery + 'startIssueDate=' + dayjs(issueDate[0]).format('YYYYMMDD') + '&endIssueDate=' + dayjs(new Date()).format('YYYYMMDD') + '&';
         }
         if (!issueDate[0] && issueDate[1]) {
-            tmpQuery =
-                tmpQuery +
-                'startIssueDate=' +
-                '19110101' +
-                '&' +
-                'endIssueDate=' +
-                dayjs(issueDate[1]).format('YYYYMMDD') +
-                '&';
+            tmpQuery = tmpQuery + 'startIssueDate=19110101&endIssueDate=' + dayjs(issueDate[1]).format('YYYYMMDD') + '&';
         }
         if (value === 0) {
             if (tmpQuery.includes('&')) {
@@ -154,9 +122,10 @@ const ReceivableQuery = ({ value, setListInfo, queryApi }) => {
             tmpQuery = queryToDecutBill + tmpQuery;
         }
         queryApi.current = tmpQuery;
+        console.log('tmpQuery=>>', tmpQuery);
         fetch(tmpQuery, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
         })
             .then((res) => res.json())
             .then((data) => {
@@ -169,9 +138,9 @@ const ReceivableQuery = ({ value, setListInfo, queryApi }) => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'info',
-                                message: '查無資料',
-                            },
-                        }),
+                                message: '查無資料'
+                            }
+                        })
                     );
                 }
             })
@@ -181,9 +150,9 @@ const ReceivableQuery = ({ value, setListInfo, queryApi }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         dispatch(setIsLoading({ isLoading: false }));
@@ -197,7 +166,7 @@ const ReceivableQuery = ({ value, setListInfo, queryApi }) => {
         // 供應商
         fetch(supplierNameDropDownUnique, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
         })
             .then((res) => res.json())
             .then((data) => {
@@ -211,14 +180,14 @@ const ReceivableQuery = ({ value, setListInfo, queryApi }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         //海纜名稱
         fetch(submarineCableInfoList, {
-            method: 'GET',
+            method: 'GET'
         })
             .then((res) => res.json())
             .then((data) => {
@@ -230,9 +199,9 @@ const ReceivableQuery = ({ value, setListInfo, queryApi }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         //會員名稱
@@ -247,18 +216,18 @@ const ReceivableQuery = ({ value, setListInfo, queryApi }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         fetch(getWorkTitle, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
             },
-            body: JSON.stringify({}),
+            body: JSON.stringify({})
         })
             .then((res) => res.json())
             .then((data) => {
@@ -276,9 +245,48 @@ const ReceivableQuery = ({ value, setListInfo, queryApi }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
+                );
+            });
+        // 下拉許單
+        fetch(dropdownmenuBillMilestone, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+            },
+            body: JSON.stringify({})
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (Array.isArray(data)) {
+                    console.log('POST=>>', data);
+                    setBmStoneList(data);
+                }
+                if (data.alert_msg) {
+                    setBmStoneList([]);
+                    dispatch(
+                        setMessageStateOpen({
+                            messageStateOpen: {
+                                isOpen: true,
+                                severity: 'error',
+                                message: data.alert_msg
+                            }
+                        })
+                    );
+                }
+            })
+            .catch(() => {
+                dispatch(
+                    setMessageStateOpen({
+                        messageStateOpen: {
+                            isOpen: true,
+                            severity: 'error',
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     }, []);
@@ -292,7 +300,7 @@ const ReceivableQuery = ({ value, setListInfo, queryApi }) => {
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                            ml: { lg: '0.5rem', xl: '1.5rem' }
                         }}
                     >
                         會員：
@@ -301,11 +309,7 @@ const ReceivableQuery = ({ value, setListInfo, queryApi }) => {
                 <Grid item xs={2} sm={2} md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇會員</InputLabel>
-                        <Select
-                            value={partyName}
-                            label="會員"
-                            onChange={(e) => setPartyName(e.target.value)}
-                        >
+                        <Select value={partyName} label="會員" onChange={(e) => setPartyName(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {partiesList.map((i) => (
                                 <MenuItem key={i} value={i}>
@@ -320,7 +324,7 @@ const ReceivableQuery = ({ value, setListInfo, queryApi }) => {
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                            ml: { lg: '0.5rem', xl: '1.5rem' }
                         }}
                     >
                         海纜名稱：
@@ -329,12 +333,7 @@ const ReceivableQuery = ({ value, setListInfo, queryApi }) => {
                 <Grid item xs={2} sm={2} md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇海纜名稱</InputLabel>
-                        <Select
-                            value={submarineCable}
-                            label="海纜名稱"
-                            size="small"
-                            onChange={(e) => setSubmarineCable(e.target.value)}
-                        >
+                        <Select value={submarineCable} label="海纜名稱" size="small" onChange={(e) => setSubmarineCable(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {submarineCableList.map((i) => (
                                 <MenuItem key={i.CableName} value={i.CableName}>
@@ -349,7 +348,7 @@ const ReceivableQuery = ({ value, setListInfo, queryApi }) => {
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                            ml: { lg: '0.5rem', xl: '1.5rem' }
                         }}
                     >
                         海纜作業：
@@ -358,11 +357,7 @@ const ReceivableQuery = ({ value, setListInfo, queryApi }) => {
                 <Grid item xs={2} sm={2} md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇海纜作業</InputLabel>
-                        <Select
-                            value={workTitle}
-                            label="海纜作業"
-                            onChange={(e) => setWorkTitle(e.target.value)}
-                        >
+                        <Select value={workTitle} label="海纜作業" onChange={(e) => setWorkTitle(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {workTitleList.map((i) => (
                                 <MenuItem key={i.Title} value={i.Title}>
@@ -379,7 +374,7 @@ const ReceivableQuery = ({ value, setListInfo, queryApi }) => {
                                 variant="h5"
                                 sx={{
                                     fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                    ml: { lg: '0.5rem', xl: '1.5rem' },
+                                    ml: { lg: '0.5rem', xl: '1.5rem' }
                                 }}
                             >
                                 供應商：
@@ -388,11 +383,7 @@ const ReceivableQuery = ({ value, setListInfo, queryApi }) => {
                         <Grid item xs={2} sm={2} md={2} lg={2}>
                             <FormControl fullWidth size="small">
                                 <InputLabel>選擇供應商</InputLabel>
-                                <Select
-                                    value={supplierName}
-                                    label="供應商"
-                                    onChange={(e) => setSupplierName(e.target.value)}
-                                >
+                                <Select value={supplierName} label="供應商" onChange={(e) => setSupplierName(e.target.value)}>
                                     <MenuItem value={'All'}>All</MenuItem>
                                     {supNmList.map((i) => (
                                         <MenuItem key={i} value={i}>
@@ -407,7 +398,7 @@ const ReceivableQuery = ({ value, setListInfo, queryApi }) => {
                                 variant="h5"
                                 sx={{
                                     fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                    ml: { lg: '0.5rem', xl: '1.5rem' },
+                                    ml: { lg: '0.5rem', xl: '1.5rem' }
                                 }}
                             >
                                 發票號碼：
@@ -415,14 +406,31 @@ const ReceivableQuery = ({ value, setListInfo, queryApi }) => {
                         </Grid>
                         <Grid item xs={2} sm={2} md={2} lg={2}>
                             <FormControl fullWidth size="small">
-                                <TextField
-                                    fullWidth
-                                    variant="outlined"
-                                    value={invoiceNo}
-                                    size="small"
-                                    label="填寫發票號碼"
-                                    onChange={(e) => setInvoiceNo(e.target.value)}
-                                />
+                                <TextField fullWidth variant="outlined" value={invoiceNo} size="small" label="填寫發票號碼" onChange={(e) => setInvoiceNo(e.target.value)} />
+                            </FormControl>
+                        </Grid>
+                        <Grid item sm={1} md={1} lg={1}>
+                            <Typography
+                                variant="h5"
+                                sx={{
+                                    fontSize: { lg: '0.7rem', xl: '0.88rem' },
+                                    ml: { lg: '0.5rem', xl: '1.5rem' }
+                                }}
+                            >
+                                計帳段號：
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={2} sm={2} md={2} lg={2}>
+                            <FormControl fullWidth size="small">
+                                <InputLabel>選擇計帳段號</InputLabel>
+                                <Select value={billMilestone} label="計帳段號" onChange={(e) => setBillMilestone(e.target.value)}>
+                                    <MenuItem value={'All'}>All</MenuItem>
+                                    {bmStoneList.map((i) => (
+                                        <MenuItem key={i} value={i}>
+                                            {i}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
                             </FormControl>
                         </Grid>
                     </>
@@ -434,17 +442,14 @@ const ReceivableQuery = ({ value, setListInfo, queryApi }) => {
                                 variant="h5"
                                 sx={{
                                     fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                    ml: { lg: '0.5rem', xl: '1.5rem' },
+                                    ml: { lg: '0.5rem', xl: '1.5rem' }
                                 }}
                             >
                                 帳單日期：
                             </Typography>
                         </Grid>
                         <Grid item xs={5} sm={5} md={5} lg={5}>
-                            <LocalizationProvider
-                                dateAdapter={AdapterDayjs}
-                                localeText={{ start: '起始日', end: '結束日' }}
-                            >
+                            <LocalizationProvider dateAdapter={AdapterDayjs} localeText={{ start: '起始日', end: '結束日' }}>
                                 <DateRangePicker
                                     inputFormat="YYYY/MM/DD"
                                     value={issueDate}
@@ -466,7 +471,7 @@ const ReceivableQuery = ({ value, setListInfo, queryApi }) => {
                                 variant="h5"
                                 sx={{
                                     fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                    ml: { lg: '0.5rem', xl: '1.5rem' },
+                                    ml: { lg: '0.5rem', xl: '1.5rem' }
                                 }}
                             >
                                 帳單號碼：
@@ -474,24 +479,17 @@ const ReceivableQuery = ({ value, setListInfo, queryApi }) => {
                         </Grid>
                         <Grid item xs={2} sm={2} md={2} lg={2}>
                             <FormControl fullWidth size="small">
-                                <TextField
-                                    fullWidth
-                                    variant="outlined"
-                                    value={billingNo}
-                                    size="small"
-                                    label="填寫帳單號碼"
-                                    onChange={(e) => setBillingNo(e.target.value)}
-                                />
+                                <TextField fullWidth variant="outlined" value={billingNo} size="small" label="填寫帳單號碼" onChange={(e) => setBillingNo(e.target.value)} />
                             </FormControl>
                         </Grid>
                     </>
                 )}
                 <Grid
                     item
-                    xs={value === 0 ? 9 : 3}
-                    sm={value === 0 ? 9 : 3}
-                    md={value === 0 ? 9 : 3}
-                    lg={value === 0 ? 9 : 3}
+                    xs={value === 0 ? 6 : 3}
+                    sm={value === 0 ? 6 : 3}
+                    md={value === 0 ? 6 : 3}
+                    lg={value === 0 ? 6 : 3}
                     display="flex"
                     justifyContent="end"
                     alignItems="center"

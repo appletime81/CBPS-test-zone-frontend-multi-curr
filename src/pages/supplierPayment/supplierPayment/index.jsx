@@ -27,7 +27,7 @@ const SupplierPayment = () => {
     const a11yProps = (index) => {
         return {
             id: `simple-tab-${index}`,
-            'aria-controls': `simple-tabpanel-${index}`,
+            'aria-controls': `simple-tabpanel-${index}`
         };
     };
 
@@ -51,9 +51,9 @@ const SupplierPayment = () => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請至少勾選一筆發票項目',
-                    },
-                }),
+                        message: '請至少勾選一筆發票項目'
+                    }
+                })
             );
         }
     };
@@ -64,7 +64,7 @@ const SupplierPayment = () => {
                 <SupplierPaymentQuery setListInfo={setListInfo} queryApi={queryApi} value={value} />
             </Grid>
             <Grid item xs={12}>
-                <MainCard title={value === 0 ? '待確認資料列表' : '函稿資料列表'}>
+                <MainCard title={value === 0 ? '待確認資料列表' : '已確認資料列表'}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider', position: 'relative' }}>
                         <Tabs value={value} onChange={handleChange}>
                             <Tab label="待確認" {...a11yProps(0)} />
@@ -78,7 +78,7 @@ const SupplierPayment = () => {
                                     sx={{
                                         position: 'absolute',
                                         right: 5,
-                                        top: 4,
+                                        top: 4
                                     }}
                                     onClick={() => {
                                         sendPaymentData();

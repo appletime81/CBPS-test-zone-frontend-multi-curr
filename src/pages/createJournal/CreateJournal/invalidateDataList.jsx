@@ -139,7 +139,7 @@ const BilledDataList = ({ listInfo }) => {
                     幣別：{codeType.current}
                 </Box>
                 <DialogContent>
-                    <TableContainer component={Paper} sx={{ maxHeight: window.screen.height * 0.4 }}>
+                    <TableContainer component={Paper} sx={{ maxHeight: window.screen.height * 0.5 }}>
                         <Table sx={{ minWidth: 300 }} stickyHeader>
                             <TableHead>
                                 <TableRow>

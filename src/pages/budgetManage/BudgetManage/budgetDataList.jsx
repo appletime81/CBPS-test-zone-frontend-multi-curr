@@ -16,7 +16,7 @@ import { styled } from '@mui/material/styles';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 
-const LiabilityDataList = ({ listInfo, setDialogAction, setIsDialogOpen, setEditItem, apiQuery }) => {
+const BudgetDataList = ({ listInfo, setDialogAction, setIsDialogOpen, setDataDetail, budgetQuery }) => {
     const [dialogTerminate, setDialogTerminate] = useState(false);
     const [terminateInfo, setTerminateInfo] = useState({});
 
@@ -44,31 +44,29 @@ const LiabilityDataList = ({ listInfo, setDialogAction, setIsDialogOpen, setEdit
                 <Table sx={{ minWidth: 300 }} stickyHeader>
                     <TableHead>
                         <TableRow>
-                            <StyledTableCell align="center">NO</StyledTableCell>
                             <StyledTableCell align="center">海纜名稱</StyledTableCell>
                             <StyledTableCell align="center">海纜作業</StyledTableCell>
                             <StyledTableCell align="center">年度</StyledTableCell>
-                            <StyledTableCell align="center">項目序號</StyledTableCell>
+                            {/* <StyledTableCell align="center">項目序號</StyledTableCell>
                             <StyledTableCell align="center">項目名稱</StyledTableCell>
                             <StyledTableCell align="center">幣別</StyledTableCell>
                             <StyledTableCell align="center">項目金額</StyledTableCell>
-                            <StyledTableCell align="center">備註</StyledTableCell>
+                            <StyledTableCell align="center">備註</StyledTableCell> */}
                             <StyledTableCell align="center">Action</StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {listInfo?.map((row, id) => {
                             return (
-                                <TableRow key={row.BillMilestone + row.LBRatio + id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                    <StyledTableCell align="center">{id + 1}</StyledTableCell>
+                                <TableRow key={row.SubmarineCable + row.LBRatio + id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <StyledTableCell align="center">{row.SubmarineCable}</StyledTableCell>
                                     <StyledTableCell align="center">{row.WorkTitle}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.BillMilestone}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.PartyName}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.LBRatio}%</StyledTableCell>
-                                    <StyledTableCell align="center">{row.ModifyNote}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.ModifyNote}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.EndDate ? dayjs(row.EndDate).format('YYYY/MM/DD') : ''}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.budget_year}</StyledTableCell>
+                                    {/* <StyledTableCell align="center">{row.budget_fee_item_seq}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.budget_fee_item_name}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.Code}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.budget_fee_amount}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.remark}</StyledTableCell> */}
                                     <StyledTableCell align="center">
                                         <Box
                                             sx={{
@@ -80,17 +78,45 @@ const LiabilityDataList = ({ listInfo, setDialogAction, setIsDialogOpen, setEdit
                                                 }
                                             }}
                                         >
+                                            <Button
+                                                color="primary"
+                                                variant="outlined"
+                                                onClick={() => {
+                                                    setDialogAction('View');
+                                                    setDataDetail(row.data);
+                                                    setIsDialogOpen(true);
+                                                }}
+                                            >
+                                                檢視
+                                            </Button>
                                             {row.EndDate ? null : (
                                                 <Button
-                                                    color="primary"
+                                                    color="success"
                                                     variant="outlined"
                                                     onClick={() => {
                                                         setDialogAction('Edit');
+                                                        setDataDetail(row.data);
                                                         setIsDialogOpen(true);
-                                                        setEditItem(id);
                                                     }}
                                                 >
                                                     編輯
+                                                </Button>
+                                            )}
+                                            {row.EndDate ? null : (
+                                                <Button
+                                                    color="warning"
+                                                    variant="outlined"
+                                                    onClick={() => {
+                                                        setDialogTerminate(true);
+                                                        setTerminateInfo({
+                                                            BillMilestone: row.BillMilestone,
+                                                            PartyName: row.PartyName,
+                                                            LBRawID: row.LBRawID,
+                                                            EndDate: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
+                                                        });
+                                                    }}
+                                                >
+                                                    停用
                                                 </Button>
                                             )}
                                             {row.EndDate ? null : (
@@ -107,7 +133,7 @@ const LiabilityDataList = ({ listInfo, setDialogAction, setIsDialogOpen, setEdit
                                                         });
                                                     }}
                                                 >
-                                                    終止
+                                                    刪除
                                                 </Button>
                                             )}
                                         </Box>
@@ -118,9 +144,9 @@ const LiabilityDataList = ({ listInfo, setDialogAction, setIsDialogOpen, setEdit
                     </TableBody>
                 </Table>
             </TableContainer>
-            <LiabilityTerminate dialogTerminate={dialogTerminate} handleDialogClose={handleDialogClose} terminateInfo={terminateInfo} apiQuery={apiQuery} />
+            <LiabilityTerminate dialogTerminate={dialogTerminate} handleDialogClose={handleDialogClose} terminateInfo={terminateInfo} budgetQuery={budgetQuery} />
         </>
     );
 };
 
-export default LiabilityDataList;
+export default BudgetDataList;

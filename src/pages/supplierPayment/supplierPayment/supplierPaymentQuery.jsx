@@ -3,12 +3,7 @@ import { Typography, Grid, Button, FormControl, InputLabel, Select, MenuItem } f
 
 // project import
 import MainCard from 'components/MainCard';
-import {
-    querySupplierPayment,
-    supplierNameDropDownUnique,
-    submarineCableInfoList,
-    getWorkTitle,
-} from 'components/apis';
+import { querySupplierPayment, supplierNameDropDownUnique, submarineCableInfoList, getWorkTitle } from 'components/apis';
 
 // day
 import dayjs from 'dayjs';
@@ -47,21 +42,14 @@ const SupplierPaymentQuery = ({ setListInfo, queryApi, value }) => {
         if (submarineCable && submarineCable !== 'All') {
             tmpQuery = tmpQuery + 'SubmarineCable=' + submarineCable + '&';
         }
-        if (invoiceNo && invoiceNo !== '' && value === 0) {
+        if (invoiceNo && invoiceNo !== '') {
             tmpQuery = tmpQuery + 'InvoiceNo=' + invoiceNo + '&';
         }
         if (workTitle && workTitle !== 'All') {
             tmpQuery = tmpQuery + 'WorkTitle=' + workTitle + '&';
         }
         if (issueDate[0]) {
-            tmpQuery =
-                tmpQuery +
-                'startIssueDate=' +
-                dayjs(issueDate[0]).format('YYYYMMDD') +
-                '&' +
-                'endIssueDate=' +
-                dayjs(issueDate[1]).format('YYYYMMDD') +
-                '&';
+            tmpQuery = tmpQuery + 'startIssueDate=' + dayjs(issueDate[0]).format('YYYYMMDD') + '&' + 'endIssueDate=' + dayjs(issueDate[1]).format('YYYYMMDD') + '&';
         }
         if (value === 0) {
             if (tmpQuery.includes('&')) {
@@ -85,7 +73,7 @@ const SupplierPaymentQuery = ({ setListInfo, queryApi, value }) => {
         queryApi.current = tmpQuery;
         fetch(tmpQuery, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
         })
             .then((res) => res.json())
             .then((data) => {
@@ -99,9 +87,9 @@ const SupplierPaymentQuery = ({ setListInfo, queryApi, value }) => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'info',
-                                message: '查無資料',
-                            },
-                        }),
+                                message: '查無資料'
+                            }
+                        })
                     );
                     setListInfo([]);
                 }
@@ -114,7 +102,7 @@ const SupplierPaymentQuery = ({ setListInfo, queryApi, value }) => {
     useEffect(() => {
         fetch(supplierNameDropDownUnique, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
         })
             .then((res) => res.json())
             .then((data) => {
@@ -128,9 +116,9 @@ const SupplierPaymentQuery = ({ setListInfo, queryApi, value }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         //海纜名稱
@@ -145,18 +133,18 @@ const SupplierPaymentQuery = ({ setListInfo, queryApi, value }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         fetch(getWorkTitle, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
             },
-            body: JSON.stringify({}),
+            body: JSON.stringify({})
         })
             .then((res) => res.json())
             .then((data) => {
@@ -173,9 +161,9 @@ const SupplierPaymentQuery = ({ setListInfo, queryApi, value }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     }, []);
@@ -189,7 +177,7 @@ const SupplierPaymentQuery = ({ setListInfo, queryApi, value }) => {
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                            ml: { lg: '0.5rem', xl: '1.5rem' }
                         }}
                     >
                         海纜名稱：
@@ -198,12 +186,7 @@ const SupplierPaymentQuery = ({ setListInfo, queryApi, value }) => {
                 <Grid item xs={2} sm={2} md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇海纜名稱</InputLabel>
-                        <Select
-                            value={submarineCable}
-                            label="海纜名稱"
-                            size="small"
-                            onChange={(e) => setSubmarineCable(e.target.value)}
-                        >
+                        <Select value={submarineCable} label="海纜名稱" size="small" onChange={(e) => setSubmarineCable(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {submarineCableList.map((i) => (
                                 <MenuItem key={i.CableName} value={i.CableName}>
@@ -218,7 +201,7 @@ const SupplierPaymentQuery = ({ setListInfo, queryApi, value }) => {
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                            ml: { lg: '0.5rem', xl: '1.5rem' }
                         }}
                     >
                         海纜作業：
@@ -227,11 +210,7 @@ const SupplierPaymentQuery = ({ setListInfo, queryApi, value }) => {
                 <Grid item xs={2} sm={2} md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇海纜作業</InputLabel>
-                        <Select
-                            value={workTitle}
-                            label="海纜作業"
-                            onChange={(e) => setWorkTitle(e.target.value)}
-                        >
+                        <Select value={workTitle} label="海纜作業" onChange={(e) => setWorkTitle(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {workTitleList.map((i) => (
                                 <MenuItem key={i.Title} value={i.Title}>
@@ -246,7 +225,7 @@ const SupplierPaymentQuery = ({ setListInfo, queryApi, value }) => {
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                            ml: { lg: '0.5rem', xl: '1.5rem' }
                         }}
                     >
                         供應商：
@@ -255,11 +234,7 @@ const SupplierPaymentQuery = ({ setListInfo, queryApi, value }) => {
                 <Grid item xs={2} sm={2} md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇供應商</InputLabel>
-                        <Select
-                            value={supplierName}
-                            label="供應商"
-                            onChange={(e) => setSupplierName(e.target.value)}
-                        >
+                        <Select value={supplierName} label="供應商" onChange={(e) => setSupplierName(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
 
                             {supNmList.map((i) => (
@@ -275,7 +250,7 @@ const SupplierPaymentQuery = ({ setListInfo, queryApi, value }) => {
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                            ml: { lg: '0.5rem', xl: '1.5rem' }
                         }}
                     >
                         發票號碼：
@@ -283,31 +258,11 @@ const SupplierPaymentQuery = ({ setListInfo, queryApi, value }) => {
                 </Grid>
                 <Grid item xs={2} sm={2} md={2} lg={2}>
                     <FormControl fullWidth size="small">
-                        <TextField
-                            fullWidth
-                            variant="outlined"
-                            value={invoiceNo}
-                            size="small"
-                            label="填寫發票號碼"
-                            onChange={(e) => setInvoiceNo(e.target.value)}
-                        />
+                        <TextField fullWidth variant="outlined" value={invoiceNo} size="small" label="填寫發票號碼" onChange={(e) => setInvoiceNo(e.target.value)} />
                     </FormControl>
                 </Grid>
-                <Grid
-                    item
-                    xs={12}
-                    sm={12}
-                    md={12}
-                    lg={12}
-                    display="flex"
-                    justifyContent="end"
-                    alignItems="center"
-                >
-                    <Button
-                        sx={{ mr: '0.5rem' }}
-                        variant="contained"
-                        onClick={supplierPaymentQuery}
-                    >
+                <Grid item xs={12} sm={12} md={12} lg={12} display="flex" justifyContent="end" alignItems="center">
+                    <Button sx={{ mr: '0.5rem' }} variant="contained" onClick={supplierPaymentQuery}>
                         查詢
                     </Button>
                     <Button variant="contained" onClick={initInfo}>

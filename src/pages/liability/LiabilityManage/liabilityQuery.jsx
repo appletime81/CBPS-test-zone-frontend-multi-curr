@@ -93,6 +93,7 @@ const LiabilityQuery = ({ setListInfo, partyList, submarineCableList, queryApi, 
                 }
             })
             .catch(() => {
+                setBmStoneList([]);
                 dispatch(
                     setMessageStateOpen({
                         messageStateOpen: {

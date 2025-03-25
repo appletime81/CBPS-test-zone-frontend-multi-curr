@@ -105,8 +105,6 @@ const InvoiceWorkManage = ({
             });
     };
 
-    console.log('purpose=>>', purpose);
-
     return (
         <MainCard title="發票工作主檔建立" sx={{ height: '100%' }}>
             <Grid container display="flex" justifyContent="center" alignItems="center" spacing={1}>

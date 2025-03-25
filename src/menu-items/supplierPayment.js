@@ -16,7 +16,7 @@ const supplierPayment = {
     type: 'group',
     children: [
         {
-            id: 'item4',
+            id: 'item41',
             title: '廠商付款處理',
             type: 'collapse',
             url: '/SupplierPayment/SupplierPayment',

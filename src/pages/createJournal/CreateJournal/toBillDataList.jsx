@@ -199,7 +199,7 @@ const ToBillDataList = ({ listInfo, apiQuery }) => {
                     幣別：{codeType.current}
                 </Box>
                 <DialogContent>
-                    <TableContainer component={Paper} sx={{ maxHeight: 440 }}>
+                    <TableContainer component={Paper} sx={{ maxHeight: window.screen.height * 0.5 }}>
                         <Table stickyHeader>
                             <TableHead>
                                 <TableRow>
