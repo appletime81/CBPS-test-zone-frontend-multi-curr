@@ -98,8 +98,8 @@ const CreateInvoiceDetail = ({
         return true;
     };
 
-    const createData = (FeeItem, BillMilestone, IsTax, FeeAmount) => {
-        return { FeeItem, BillMilestone, IsTax, FeeAmount };
+    const createData = (FeeItem, BillMilestone, IsTax, FeeAmount, budget_year, budget_fee_item_seq) => {
+        return { FeeItem, BillMilestone, IsTax, FeeAmount, budget_year, budget_fee_item_seq };
     };
 
     // 新增
@@ -133,6 +133,10 @@ const CreateInvoiceDetail = ({
         setBillMilestone(tmpArray.BillMilestone);
         setFeeItem(tmpArray.FeeItem);
         setFeeAmount(tmpArray.FeeAmount);
+        setBudgetInfo({
+            budget_year: tmpArray.budget_year,
+            budget_fee_item_seq: tmpArray.budget_fee_item_seq
+        });
         isTax.current = tmpArray.IsTax;
     };
 
@@ -142,7 +146,7 @@ const CreateInvoiceDetail = ({
             setIsEdit(false);
             let tmpArray = invoiceDetailInfo.map((i) => i);
             tmpArray.splice(editItem.current, 1);
-            tmpArray.push(createData(feeItem, billMilestone, isTax.current, feeAmount));
+            tmpArray.push(createData(feeItem, billMilestone, isTax.current, feeAmount, budgetInfo.budget_year, budgetInfo.budget_fee_item_seq));
             tmpArray.reverse();
             setInvoiceDetailInfo([...tmpArray]);
             itemDetailInitial();
@@ -160,7 +164,9 @@ const CreateInvoiceDetail = ({
     const copyTax = (info) => {
         let tmpArray = invoiceDetailInfo.map((i) => i);
         console.log(info);
-        tmpArray.push(createData('(tax)' + info.FeeItem.trim(), info.BillMilestone, 1, Number(info.FeeAmount / 10)));
+        tmpArray.push(
+            createData('(tax)' + info.FeeItem.trim(), info.BillMilestone, 1, Number(info.FeeAmount / 10), info.budgetInfo.budget_year, info.budgetInfo.budget_fee_item_seq)
+        );
         // tmpArray.reverse();
         setInvoiceDetailInfo([...tmpArray]);
         itemDetailInitial();
@@ -175,8 +181,6 @@ const CreateInvoiceDetail = ({
     useEffect(() => {
         itemDetailInitial();
     }, []);
-
-    console.log('budgetList=>>', budgetList);
 
     return (
         <MainCard title="發票工作明細檔建立" sx={{ height: '100%' }}>
@@ -248,7 +252,7 @@ const CreateInvoiceDetail = ({
                 <Grid item sm={6} md={6} lg={6}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇項目序號</InputLabel>
-                        <Select label="項目序號" onChange={handleBudgetInfo}>
+                        <Select label="項目序號" value={budgetInfo ? JSON.stringify(budgetInfo) : ''} onChange={handleBudgetInfo}>
                             {budgetList.map((i) => (
                                 <MenuItem
                                     key={i}
@@ -314,6 +318,7 @@ const CreateInvoiceDetail = ({
                                     <StyledTableCell align="center">計帳段號</StyledTableCell>
                                     <StyledTableCell align="center">是否為稅</StyledTableCell>
                                     <StyledTableCell align="center">費用金額</StyledTableCell>
+                                    <StyledTableCell align="center">預算費用項目</StyledTableCell>
                                     <StyledTableCell align="center">Action</StyledTableCell>
                                 </TableRow>
                             </TableHead>
@@ -326,10 +331,12 @@ const CreateInvoiceDetail = ({
                                         <StyledTableCell align="center">{row.BillMilestone}</StyledTableCell>
                                         <StyledTableCell align="center">{row.IsTax === 1 ? '是' : '否'}</StyledTableCell>
                                         <StyledTableCell align="center">{handleNumber(row.FeeAmount)}</StyledTableCell>
+                                        <StyledTableCell align="center"> {row.budget_year ? `${row.budget_year}年 序號:${row.budget_fee_item_seq}` : null}</StyledTableCell>
                                         <StyledTableCell align="center">
                                             {row.FeeItem.includes('(tax)') ? null : (
                                                 <Button
                                                     color="success"
+                                                    sx={{ m: '0.01rem', p: '0.01rem' }}
                                                     onClick={() => {
                                                         copyTax(row);
                                                     }}
@@ -339,6 +346,7 @@ const CreateInvoiceDetail = ({
                                             )}
                                             <Button
                                                 color="primary"
+                                                sx={{ m: '0.01rem', p: '0.01rem' }}
                                                 onClick={() => {
                                                     itemDetailEdit(id);
                                                 }}
@@ -347,6 +355,7 @@ const CreateInvoiceDetail = ({
                                             </Button>
                                             <Button
                                                 color="error"
+                                                sx={{ m: '0.01rem', p: '0.01rem' }}
                                                 onClick={() => {
                                                     itemDetailDelete(id);
                                                 }}

@@ -42,7 +42,7 @@ const InvoiceDataList = ({ listInfo, setAction, setModifyItem, page, setPage, ac
         setPage(0);
     };
 
-    const options1 = ['檢視', '', '編輯', '刪除'];
+    const options1 = ['檢視', '待立帳', '編輯', '刪除'];
     const options2 = ['檢視', '作廢'];
     const options3 = ['檢視', '作廢', '退回'];
 
@@ -135,7 +135,7 @@ const InvoiceDataList = ({ listInfo, setAction, setModifyItem, page, setPage, ac
                                             {options1.map((option) => {
                                                 return (
                                                     <Button
-                                                        color={option === '檢視' ? 'primary' : option === '' ? 'success' : option === '編輯' ? 'warning' : 'error'}
+                                                        color={option === '檢視' ? 'primary' : option === '待立帳' ? 'success' : option === '編輯' ? 'warning' : 'error'}
                                                         key={option}
                                                         variant="outlined"
                                                         size="small"

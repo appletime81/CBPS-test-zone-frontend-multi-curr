@@ -28,7 +28,8 @@ import {
     getCurrencyData,
     dropdownmenuParties,
     getWorkTitle,
-    supplierNameDropDownUnique
+    supplierNameDropDownUnique,
+    getLevels
 } from 'components/apis.jsx';
 
 // redux
@@ -50,7 +51,8 @@ const InvoiceWorkManage = () => {
         bmStoneList: [], //計帳段號下拉選單
         workTitleList: [], //海纜作業下拉選單
         codeList: [], //幣別下拉選單
-        bmsList: [] //計帳段號下拉選單
+        bmsList: [], //計帳段號下拉選單
+        budgetList: [] //預算下拉選單
     });
     const dispatch = useDispatch();
     const [invoiceDetailInfo, setInvoiceDetailInfo] = useState([]);
@@ -89,6 +91,7 @@ const InvoiceWorkManage = () => {
     const rateInfo = useRef({});
     const [isPurposeDialogOpen, setIsPurposeDialogOpen] = useState(false);
     const [purpose, setPurpose] = useState('');
+    const [budgetInfo, setBudgetInfo] = useState('');
 
     const fetchData = useCallback(
         async (url, method = 'GET', body = null) => {
@@ -134,6 +137,7 @@ const InvoiceWorkManage = () => {
         setBillMilestone('');
         setFeeItem('');
         setFeeAmount('');
+        setBudgetInfo('');
     };
 
     const orderDate = (data) => {
@@ -903,7 +907,13 @@ const InvoiceWorkManage = () => {
                 const fetchSupplierList = async () => {
                     try {
                         const data = await fetchData(`${supplierNameListForInvoice}SubmarineCable=${submarineCable}&WorkTitle=${workTitle}`);
+                        const budgetListData = await fetchData(getLevels, 'POST', {
+                            SubmarineCable: submarineCable,
+                            WorkTitle: workTitle,
+                            budget_year: dayjs(issueDate).format('YYYY')
+                        });
                         setDropdownLists((prev) => ({ ...prev, supNmList: data }));
+                        setDropdownLists((prev) => ({ ...prev, budgetList: budgetListData[0]?.data || [] }));
                     } catch (error) {
                         console.error('Error fetching supplier list:', error);
                     }
@@ -1095,6 +1105,7 @@ const InvoiceWorkManage = () => {
                                         setInvoiceDetailInfo={setInvoiceDetailInfo}
                                         invoiceDetailInfo={invoiceDetailInfo}
                                         bmStoneList={bmStoneList}
+                                        budgetList={dropdownLists.budgetList}
                                         action={action}
                                         itemDetailInitial={itemDetailInitial}
                                         billMilestone={billMilestone}
@@ -1104,6 +1115,8 @@ const InvoiceWorkManage = () => {
                                         feeAmount={feeAmount}
                                         setFeeAmount={setFeeAmount}
                                         isTax={isTax}
+                                        budgetInfo={budgetInfo}
+                                        setBudgetInfo={setBudgetInfo}
                                     />
                                 </Grid>
                                 {action === '編輯' ? (

@@ -87,10 +87,7 @@ const InvoiceWorkManage = () => {
     const [listInfo, setListInfo] = useState([]);
     const [isListEdit, setIsListEdit] = useState(false);
     const [isPurposeDialogOpen, setIsPurposeDialogOpen] = useState(false);
-    const [budgetInfo, setBudgetInfo] = useState({
-        budget_year: '',
-        budget_fee_item_seq: ''
-    });
+    const [budgetInfo, setBudgetInfo] = useState('');
     const dispatch = useDispatch();
 
     const fetchData = useCallback(
@@ -145,6 +142,7 @@ const InvoiceWorkManage = () => {
         setBillMilestone('');
         setFeeItem('');
         setFeeAmount('');
+        setBudgetInfo('');
     };
 
     const createData = (
@@ -578,8 +576,6 @@ const InvoiceWorkManage = () => {
         }
     }, [workTitle, submarineCable]);
 
-    console.log('dropdownLists=>>', dropdownLists);
-
     //海纜名稱或海纜作業更動時，則更動供應商及匯率資料
     useEffect(() => {
         // rateInfo.current = {}; 使用者更動海纜名稱跟海纜作業才能清空匯率資料
@@ -680,8 +676,6 @@ const InvoiceWorkManage = () => {
             setIsListEdit(true);
         }
     }, [editItem]);
-
-    console.log('dropdownLists=>>', dropdownLists);
 
     return (
         <>

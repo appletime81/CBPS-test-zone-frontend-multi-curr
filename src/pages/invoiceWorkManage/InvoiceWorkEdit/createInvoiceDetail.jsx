@@ -7,16 +7,7 @@ import NumericFormatCustom from 'components/numericFormatCustom';
 import { handleNumber } from 'components/commonFunction';
 
 // material-ui
-import {
-    Typography,
-    Grid,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    Button,
-    Table,
-} from '@mui/material';
+import { Typography, Grid, FormControl, InputLabel, Select, MenuItem, Button, Table } from '@mui/material';
 import { StyledEngineProvider, CssVarsProvider } from '@mui/joy/styles';
 import Textarea from '@mui/joy/Textarea';
 
@@ -41,17 +32,20 @@ const CreateInvoiceDetail = ({
     itemDetailInitial,
     billMilestone,
     setBillMilestone,
+    budgetList,
     feeItem,
     setFeeItem,
     feeAmount,
     setFeeAmount,
     isTax,
+    budgetInfo,
+    setBudgetInfo
 }) => {
     const [isEdit, setIsEdit] = useState(false);
     const editItem = useRef();
     const dispatch = useDispatch();
-    const createData = (FeeItem, BillMilestone, IsTax, FeeAmount) => {
-        return { FeeItem, BillMilestone, IsTax, FeeAmount };
+    const createData = (FeeItem, BillMilestone, IsTax, FeeAmount, budget_year, budget_fee_item_seq) => {
+        return { FeeItem, BillMilestone, IsTax, FeeAmount, budget_year, budget_fee_item_seq };
     };
 
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -59,13 +53,13 @@ const CreateInvoiceDetail = ({
             // backgroundColor: theme.palette.common.gary,
             color: theme.palette.common.black,
             paddingTop: '0.2rem',
-            paddingBottom: '0.2rem',
+            paddingBottom: '0.2rem'
         },
         [`&.${tableCellClasses.body}`]: {
             fontSize: 14,
             paddingTop: '0.2rem',
-            paddingBottom: '0.2rem',
-        },
+            paddingBottom: '0.2rem'
+        }
     }));
 
     const infoCheck = () => {
@@ -75,9 +69,9 @@ const CreateInvoiceDetail = ({
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入計帳段號',
-                    },
-                }),
+                        message: '請輸入計帳段號'
+                    }
+                })
             );
             return false;
         }
@@ -87,9 +81,9 @@ const CreateInvoiceDetail = ({
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入費用項目',
-                    },
-                }),
+                        message: '請輸入費用項目'
+                    }
+                })
             );
             return false;
         }
@@ -99,9 +93,9 @@ const CreateInvoiceDetail = ({
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入費用金額',
-                    },
-                }),
+                        message: '請輸入費用金額'
+                    }
+                })
             );
             return false;
         }
@@ -111,7 +105,7 @@ const CreateInvoiceDetail = ({
     const itemDetailAdd = () => {
         if (infoCheck()) {
             let tmpArray = invoiceDetailInfo;
-            tmpArray.push(createData(feeItem.trim(), billMilestone, 0, feeAmount));
+            tmpArray.push(createData(feeItem.trim(), billMilestone, 0, feeAmount, budgetInfo.budget_year, budgetInfo.budget_fee_item_seq));
             setInvoiceDetailInfo([...tmpArray]);
             itemDetailInitial();
         }
@@ -130,6 +124,10 @@ const CreateInvoiceDetail = ({
         setBillMilestone(tmpArray.BillMilestone);
         setFeeItem(tmpArray.FeeItem);
         setFeeAmount(handleNumber(tmpArray.FeeAmount));
+        setBudgetInfo({
+            budget_year: tmpArray.budget_year,
+            budget_fee_item_seq: tmpArray.budget_fee_item_seq
+        });
         isTax.current = tmpArray.IsTax;
     };
 
@@ -139,7 +137,7 @@ const CreateInvoiceDetail = ({
             let tmpArray = invoiceDetailInfo.map((i) => i);
             tmpArray.splice(editItem.current, 1);
             console.log('feeAmount=>>', feeAmount);
-            tmpArray.push(createData(feeItem, billMilestone, isTax.current, feeAmount));
+            tmpArray.push(createData(feeItem, billMilestone, isTax.current, feeAmount, budgetInfo.budget_year, budgetInfo.budget_fee_item_seq));
             tmpArray.reverse();
             setInvoiceDetailInfo([...tmpArray]);
             itemDetailInitial();
@@ -157,12 +155,7 @@ const CreateInvoiceDetail = ({
         let tmpArray = invoiceDetailInfo.map((i) => i);
         console.log(info);
         tmpArray.push(
-            createData(
-                '(tax)' + info.FeeItem.trim(),
-                info.BillMilestone,
-                1,
-                Number(info.FeeAmount / 10),
-            ),
+            createData('(tax)' + info.FeeItem.trim(), info.BillMilestone, 1, Number(info.FeeAmount / 10), info.budgetInfo.budget_year, info.budgetInfo.budget_fee_item_seq)
         );
         // tmpArray.reverse();
         setInvoiceDetailInfo([...tmpArray]);
@@ -170,11 +163,14 @@ const CreateInvoiceDetail = ({
         console.log(info);
     };
 
+    const handleBudgetInfo = (e) => {
+        const selectedValue = JSON.parse(e.target.value);
+        setBudgetInfo(selectedValue);
+    };
+
     useEffect(() => {
         itemDetailInitial();
     }, []);
-
-    console.log('invoiceDetailInfo=>>', invoiceDetailInfo);
 
     return (
         <MainCard title="發票明細檔" sx={{ height: '100%' }}>
@@ -187,7 +183,7 @@ const CreateInvoiceDetail = ({
                                 variant="h5"
                                 sx={{
                                     fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                    ml: { lg: '0rem', xl: '1.5rem' },
+                                    ml: { lg: '0rem', xl: '1.5rem' }
                                 }}
                             >
                                 計帳段號：
@@ -195,20 +191,10 @@ const CreateInvoiceDetail = ({
                         </Grid>
                         <Grid item md={4} lg={4}>
                             <FormControl fullWidth>
-                                <InputLabel
-                                    size="small"
-                                    id="billMilestone"
-                                    disabled={action !== '編輯'}
-                                >
+                                <InputLabel size="small" id="billMilestone" disabled={action !== '編輯'}>
                                     選擇計帳段號
                                 </InputLabel>
-                                <Select
-                                    value={billMilestone}
-                                    disabled={action !== '編輯'}
-                                    label="發票供應商"
-                                    size="small"
-                                    onChange={(e) => setBillMilestone(e.target.value)}
-                                >
+                                <Select value={billMilestone} disabled={action !== '編輯'} label="發票供應商" size="small" onChange={(e) => setBillMilestone(e.target.value)}>
                                     {bmStoneList.map((i) => (
                                         <MenuItem key={i} value={i}>
                                             {i}
@@ -222,7 +208,7 @@ const CreateInvoiceDetail = ({
                                 variant="h5"
                                 sx={{
                                     fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                    ml: { lg: '0rem', xl: '1.5rem' },
+                                    ml: { lg: '0rem', xl: '1.5rem' }
                                 }}
                             >
                                 費用金額：
@@ -237,19 +223,50 @@ const CreateInvoiceDetail = ({
                                 size="small"
                                 label="填寫費用金額"
                                 InputProps={{
-                                    inputComponent: NumericFormatCustom,
+                                    inputComponent: NumericFormatCustom
                                 }}
                                 onChange={(e) => setFeeAmount(e.target.value)}
                             />
                         </Grid>
                         {/* row2 */}
+                        <Grid item sm={6} md={2} lg={2}>
+                            <Typography
+                                variant="h5"
+                                align="left"
+                                sx={{
+                                    fontSize: { lg: '0.7rem', xl: '0.88rem' }
+                                }}
+                            >
+                                預算費用項目：
+                            </Typography>
+                        </Grid>
+                        <Grid item sm={6} md={6} lg={6}>
+                            <FormControl fullWidth size="small">
+                                <InputLabel>選擇項目序號</InputLabel>
+                                <Select label="項目序號" value={budgetInfo ? JSON.stringify(budgetInfo) : ''} onChange={handleBudgetInfo}>
+                                    {budgetList.map((i) => (
+                                        <MenuItem
+                                            key={i}
+                                            value={JSON.stringify({
+                                                budget_year: i.budget_year,
+                                                budget_fee_item_seq: i.budget_fee_item_seq
+                                            })}
+                                        >
+                                            {`序號:${i.budget_fee_item_seq}'  名稱:'${i.budget_fee_item_name}`}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item sm={6} md={4} lg={4} />
+                        {/* row3 */}
                         <Grid item md={2} lg={2}>
                             <Typography
                                 variant="h5"
                                 size="small"
                                 sx={{
                                     fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                    ml: { lg: '0rem', xl: '1.5rem' },
+                                    ml: { lg: '0rem', xl: '1.5rem' }
                                 }}
                             >
                                 費用項目：
@@ -273,45 +290,22 @@ const CreateInvoiceDetail = ({
                     </>
                 ) : null}
                 {action === '編輯' ? (
-                    <Grid
-                        item
-                        md={12}
-                        lg={12}
-                        display="flex"
-                        justifyContent="end"
-                        alignItems="center"
-                    >
+                    <Grid item md={12} lg={12} display="flex" justifyContent="end" alignItems="center">
                         {isEdit ? (
-                            <Button
-                                sx={{ mr: '0.25rem' }}
-                                variant="contained"
-                                onClick={itemDetailSave}
-                            >
+                            <Button sx={{ mr: '0.25rem' }} variant="contained" onClick={itemDetailSave}>
                                 儲存
                             </Button>
                         ) : (
-                            <Button
-                                sx={{ mr: '0.25rem' }}
-                                variant="contained"
-                                onClick={itemDetailAdd}
-                            >
+                            <Button sx={{ mr: '0.25rem' }} variant="contained" onClick={itemDetailAdd}>
                                 新增
                             </Button>
                         )}
                         {isEdit ? (
-                            <Button
-                                sx={{ ml: '0.25rem' }}
-                                variant="contained"
-                                onClick={itemDetailCancel}
-                            >
+                            <Button sx={{ ml: '0.25rem' }} variant="contained" onClick={itemDetailCancel}>
                                 關閉
                             </Button>
                         ) : (
-                            <Button
-                                sx={{ ml: '0.25rem' }}
-                                variant="contained"
-                                onClick={itemDetailInitial}
-                            >
+                            <Button sx={{ ml: '0.25rem' }} variant="contained" onClick={itemDetailInitial}>
                                 清除
                             </Button>
                         )}
@@ -326,34 +320,26 @@ const CreateInvoiceDetail = ({
                                     <StyledTableCell align="center">計帳段號</StyledTableCell>
                                     <StyledTableCell align="center">是否為稅</StyledTableCell>
                                     <StyledTableCell align="center">費用金額</StyledTableCell>
-                                    {action === '編輯' ? (
-                                        <StyledTableCell align="center">Action</StyledTableCell>
-                                    ) : null}
+                                    <StyledTableCell align="center">預算費用項目</StyledTableCell>
+                                    {action === '編輯' ? <StyledTableCell align="center">Action</StyledTableCell> : null}
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {invoiceDetailInfo?.map((row, id) => (
-                                    <TableRow
-                                        key={row.FeeItem + row.BillMilestone + id}
-                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                    >
+                                    <TableRow key={row.FeeItem + row.BillMilestone + id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                         <StyledTableCell component="th" scope="row">
                                             {row.FeeItem}
                                         </StyledTableCell>
-                                        <StyledTableCell align="center">
-                                            {row.BillMilestone}
-                                        </StyledTableCell>
-                                        <StyledTableCell align="center">
-                                            {row.IsTax ? '是' : '否'}
-                                        </StyledTableCell>
-                                        <StyledTableCell align="center">
-                                            {handleNumber(row.FeeAmount)}
-                                        </StyledTableCell>
+                                        <StyledTableCell align="center">{row.BillMilestone}</StyledTableCell>
+                                        <StyledTableCell align="center">{row.IsTax ? '是' : '否'}</StyledTableCell>
+                                        <StyledTableCell align="center">{handleNumber(row.FeeAmount)}</StyledTableCell>
+                                        <StyledTableCell align="center"> {row.budget_year ? `${row.budget_year}年 序號:${row.budget_fee_item_seq}` : null}</StyledTableCell>
                                         {action === '編輯' ? (
                                             <StyledTableCell align="center">
                                                 {row.FeeItem.includes('(tax)') ? null : (
                                                     <Button
                                                         color="success"
+                                                        sx={{ m: '0.01rem', p: '0.01rem' }}
                                                         onClick={() => {
                                                             copyTax(row);
                                                         }}
@@ -363,6 +349,7 @@ const CreateInvoiceDetail = ({
                                                 )}
                                                 <Button
                                                     color="primary"
+                                                    sx={{ m: '0.01rem', p: '0.01rem' }}
                                                     onClick={() => {
                                                         itemDetailEdit(id);
                                                     }}
@@ -371,6 +358,7 @@ const CreateInvoiceDetail = ({
                                                 </Button>
                                                 <Button
                                                     color="error"
+                                                    sx={{ m: '0.01rem', p: '0.01rem' }}
                                                     onClick={() => {
                                                         itemDetailDelete(id);
                                                     }}
