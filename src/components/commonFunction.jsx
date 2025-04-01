@@ -38,7 +38,13 @@ export const BootstrapDialogTitle = (props) => {
     );
 };
 
-export const CustomTypography = ({ children }) => (
+export const CustomQueryTypography = ({ children }) => (
+    <Typography variant="h5" sx={{ fontSize: { lg: '0.7rem', xl: '0.88rem' }, ml: { lg: '0.5rem', xl: '1.5rem' } }}>
+        {children}
+    </Typography>
+);
+
+export const CustomAddTypography = ({ children }) => (
     <Typography variant="h5" sx={{ fontSize: { lg: '0.85rem', xl: '0.95rem' }, ml: { lg: '0.5rem', xl: '3rem' } }}>
         {children}
     </Typography>

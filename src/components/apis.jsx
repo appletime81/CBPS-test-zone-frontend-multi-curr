@@ -27,6 +27,7 @@ export const genToken = `${httpEnv}://${env}/api/v1/gen_token`;
 export const generatetoken = `${httpEnv}://${env}/api/v1/generatetoken`;
 export const checktoken = `${httpEnv}://${env}/api/v1/checktoken`;
 export const checktokenForLDAP = `${httpEnv}://${env}/api/v1/checktokenForLDAP`;
+export const logout = 'https://iam-qa.cht.com.tw/auth/realms/B2E/protocol/openid-connect/logout';
 
 // 下拉選單
 export const dropdownmenuParties = `${httpEnv}://${env}/api/v1/dropdownmenuParties`;

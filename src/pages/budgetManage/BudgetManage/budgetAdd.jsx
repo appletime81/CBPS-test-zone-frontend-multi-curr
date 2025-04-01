@@ -16,7 +16,7 @@ import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 
 // project
-import { BootstrapDialogTitle, CustomTypography, CustomSelect } from 'components/commonFunction';
+import { BootstrapDialogTitle, CustomAddTypography, CustomSelect } from 'components/commonFunction';
 
 // api
 import { addLevelsFromFrontend, updateLevels } from 'components/apis.jsx';
@@ -218,7 +218,7 @@ const BudgetAdd = ({ isDialogOpen, handleDialogClose, currencyListInfo, submarin
                     {isAddOrEdit && (
                         <>
                             <Grid item md={3} lg={3} display="flex" justifyContent="center">
-                                <CustomTypography>海纜名稱：</CustomTypography>
+                                <CustomAddTypography>海纜名稱：</CustomAddTypography>
                             </Grid>
                             <Grid item md={3} lg={3}>
                                 <CustomSelect
@@ -230,7 +230,7 @@ const BudgetAdd = ({ isDialogOpen, handleDialogClose, currencyListInfo, submarin
                                 />
                             </Grid>
                             <Grid item md={3} lg={3} display="flex" justifyContent="center">
-                                <CustomTypography>海纜作業：</CustomTypography>
+                                <CustomAddTypography>海纜作業：</CustomAddTypography>
                             </Grid>
                             <Grid item md={3} lg={3}>
                                 <CustomSelect
@@ -242,7 +242,7 @@ const BudgetAdd = ({ isDialogOpen, handleDialogClose, currencyListInfo, submarin
                                 />
                             </Grid>
                             <Grid item xs={3} sm={3} md={3} lg={3} display="flex" justifyContent="center">
-                                <CustomTypography>年度：</CustomTypography>
+                                <CustomAddTypography>年度：</CustomAddTypography>
                             </Grid>
                             <Grid item xs={3} sm={3} md={3} lg={3}>
                                 <FormControl>
@@ -260,7 +260,7 @@ const BudgetAdd = ({ isDialogOpen, handleDialogClose, currencyListInfo, submarin
                                 </FormControl>
                             </Grid>
                             <Grid item xs={3} sm={3} md={3} lg={3} display="flex" justifyContent="center">
-                                <CustomTypography>幣別：</CustomTypography>
+                                <CustomAddTypography>幣別：</CustomAddTypography>
                             </Grid>
                             <Grid item xs={3} sm={3} md={3} lg={3}>
                                 <CustomSelect
@@ -272,7 +272,7 @@ const BudgetAdd = ({ isDialogOpen, handleDialogClose, currencyListInfo, submarin
                                 />
                             </Grid>
                             <Grid item xs={3} sm={3} md={3} lg={3} display="flex" justifyContent="center">
-                                <CustomTypography>項目序號：</CustomTypography>
+                                <CustomAddTypography>項目序號：</CustomAddTypography>
                             </Grid>
                             <Grid item xs={3} sm={3} md={3} lg={3}>
                                 <TextField
@@ -285,7 +285,7 @@ const BudgetAdd = ({ isDialogOpen, handleDialogClose, currencyListInfo, submarin
                                 />
                             </Grid>
                             <Grid item xs={3} sm={3} md={3} lg={3} display="flex" justifyContent="center">
-                                <CustomTypography>項目名稱：</CustomTypography>
+                                <CustomAddTypography>項目名稱：</CustomAddTypography>
                             </Grid>
                             <Grid item xs={3} sm={3} md={3} lg={3}>
                                 <TextField
@@ -298,7 +298,7 @@ const BudgetAdd = ({ isDialogOpen, handleDialogClose, currencyListInfo, submarin
                                 />
                             </Grid>
                             <Grid item xs={3} sm={3} md={3} lg={3} display="flex" justifyContent="center">
-                                <CustomTypography>項目金額：</CustomTypography>
+                                <CustomAddTypography>項目金額：</CustomAddTypography>
                             </Grid>
                             <Grid item xs={3} sm={3} md={3} lg={3}>
                                 <TextField
@@ -311,7 +311,7 @@ const BudgetAdd = ({ isDialogOpen, handleDialogClose, currencyListInfo, submarin
                                 />
                             </Grid>
                             <Grid item xs={3} sm={3} md={3} lg={3} display="flex" justifyContent="center">
-                                <CustomTypography>備註：</CustomTypography>
+                                <CustomAddTypography>備註：</CustomAddTypography>
                             </Grid>
                             <Grid item xs={3} sm={3} md={3} lg={3}>
                                 <TextField fullWidth variant="outlined" value={remark} size="small" label="填寫備註" onChange={(e) => setRemark(e.target.value)} />

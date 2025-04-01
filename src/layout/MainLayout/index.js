@@ -120,206 +120,206 @@ const MainLayout = () => {
 
     let accessSSO = isOL ? accessSSOOL : accessSSOQA;
 
-    useEffect(() => {
-        //haha1
-        console.log('haha1=>>');
-        const getExpireTime = localStorage.getItem('expireTimeCBPS');
-        if (window.location.href.indexOf('code') !== -1) {
-            if (dayjs(getExpireTime).diff(new Date(), 'minute') > 0) {
-                console.log('12345678');
-                // 傳送使用者資料取得權限
-                let accessToken = localStorage.getItem('accessToken');
-                fetch(checktokenForLDAP, {
-                    method: 'POST',
-                    headers: {
-                        'Content-type': 'application/json',
-                        Authorization: 'Bearer' + accessToken
-                    },
-                    body: JSON.stringify({ accessToken: accessToken })
-                })
-                    .then((res) => res.json())
-                    .then((data) => {
-                        console.log('使用者權限資料1=>>', data);
-                        dispatch(
-                            setUserInfo({
-                                userInfo: {
-                                    UserCName: data.UserCName,
-                                    ProfilePhotoURI: data.ProfilePhotoURI,
-                                    CB: data.CB,
-                                    Role: data.Role,
-                                    CM: data.CM,
-                                    System: data.System,
-                                    GlobalQuery: data.GlobalQuery,
-                                    SupplierNotify: data.SupplierNotify,
-                                    InvoiceWK: data.InvoiceWK,
-                                    Report: data.Report,
-                                    Superior: data.Superior,
-                                    Invoice: data.Invoice,
-                                    Data: data.Data,
-                                    Bill: data.Bill,
-                                    Liability: data.Liability,
-                                    Pay: data.Pay,
-                                    PartyNotify: data.PartyNotify,
-                                    SysNotify: data.SysNotify
-                                }
-                            })
-                        );
-                    })
-                    .catch(() => {
-                        dispatch(
-                            setMessageStateOpen({
-                                messageStateOpen: {
-                                    isOpen: true,
-                                    severity: 'error',
-                                    message: '網路異常，請檢查網路連線或與系統窗口聯絡'
-                                }
-                            })
-                        );
-                    });
-            } else {
-                console.log('87654321');
-                const accessCode = window.location.href.split('code=')[1];
-                let tmpArray = {
-                    client_id: isOL ? 'CBPS-CBPS.OL.I' : 'CBPS.QA.I',
-                    redirect_uri: isOL ? redirectUriOL : redirectUriQA,
-                    code: accessCode,
-                    grant_type: 'authorization_code'
-                };
-                const searchParams = new URLSearchParams(tmpArray);
-                fetch(accessSSO, {
-                    method: 'POST',
-                    body: searchParams,
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    }
-                })
-                    .then((res) => res.json())
-                    .then((data) => {
-                        if (data.access_token) {
-                            dispatch(
-                                setLoginInInfo({
-                                    loginInInfo: {
-                                        EmployeeNumber: jwt_decode(data.access_token).employeeNumber,
-                                        Email: jwt_decode(data.access_token).email,
-                                        Name: jwt_decode(data.access_token).name
-                                    }
-                                })
-                            );
-                            // 傳送使用者資料取得權限
-                            fetch(checktokenForLDAP, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-type': 'application/json',
-                                    Authorization: 'Bearer' + data.access_token
-                                },
-                                body: JSON.stringify(data.access_token)
-                            })
-                                .then((res) => res.json())
-                                .then((data) => {
-                                    console.log('使用者權限資料1=>>', data);
-                                    dispatch(
-                                        setUserInfo({
-                                            userInfo: {
-                                                UserCName: data.UserCName,
-                                                ProfilePhotoURI: data.ProfilePhotoURI,
-                                                CB: data.CB,
-                                                Role: data.Role,
-                                                CM: data.CM,
-                                                System: data.System,
-                                                GlobalQuery: data.GlobalQuery,
-                                                SupplierNotify: data.SupplierNotify,
-                                                InvoiceWK: data.InvoiceWK,
-                                                Report: data.Report,
-                                                Superior: data.Superior,
-                                                Invoice: data.Invoice,
-                                                Data: data.Data,
-                                                Bill: data.Bill,
-                                                Liability: data.Liability,
-                                                Pay: data.Pay,
-                                                PartyNotify: data.PartyNotify,
-                                                SysNotify: data.SysNotify
-                                            }
-                                        })
-                                    );
-                                })
-                                .catch(() => {
-                                    dispatch(
-                                        setMessageStateOpen({
-                                            messageStateOpen: {
-                                                isOpen: true,
-                                                severity: 'error',
-                                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
-                                            }
-                                        })
-                                    );
-                                });
-                        }
-                    })
-                    .catch(() => {
-                        dispatch(
-                            setMessageStateOpen({
-                                messageStateOpen: {
-                                    isOpen: true,
-                                    severity: 'error',
-                                    message: '網路異常，請檢查網路連線或與系統窗口聯絡'
-                                }
-                            })
-                        );
-                    });
-            }
-        } else if (dayjs(getExpireTime).diff(new Date(), 'minute') > 0 && localStorage.getItem('accessToken')) {
-            console.log('111111111');
-            // 傳送使用者資料取得權限
-            let accessToken = localStorage.getItem('accessToken');
-            fetch(checktokenForLDAP, {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json',
-                    Authorization: 'Bearer' + accessToken
-                },
-                body: JSON.stringify({ accessToken: accessToken })
-            })
-                .then((res) => res.json())
-                .then((data) => {
-                    console.log('使用者權限資料1=>>', data);
-                    dispatch(
-                        setUserInfo({
-                            userInfo: {
-                                UserCName: data.UserCName,
-                                ProfilePhotoURI: data.ProfilePhotoURI,
-                                CB: data.CB,
-                                Role: data.Role,
-                                CM: data.CM,
-                                System: data.System,
-                                GlobalQuery: data.GlobalQuery,
-                                SupplierNotify: data.SupplierNotify,
-                                InvoiceWK: data.InvoiceWK,
-                                Report: data.Report,
-                                Superior: data.Superior,
-                                Invoice: data.Invoice,
-                                Data: data.Data,
-                                Bill: data.Bill,
-                                Liability: data.Liability,
-                                Pay: data.Pay,
-                                PartyNotify: data.PartyNotify,
-                                SysNotify: data.SysNotify
-                            }
-                        })
-                    );
-                })
-                .catch(() => {
-                    dispatch(
-                        setMessageStateOpen({
-                            messageStateOpen: {
-                                isOpen: true,
-                                severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
-                            }
-                        })
-                    );
-                });
-        }
-    }, []);
+    // useEffect(() => {
+    //     //haha1
+    //     console.log('haha1=>>');
+    //     const getExpireTime = localStorage.getItem('expireTimeCBPS');
+    //     if (window.location.href.indexOf('code') !== -1) {
+    //         if (dayjs(getExpireTime).diff(new Date(), 'minute') > 0) {
+    //             console.log('12345678');
+    //             // 傳送使用者資料取得權限
+    //             let accessToken = localStorage.getItem('accessToken');
+    //             fetch(checktokenForLDAP, {
+    //                 method: 'POST',
+    //                 headers: {
+    //                     'Content-type': 'application/json',
+    //                     Authorization: 'Bearer' + accessToken
+    //                 },
+    //                 body: JSON.stringify({ accessToken: accessToken })
+    //             })
+    //                 .then((res) => res.json())
+    //                 .then((data) => {
+    //                     console.log('使用者權限資料1=>>', data);
+    //                     dispatch(
+    //                         setUserInfo({
+    //                             userInfo: {
+    //                                 UserCName: data.UserCName,
+    //                                 ProfilePhotoURI: data.ProfilePhotoURI,
+    //                                 CB: data.CB,
+    //                                 Role: data.Role,
+    //                                 CM: data.CM,
+    //                                 System: data.System,
+    //                                 GlobalQuery: data.GlobalQuery,
+    //                                 SupplierNotify: data.SupplierNotify,
+    //                                 InvoiceWK: data.InvoiceWK,
+    //                                 Report: data.Report,
+    //                                 Superior: data.Superior,
+    //                                 Invoice: data.Invoice,
+    //                                 Data: data.Data,
+    //                                 Bill: data.Bill,
+    //                                 Liability: data.Liability,
+    //                                 Pay: data.Pay,
+    //                                 PartyNotify: data.PartyNotify,
+    //                                 SysNotify: data.SysNotify
+    //                             }
+    //                         })
+    //                     );
+    //                 })
+    //                 .catch(() => {
+    //                     dispatch(
+    //                         setMessageStateOpen({
+    //                             messageStateOpen: {
+    //                                 isOpen: true,
+    //                                 severity: 'error',
+    //                                 message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+    //                             }
+    //                         })
+    //                     );
+    //                 });
+    //         } else {
+    //             console.log('87654321');
+    //             const accessCode = window.location.href.split('code=')[1];
+    //             let tmpArray = {
+    //                 client_id: isOL ? 'CBPS-CBPS.OL.I' : 'CBPS.QA.I',
+    //                 redirect_uri: isOL ? redirectUriOL : redirectUriQA,
+    //                 code: accessCode,
+    //                 grant_type: 'authorization_code'
+    //             };
+    //             const searchParams = new URLSearchParams(tmpArray);
+    //             fetch(accessSSO, {
+    //                 method: 'POST',
+    //                 body: searchParams,
+    //                 headers: {
+    //                     'Content-Type': 'application/x-www-form-urlencoded'
+    //                 }
+    //             })
+    //                 .then((res) => res.json())
+    //                 .then((data) => {
+    //                     if (data.access_token) {
+    //                         dispatch(
+    //                             setLoginInInfo({
+    //                                 loginInInfo: {
+    //                                     EmployeeNumber: jwt_decode(data.access_token).employeeNumber,
+    //                                     Email: jwt_decode(data.access_token).email,
+    //                                     Name: jwt_decode(data.access_token).name
+    //                                 }
+    //                             })
+    //                         );
+    //                         // 傳送使用者資料取得權限
+    //                         fetch(checktokenForLDAP, {
+    //                             method: 'POST',
+    //                             headers: {
+    //                                 'Content-type': 'application/json',
+    //                                 Authorization: 'Bearer' + data.access_token
+    //                             },
+    //                             body: JSON.stringify(data.access_token)
+    //                         })
+    //                             .then((res) => res.json())
+    //                             .then((data) => {
+    //                                 console.log('使用者權限資料1=>>', data);
+    //                                 dispatch(
+    //                                     setUserInfo({
+    //                                         userInfo: {
+    //                                             UserCName: data.UserCName,
+    //                                             ProfilePhotoURI: data.ProfilePhotoURI,
+    //                                             CB: data.CB,
+    //                                             Role: data.Role,
+    //                                             CM: data.CM,
+    //                                             System: data.System,
+    //                                             GlobalQuery: data.GlobalQuery,
+    //                                             SupplierNotify: data.SupplierNotify,
+    //                                             InvoiceWK: data.InvoiceWK,
+    //                                             Report: data.Report,
+    //                                             Superior: data.Superior,
+    //                                             Invoice: data.Invoice,
+    //                                             Data: data.Data,
+    //                                             Bill: data.Bill,
+    //                                             Liability: data.Liability,
+    //                                             Pay: data.Pay,
+    //                                             PartyNotify: data.PartyNotify,
+    //                                             SysNotify: data.SysNotify
+    //                                         }
+    //                                     })
+    //                                 );
+    //                             })
+    //                             .catch(() => {
+    //                                 dispatch(
+    //                                     setMessageStateOpen({
+    //                                         messageStateOpen: {
+    //                                             isOpen: true,
+    //                                             severity: 'error',
+    //                                             message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+    //                                         }
+    //                                     })
+    //                                 );
+    //                             });
+    //                     }
+    //                 })
+    //                 .catch(() => {
+    //                     dispatch(
+    //                         setMessageStateOpen({
+    //                             messageStateOpen: {
+    //                                 isOpen: true,
+    //                                 severity: 'error',
+    //                                 message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+    //                             }
+    //                         })
+    //                     );
+    //                 });
+    //         }
+    //     } else if (dayjs(getExpireTime).diff(new Date(), 'minute') > 0 && localStorage.getItem('accessToken')) {
+    //         console.log('111111111');
+    //         // 傳送使用者資料取得權限
+    //         let accessToken = localStorage.getItem('accessToken');
+    //         fetch(checktokenForLDAP, {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-type': 'application/json',
+    //                 Authorization: 'Bearer' + accessToken
+    //             },
+    //             body: JSON.stringify({ accessToken: accessToken })
+    //         })
+    //             .then((res) => res.json())
+    //             .then((data) => {
+    //                 console.log('使用者權限資料1=>>', data);
+    //                 dispatch(
+    //                     setUserInfo({
+    //                         userInfo: {
+    //                             UserCName: data.UserCName,
+    //                             ProfilePhotoURI: data.ProfilePhotoURI,
+    //                             CB: data.CB,
+    //                             Role: data.Role,
+    //                             CM: data.CM,
+    //                             System: data.System,
+    //                             GlobalQuery: data.GlobalQuery,
+    //                             SupplierNotify: data.SupplierNotify,
+    //                             InvoiceWK: data.InvoiceWK,
+    //                             Report: data.Report,
+    //                             Superior: data.Superior,
+    //                             Invoice: data.Invoice,
+    //                             Data: data.Data,
+    //                             Bill: data.Bill,
+    //                             Liability: data.Liability,
+    //                             Pay: data.Pay,
+    //                             PartyNotify: data.PartyNotify,
+    //                             SysNotify: data.SysNotify
+    //                         }
+    //                     })
+    //                 );
+    //             })
+    //             .catch(() => {
+    //                 dispatch(
+    //                     setMessageStateOpen({
+    //                         messageStateOpen: {
+    //                             isOpen: true,
+    //                             severity: 'error',
+    //                             message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+    //                         }
+    //                     })
+    //                 );
+    //             });
+    //     }
+    // }, []);
 
     useEffect(() => {
         if (messageStateOpen.isOpen) handleLoading();
