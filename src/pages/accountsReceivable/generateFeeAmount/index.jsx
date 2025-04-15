@@ -78,7 +78,9 @@ const GenerateFeeAmount = () => {
         }
         fetch(tmpQuery, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {

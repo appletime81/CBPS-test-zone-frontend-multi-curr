@@ -12,12 +12,7 @@ import BillNotificationDataList from './billNotificationDataList';
 import NotificationQuery from './notificationQuery';
 
 // api
-import {
-    dropdownmenuSubmarineCable,
-    dropdownmenuParties,
-    getSysInvNotifyRule,
-    getWorkTitle,
-} from 'components/apis.jsx';
+import { dropdownmenuSubmarineCable, dropdownmenuParties, getSysInvNotifyRule, getWorkTitle } from 'components/apis.jsx';
 
 // redux
 import { useDispatch } from 'react-redux';
@@ -43,7 +38,7 @@ const Information = () => {
     const a11yProps = (index) => {
         return {
             id: `simple-tab-${index}`,
-            'aria-controls': `simple-tabpanel-${index}`,
+            'aria-controls': `simple-tabpanel-${index}`
         };
     };
 
@@ -59,9 +54,9 @@ const Information = () => {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
                 },
-                body: JSON.stringify(tmpArray),
+                body: JSON.stringify(tmpArray)
             })
                 .then((res) => res.json())
                 .then((data) => {
@@ -74,16 +69,21 @@ const Information = () => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
         }
     };
 
     useEffect(() => {
-        fetch(dropdownmenuSubmarineCable, { method: 'GET' })
+        fetch(dropdownmenuSubmarineCable, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 setSubmarineCableList(data);
@@ -94,12 +94,17 @@ const Information = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
-        fetch(dropdownmenuParties, { method: 'GET' })
+        fetch(dropdownmenuParties, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 setPartiesList(data);
@@ -110,18 +115,18 @@ const Information = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         fetch(getWorkTitle, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify({}),
+            body: JSON.stringify({})
         })
             .then((res) => res.json())
             .then((data) => {
@@ -138,18 +143,18 @@ const Information = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         fetch(getWorkTitle, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify({}),
+            body: JSON.stringify({})
         })
             .then((res) => res.json())
             .then((data) => {
@@ -166,9 +171,9 @@ const Information = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     }, []);
@@ -191,13 +196,7 @@ const Information = () => {
                 />
             </Grid>
             <Grid item xs={12}>
-                <NotificationQuery
-                    setListInfo={setListInfo}
-                    partiesList={partiesList}
-                    submarineCableList={submarineCableList}
-                    value={value}
-                    workTitleList={workTitleList}
-                />
+                <NotificationQuery setListInfo={setListInfo} partiesList={partiesList} submarineCableList={submarineCableList} value={value} workTitleList={workTitleList} />
             </Grid>
             <Grid item xs={12}>
                 <MainCard title="通知列表">
@@ -212,12 +211,7 @@ const Information = () => {
                         <MemberBillDataList listInfo={listInfo} />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={1}>
-                        <InvoiceNotificationDataList
-                            listInfo={listInfo}
-                            partiesList={partiesList}
-                            submarineCableList={submarineCableList}
-                            initQuery={initQuery}
-                        />
+                        <InvoiceNotificationDataList listInfo={listInfo} partiesList={partiesList} submarineCableList={submarineCableList} initQuery={initQuery} />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={2}>
                         <BillNotificationDataList listInfo={listInfo} />

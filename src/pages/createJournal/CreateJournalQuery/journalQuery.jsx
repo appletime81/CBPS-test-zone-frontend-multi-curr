@@ -1,14 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-    Typography,
-    Grid,
-    Button,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    Box,
-} from '@mui/material';
+import { Typography, Grid, Button, FormControl, InputLabel, Select, MenuItem, Box } from '@mui/material';
 
 // project import
 import MainCard from 'components/MainCard';
@@ -21,12 +12,7 @@ import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { TextField } from '@mui/material/index';
 
 //api
-import {
-    getInvoiceWKMasterInvoiceWKDetail,
-    supplierNameDropDownUnique,
-    submarineCableInfoList,
-    getCurrencyData,
-} from 'components/apis.jsx';
+import { getInvoiceWKMasterInvoiceWKDetail, supplierNameDropDownUnique, submarineCableInfoList, getCurrencyData } from 'components/apis.jsx';
 
 // redux
 import { useDispatch } from 'react-redux';
@@ -66,9 +52,7 @@ const JournalQuery = ({ setListInfo, queryApi, invoiceStatus, setPage }) => {
         if (issueDate[0] || issueDate[1]) {
             tmpObject.CreateDate = {
                 start: issueDate[0] ? dayjs(issueDate[0]).format('YYYYMMDD') : '19110101',
-                end: issueDate[1]
-                    ? dayjs(issueDate[1]).format('YYYYMMDD')
-                    : dayjs(new Date()).format('YYYYMMDD'),
+                end: issueDate[1] ? dayjs(issueDate[1]).format('YYYYMMDD') : dayjs(new Date()).format('YYYYMMDD')
             };
         }
         if (code && code !== 'All') {
@@ -87,9 +71,9 @@ const JournalQuery = ({ setListInfo, queryApi, invoiceStatus, setPage }) => {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify(tmpObject),
+            body: JSON.stringify(tmpObject)
         })
             .then((res) => res.json())
             .then((data) => {
@@ -103,9 +87,9 @@ const JournalQuery = ({ setListInfo, queryApi, invoiceStatus, setPage }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -113,7 +97,9 @@ const JournalQuery = ({ setListInfo, queryApi, invoiceStatus, setPage }) => {
     useEffect(() => {
         fetch(supplierNameDropDownUnique, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {
@@ -128,14 +114,17 @@ const JournalQuery = ({ setListInfo, queryApi, invoiceStatus, setPage }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         //海纜名稱
         fetch(submarineCableInfoList, {
             method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {
@@ -147,15 +136,17 @@ const JournalQuery = ({ setListInfo, queryApi, invoiceStatus, setPage }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         //幣別
         fetch(getCurrencyData, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {
@@ -176,7 +167,7 @@ const JournalQuery = ({ setListInfo, queryApi, invoiceStatus, setPage }) => {
                         variant="h5"
                         textAlign="right"
                         sx={{
-                            fontSize: { lg: '0.7rem', xl: '0.88rem' },
+                            fontSize: { lg: '0.7rem', xl: '0.88rem' }
                         }}
                     >
                         海纜名稱：
@@ -185,11 +176,7 @@ const JournalQuery = ({ setListInfo, queryApi, invoiceStatus, setPage }) => {
                 <Grid item xs={2} sm={2} md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇海纜</InputLabel>
-                        <Select
-                            value={submarineCable}
-                            label="海纜"
-                            onChange={(e) => setSubmarineCable(e.target.value)}
-                        >
+                        <Select value={submarineCable} label="海纜" onChange={(e) => setSubmarineCable(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {submarineCableList.map((i) => (
                                 <MenuItem key={i.CableName} value={i.CableName}>
@@ -204,7 +191,7 @@ const JournalQuery = ({ setListInfo, queryApi, invoiceStatus, setPage }) => {
                         textAlign="right"
                         variant="h5"
                         sx={{
-                            fontSize: { lg: '0.7rem', xl: '0.88rem' },
+                            fontSize: { lg: '0.7rem', xl: '0.88rem' }
                         }}
                     >
                         供應商：
@@ -213,11 +200,7 @@ const JournalQuery = ({ setListInfo, queryApi, invoiceStatus, setPage }) => {
                 <Grid item xs={2} sm={2} md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇供應商</InputLabel>
-                        <Select
-                            value={supplierName}
-                            label="供應商"
-                            onChange={(e) => setSupplierName(e.target.value)}
-                        >
+                        <Select value={supplierName} label="供應商" onChange={(e) => setSupplierName(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {supNmList.map((i) => (
                                 <MenuItem key={i} value={i}>
@@ -233,17 +216,14 @@ const JournalQuery = ({ setListInfo, queryApi, invoiceStatus, setPage }) => {
                         variant="h5"
                         textAlign="right"
                         sx={{
-                            fontSize: { lg: '0.7rem', xl: '0.88rem' },
+                            fontSize: { lg: '0.7rem', xl: '0.88rem' }
                         }}
                     >
                         發票日期：
                     </Typography>
                 </Grid>
                 <Grid item md={5} lg={5}>
-                    <LocalizationProvider
-                        dateAdapter={AdapterDayjs}
-                        localeText={{ start: '起始日', end: '結束日' }}
-                    >
+                    <LocalizationProvider dateAdapter={AdapterDayjs} localeText={{ start: '起始日', end: '結束日' }}>
                         <DateRangePicker
                             inputFormat="YYYY/MM/DD"
                             value={issueDate}
@@ -266,7 +246,7 @@ const JournalQuery = ({ setListInfo, queryApi, invoiceStatus, setPage }) => {
                         variant="h5"
                         textAlign="right"
                         sx={{
-                            fontSize: { lg: '0.7rem', xl: '0.88rem' },
+                            fontSize: { lg: '0.7rem', xl: '0.88rem' }
                         }}
                     >
                         原始幣別：
@@ -290,7 +270,7 @@ const JournalQuery = ({ setListInfo, queryApi, invoiceStatus, setPage }) => {
                         variant="h5"
                         textAlign="right"
                         sx={{
-                            fontSize: { lg: '0.7rem', xl: '0.88rem' },
+                            fontSize: { lg: '0.7rem', xl: '0.88rem' }
                         }}
                     >
                         兌換幣別：

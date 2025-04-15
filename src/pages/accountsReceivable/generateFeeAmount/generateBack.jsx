@@ -16,27 +16,20 @@ import { beforeDuction, afterDeduction } from 'components/apis.jsx';
 import { useDispatch } from 'react-redux';
 import { setMessageStateOpen } from 'store/reducers/dropdown';
 
-const GenerateBack = ({
-    action,
-    infoBack,
-    handleBackClose,
-    receivableQuery,
-    editBillingNo,
-    editBillMasterID,
-}) => {
+const GenerateBack = ({ action, infoBack, handleBackClose, receivableQuery, editBillingNo, editBillMasterID }) => {
     const dispatch = useDispatch();
     const backBill = () => {
         const queryApi = action === 'toDeduct' ? beforeDuction : afterDeduction;
         let tmpObject = {
-            BillMasterID: editBillMasterID,
+            BillMasterID: editBillMasterID
         };
         fetch(queryApi, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify(tmpObject),
+            body: JSON.stringify(tmpObject)
         })
             .then((res) => res.json())
             .then(() => {
@@ -45,9 +38,9 @@ const GenerateBack = ({
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'success',
-                            message: '退回成功',
-                        },
-                    }),
+                            message: '退回成功'
+                        }
+                    })
                 );
                 receivableQuery();
                 handleBackClose();
@@ -58,9 +51,9 @@ const GenerateBack = ({
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -69,19 +62,13 @@ const GenerateBack = ({
         <Dialog maxWidth="xs" fullWidth open={infoBack}>
             <BootstrapDialogTitle>確認退回訊息</BootstrapDialogTitle>
             <DialogContent dividers>
-                <Grid
-                    container
-                    spacing={1}
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                >
+                <Grid container spacing={1} display="flex" justifyContent="center" alignItems="center">
                     {/* row3 */}
                     <Grid item xs={12} sm={12} md={12} lg={12} display="flex">
                         <Typography
                             sx={{
                                 fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                ml: { lg: '0.5rem', xl: '1.5rem' },
+                                ml: { lg: '0.5rem', xl: '1.5rem' }
                             }}
                         >
                             {`是否確定退回此${editBillingNo}帳單`}

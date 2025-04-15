@@ -1,17 +1,5 @@
 import { useState } from 'react';
-import {
-    Typography,
-    Grid,
-    Button,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    Box,
-    TextField,
-    Autocomplete,
-    Table,
-} from '@mui/material';
+import { Typography, Grid, Button, FormControl, InputLabel, Select, MenuItem, Box, TextField, Autocomplete, Table } from '@mui/material';
 
 // day
 import Dialog from '@mui/material/Dialog';
@@ -28,27 +16,22 @@ import { BootstrapDialogTitle } from 'components/commonFunction';
 import { useDispatch } from 'react-redux';
 import { setMessageStateOpen } from 'store/reducers/dropdown';
 
-const CurrencyTerminate = ({
-    dialogTerminate,
-    handleDialogClose,
-    terminateInfo,
-    currencyQuery,
-}) => {
+const CurrencyTerminate = ({ dialogTerminate, handleDialogClose, terminateInfo, currencyQuery }) => {
     const dispatch = useDispatch();
 
     const terminalLiability = () => {
         let tmpArray = {
             CurrencyExgID: terminateInfo,
-            ifEnd: true,
+            ifEnd: true
         };
         console.log('', tmpArray);
         fetch(updateCurrencyExchangeData, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify(tmpArray),
+            body: JSON.stringify(tmpArray)
         })
             .then((res) => res.json())
             .then(() => {
@@ -57,9 +40,9 @@ const CurrencyTerminate = ({
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'success',
-                            message: '終止成功',
-                        },
-                    }),
+                            message: '終止成功'
+                        }
+                    })
                 );
                 currencyQuery();
                 handleDialogClose();
@@ -80,20 +63,14 @@ const CurrencyTerminate = ({
                 確認終止訊息
             </BootstrapDialogTitle>
             <DialogContent dividers>
-                <Grid
-                    container
-                    spacing={1}
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                >
+                <Grid container spacing={1} display="flex" justifyContent="center" alignItems="center">
                     {/* row3 */}
                     <Grid item xs={12} sm={12} md={12} lg={12} display="flex">
                         <Typography
                             variant="h5"
                             sx={{
                                 fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                ml: { lg: '0.5rem', xl: '1.5rem' },
+                                ml: { lg: '0.5rem', xl: '1.5rem' }
                             }}
                         >
                             是否確定終止？

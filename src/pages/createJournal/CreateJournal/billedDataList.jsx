@@ -64,13 +64,17 @@ const BilledDataList = ({ listInfo, apiQuery }) => {
         let tmpQueryMaster = journalMasterView + tmpQuery;
         fetch(tmpQueryMaster, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then(() => {
                 fetch(tmpQueryDetail, {
                     method: 'GET',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+                    }
                 })
                     .then((res) => res.json())
                     .then((data2) => {
@@ -135,7 +139,7 @@ const BilledDataList = ({ listInfo, apiQuery }) => {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
             body: JSON.stringify(tmpArray)
         })
@@ -158,7 +162,7 @@ const BilledDataList = ({ listInfo, apiQuery }) => {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
             body: JSON.stringify(tmpArray)
         })

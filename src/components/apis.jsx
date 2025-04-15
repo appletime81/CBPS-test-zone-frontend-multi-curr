@@ -11,11 +11,14 @@ if (process.env.REACT_APP_ENV_FLAGE === 'qa') {
     httpEnv = 'https';
 }
 export const ssoUrlQA =
-    'https://iam-qa.cht.com.tw/auth/realms/B2E/protocol/openid-connect/auth?client_id=CBPS.QA.I&response_type=code&redirect_uri=https://cbpsqa.cht.com.tw&scope=ldap';
+    'https://iam-qa.cht.com.tw/auth/realms/B2E/protocol/openid-connect/auth?client_id=CBPS.QA.I&response_type=code&redirect_uri=http://localhost:3000&scope=ldap';
 export const ssoUrlOL =
     'https://iam.cht.com.tw/auth/realms/B2E/protocol/openid-connect/auth?client_id=CBPS-CBPS.OL.I&response_type=code&redirect_uri=https://cbps.cht.com.tw&scope=ldap';
+export const ssoUrlTest =
+    'https://iam-qa.cht.com.tw/auth/realms/B2E/protocol/openid-connect/auth?client_id=CBPS.QA.I&response_type=code&redirect_uri=http://localhost:3000&scope=ldap';
+export const ssoUrlLogout = 'https://iam-qa.cht.com.tw/auth/realms/B2E/protocol/openid-connect/logout';
 
-export const redirectUriQA = 'https://cbpsqa.cht.com.tw';
+export const redirectUriQA = 'http://localhost:3000';
 export const redirectUriOL = 'https://cbps.cht.com.tw';
 // 'https://internal-cbpsalbfrontend-1323185980.ap-northeast-1.elb.amazonaws.com';
 
@@ -27,7 +30,6 @@ export const genToken = `${httpEnv}://${env}/api/v1/gen_token`;
 export const generatetoken = `${httpEnv}://${env}/api/v1/generatetoken`;
 export const checktoken = `${httpEnv}://${env}/api/v1/checktoken`;
 export const checktokenForLDAP = `${httpEnv}://${env}/api/v1/checktokenForLDAP`;
-export const logout = 'https://iam-qa.cht.com.tw/auth/realms/B2E/protocol/openid-connect/logout';
 
 // 下拉選單
 export const dropdownmenuParties = `${httpEnv}://${env}/api/v1/dropdownmenuParties`;
@@ -170,7 +172,6 @@ export const supplierNameListForInvoice = `${httpEnv}://${env}/api/v1/Suppliers/
 export const supplierNameDropDownUnique = `${httpEnv}://${env}/api/v1/dropdownmenuSuppliers`; //供應商
 export const submarineCableInfoList = `${httpEnv}://${env}/api/v1/SubmarineCables/all`; // 海纜名稱
 export const supplierNameList = `${httpEnv}://${env}/api/v1/Suppliers/all`; //供應商
-export const billMilestoneLiabilityList = `${httpEnv}://${env}/api/v1/dropdownmenuBillMilestone`; //計帳段號
 export const billMilestoneList = `${httpEnv}://${env}/api/v1/BillMilestone/`;
 export const dropdownmenuSubmarineCable = `${httpEnv}://${env}/api/v1/dropdownmenuSubmarineCable`; // 海纜名稱
 // export const workTitleLiabilityList = `${httpEnv}://${env}/api/v1/dropdownmenuWorkTitle`;

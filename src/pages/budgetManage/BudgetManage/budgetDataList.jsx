@@ -1,7 +1,5 @@
-// import { useState } from 'react';
-
 // project import
-import LiabilityTerminate from './budgetTerminate';
+import BudgeTerminate from './budgetTerminate';
 
 // material-ui
 import { Button, Table, Box } from '@mui/material';
@@ -14,11 +12,17 @@ import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 
 import dayjs from 'dayjs';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 const BudgetDataList = ({ listInfo, setDialogAction, setIsDialogOpen, setDataDetail, budgetQuery }) => {
     const [dialogTerminate, setDialogTerminate] = useState(false);
     const [terminateInfo, setTerminateInfo] = useState({});
+    const actionName = useRef('');
+
+    const handleDialogOpen = (action) => {
+        actionName.current = action;
+        setDialogTerminate(true);
+    };
 
     const handleDialogClose = () => {
         setDialogTerminate(false);
@@ -107,7 +111,7 @@ const BudgetDataList = ({ listInfo, setDialogAction, setIsDialogOpen, setDataDet
                                                     color="warning"
                                                     variant="outlined"
                                                     onClick={() => {
-                                                        setDialogTerminate(true);
+                                                        handleDialogOpen('stop');
                                                         setTerminateInfo({
                                                             BillMilestone: row.BillMilestone,
                                                             PartyName: row.PartyName,
@@ -124,7 +128,7 @@ const BudgetDataList = ({ listInfo, setDialogAction, setIsDialogOpen, setDataDet
                                                     color="error"
                                                     variant="outlined"
                                                     onClick={() => {
-                                                        setDialogTerminate(true);
+                                                        handleDialogOpen('terminate');
                                                         setTerminateInfo({
                                                             BillMilestone: row.BillMilestone,
                                                             PartyName: row.PartyName,
@@ -144,7 +148,13 @@ const BudgetDataList = ({ listInfo, setDialogAction, setIsDialogOpen, setDataDet
                     </TableBody>
                 </Table>
             </TableContainer>
-            <LiabilityTerminate dialogTerminate={dialogTerminate} handleDialogClose={handleDialogClose} terminateInfo={terminateInfo} budgetQuery={budgetQuery} />
+            <BudgeTerminate
+                dialogTerminate={dialogTerminate}
+                handleDialogClose={handleDialogClose}
+                actionName={actionName.current}
+                budgetQuery={budgetQuery}
+                terminateInfo={terminateInfo}
+            />
         </>
     );
 };

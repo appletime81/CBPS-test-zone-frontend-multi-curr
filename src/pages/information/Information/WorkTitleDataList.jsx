@@ -88,7 +88,7 @@ const WorkTitleDataList = ({ infoList, setInfoList }) => {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
             body: JSON.stringify({})
         })
@@ -127,7 +127,7 @@ const WorkTitleDataList = ({ infoList, setInfoList }) => {
                 body: JSON.stringify(tmpArray),
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
                 }
             })
                 .then((res) => res.json())
@@ -187,7 +187,7 @@ const WorkTitleDataList = ({ infoList, setInfoList }) => {
             body: JSON.stringify({ TitleID: titleID }),
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             }
         })
             .then((res) => res.json())
@@ -264,7 +264,7 @@ const WorkTitleDataList = ({ infoList, setInfoList }) => {
                 body: JSON.stringify(tmpArray),
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
                 }
             })
                 .then((res) => res.json())

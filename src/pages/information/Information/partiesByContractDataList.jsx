@@ -61,7 +61,12 @@ const PartiesByContractDataList = ({}) => {
     };
 
     const queryPartiesByContractInfo = () => {
-        fetch(getPartiesByContractInfo, { method: 'GET' })
+        fetch(getPartiesByContractInfo, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 console.log('取得海纜資料成功=>', data);

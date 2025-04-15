@@ -30,7 +30,7 @@ const CreditBalanceView = ({ cbView, handleViewClose, viewId, codeType }) => {
     const a11yProps = (index) => {
         return {
             id: `simple-tab-${index}`,
-            'aria-controls': `simple-tabpanel-${index}`,
+            'aria-controls': `simple-tabpanel-${index}`
         };
     };
 
@@ -41,15 +41,15 @@ const CreditBalanceView = ({ cbView, handleViewClose, viewId, codeType }) => {
     const handleDownload = () => {
         let tmpData = {
             CBID: viewId,
-            Download: true,
+            Download: true
         };
         fetch(generateReport, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify(tmpData),
+            body: JSON.stringify(tmpData)
         })
             .then((res) => {
                 return res.blob();
@@ -66,9 +66,9 @@ const CreditBalanceView = ({ cbView, handleViewClose, viewId, codeType }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -76,15 +76,15 @@ const CreditBalanceView = ({ cbView, handleViewClose, viewId, codeType }) => {
     const getData = () => {
         let tmpData = {
             CBID: viewId,
-            Download: false,
+            Download: false
         };
         fetch(generateReport, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify(tmpData),
+            body: JSON.stringify(tmpData)
         })
             .then((res) => res.json())
             .then((data) => {
@@ -98,9 +98,9 @@ const CreditBalanceView = ({ cbView, handleViewClose, viewId, codeType }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };

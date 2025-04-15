@@ -125,7 +125,9 @@ const ReceivableQuery = ({ value, setListInfo, queryApi }) => {
         console.log('tmpQuery=>>', tmpQuery);
         fetch(tmpQuery, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {
@@ -166,7 +168,9 @@ const ReceivableQuery = ({ value, setListInfo, queryApi }) => {
         // 供應商
         fetch(supplierNameDropDownUnique, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {
@@ -187,7 +191,10 @@ const ReceivableQuery = ({ value, setListInfo, queryApi }) => {
             });
         //海纜名稱
         fetch(submarineCableInfoList, {
-            method: 'GET'
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {
@@ -205,7 +212,12 @@ const ReceivableQuery = ({ value, setListInfo, queryApi }) => {
                 );
             });
         //會員名稱
-        fetch(dropdownmenuParties, { method: 'GET' })
+        fetch(dropdownmenuParties, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 setPartiesList(data);
@@ -225,7 +237,7 @@ const ReceivableQuery = ({ value, setListInfo, queryApi }) => {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
             body: JSON.stringify({})
         })
@@ -255,7 +267,7 @@ const ReceivableQuery = ({ value, setListInfo, queryApi }) => {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
             body: JSON.stringify({})
         })

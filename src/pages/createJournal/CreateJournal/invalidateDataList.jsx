@@ -66,14 +66,18 @@ const BilledDataList = ({ listInfo }) => {
         let tmpQueryMaster = journalMasterView + tmpQuery;
         fetch(tmpQueryMaster, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {
                 // totalAmount.current = data[0].TotalAmount;
                 fetch(tmpQueryDetail, {
                     method: 'GET',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+                    }
                 })
                     .then((res) => res.json())
                     .then((data2) => {

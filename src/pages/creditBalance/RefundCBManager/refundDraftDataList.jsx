@@ -26,13 +26,13 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
         color: theme.palette.common.black,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
+        paddingBottom: '0.2rem'
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
-    },
+        paddingBottom: '0.2rem'
+    }
 }));
 
 const CreditBalanceDataList = ({ listInfo }) => {
@@ -66,15 +66,15 @@ const CreditBalanceDataList = ({ listInfo }) => {
     const handleComplete = (id) => {
         let tmpArray = {
             PayDraftID: id,
-            Status: 'COMPLETE',
+            Status: 'COMPLETE'
         };
         fetch(updatePayDraft, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify(tmpArray),
+            body: JSON.stringify(tmpArray)
         })
             .then((res) => res.json())
             .then((data) => {
@@ -83,9 +83,9 @@ const CreditBalanceDataList = ({ listInfo }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'success',
-                            message: '完成函稿成功',
-                        },
-                    }),
+                            message: '完成函稿成功'
+                        }
+                    })
                 );
             })
             .catch(() => {
@@ -94,26 +94,17 @@ const CreditBalanceDataList = ({ listInfo }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
 
     return (
         <>
-            <CorrespondenceMake
-                isDialogOpen={isDialogOpen}
-                payDraftID={payDraftID.current}
-                payCode={payCode.current}
-                handleDialogClose={handleDialogClose}
-            />
-            <PayDraftUpload
-                isUploadOpen={isUploadOpen}
-                handleUploadClose={handleUploadClose}
-                payDraftID={payDraftID.current}
-            />
+            <CorrespondenceMake isDialogOpen={isDialogOpen} payDraftID={payDraftID.current} payCode={payCode.current} handleDialogClose={handleDialogClose} />
+            <PayDraftUpload isUploadOpen={isUploadOpen} handleUploadClose={handleUploadClose} payDraftID={payDraftID.current} />
             <TableContainer component={Paper} sx={{ maxHeight: window.screen.height * 0.45 }}>
                 <Table sx={{ minWidth: 300 }} stickyHeader>
                     <TableHead>
@@ -130,21 +121,12 @@ const CreditBalanceDataList = ({ listInfo }) => {
                     <TableBody>
                         {listInfo?.map((row, id) => {
                             return (
-                                <TableRow
-                                    key={row.CBID + id}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
+                                <TableRow key={row.CBID + id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <StyledTableCell align="center">{id + 1}</StyledTableCell>
                                     <StyledTableCell align="center">{row.Payee}</StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.SubmarineCable}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.WorkTitle}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {handleNumber(row.TotalFeeAmount)}
-                                    </StyledTableCell>
+                                    <StyledTableCell align="center">{row.SubmarineCable}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.WorkTitle}</StyledTableCell>
+                                    <StyledTableCell align="center">{handleNumber(row.TotalFeeAmount)}</StyledTableCell>
                                     <StyledTableCell align="center">{row.Code}</StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Box
@@ -153,8 +135,8 @@ const CreditBalanceDataList = ({ listInfo }) => {
                                                 justifyContent: 'center',
                                                 '& button': {
                                                     mx: { sm: 0.3, md: 0.3, lg: 0.6, xl: 1.5 },
-                                                    p: 0,
-                                                },
+                                                    p: 0
+                                                }
                                             }}
                                         >
                                             <Button

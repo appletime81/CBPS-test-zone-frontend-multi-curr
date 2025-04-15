@@ -20,7 +20,7 @@ const Correspondence = () => {
     const a11yProps = (index) => {
         return {
             id: `simple-tab-${index}`,
-            'aria-controls': `simple-tabpanel-${index}`,
+            'aria-controls': `simple-tabpanel-${index}`
         };
     };
 
@@ -36,14 +36,13 @@ const Correspondence = () => {
     };
 
     const initQuery = () => {
-        let tmpQuery =
-            value === 0
-                ? '/Status=TEMPORARY&PayeeType=SUPPLIER'
-                : '/Status=COMPLETE&PayeeType=SUPPLIER';
+        let tmpQuery = value === 0 ? '/Status=TEMPORARY&PayeeType=SUPPLIER' : '/Status=COMPLETE&PayeeType=SUPPLIER';
         tmpQuery = queryPaydraft + tmpQuery;
         fetch(tmpQuery, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {
@@ -60,11 +59,7 @@ const Correspondence = () => {
         <>
             <Grid container spacing={1}>
                 <Grid item xs={12}>
-                    <CorrespondenceQuery
-                        setListInfo={setListInfo}
-                        queryApi={queryApi}
-                        value={value}
-                    />
+                    <CorrespondenceQuery setListInfo={setListInfo} queryApi={queryApi} value={value} />
                 </Grid>
                 <Grid item xs={12}>
                     <MainCard title={`${value === 0 ? '未編輯' : '已編輯'}資料列表`}>
@@ -83,11 +78,7 @@ const Correspondence = () => {
                     </MainCard>
                 </Grid>
             </Grid>
-            <CorrespondenceMake
-                isDialogOpen={isDialogOpen}
-                handleDialogClose={handleDialogClose}
-                listInfo={listInfo}
-            />
+            <CorrespondenceMake isDialogOpen={isDialogOpen} handleDialogClose={handleDialogClose} listInfo={listInfo} />
         </>
     );
 };

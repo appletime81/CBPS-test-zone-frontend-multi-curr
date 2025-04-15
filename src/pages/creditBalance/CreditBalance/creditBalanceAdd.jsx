@@ -41,7 +41,12 @@ const CreditBalanceAdd = ({ handleDialogClose, isDialogOpen, partiesList, submar
     };
 
     const creditBalanceQuery = () => {
-        fetch(queryApi, { method: 'GET' })
+        fetch(queryApi, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 if (Array.isArray(data)) {
@@ -154,7 +159,7 @@ const CreditBalanceAdd = ({ handleDialogClose, isDialogOpen, partiesList, submar
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
                 },
                 body: JSON.stringify(tmpArray)
             })

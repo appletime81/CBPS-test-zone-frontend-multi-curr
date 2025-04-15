@@ -4,12 +4,7 @@ import { Typography, Grid, Button, FormControl, InputLabel, Select, MenuItem } f
 
 // project import
 import MainCard from 'components/MainCard';
-import {
-    queryPaydraft,
-    supplierNameDropDownUnique,
-    submarineCableInfoList,
-    getWorkTitle,
-} from 'components/apis';
+import { queryPaydraft, supplierNameDropDownUnique, submarineCableInfoList, getWorkTitle } from 'components/apis';
 
 // day
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -44,10 +39,7 @@ const CorrespondenceQuery = ({ setListInfo, queryApi, value }) => {
     };
 
     const correspondenceQuery = () => {
-        let tmpQuery =
-            value === 0
-                ? '/Status=TEMPORARY&PayeeType=SUPPLIER&'
-                : '/Status=COMPLETE&PayeeType=SUPPLIER&';
+        let tmpQuery = value === 0 ? '/Status=TEMPORARY&PayeeType=SUPPLIER&' : '/Status=COMPLETE&PayeeType=SUPPLIER&';
         if (supplierName && supplierName !== 'All') {
             tmpQuery = tmpQuery + 'SupplierName=' + supplierName + '&';
         }
@@ -61,14 +53,7 @@ const CorrespondenceQuery = ({ setListInfo, queryApi, value }) => {
             tmpQuery = tmpQuery + 'WorkTitle=' + workTitle + '&';
         }
         if (issueDate && value === 1) {
-            tmpQuery =
-                tmpQuery +
-                'startIssueDate=' +
-                dayjs(issueDate).format('YYYYMMDD') +
-                '&' +
-                'endIssueDate=' +
-                dayjs(issueDate).format('YYYYMMDD') +
-                '&';
+            tmpQuery = tmpQuery + 'startIssueDate=' + dayjs(issueDate).format('YYYYMMDD') + '&' + 'endIssueDate=' + dayjs(issueDate).format('YYYYMMDD') + '&';
         }
         tmpQuery = tmpQuery.slice(0, -1);
         tmpQuery = queryPaydraft + tmpQuery;
@@ -76,7 +61,9 @@ const CorrespondenceQuery = ({ setListInfo, queryApi, value }) => {
         queryApi.current = tmpQuery;
         fetch(tmpQuery, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {
@@ -92,7 +79,9 @@ const CorrespondenceQuery = ({ setListInfo, queryApi, value }) => {
     useEffect(() => {
         fetch(supplierNameDropDownUnique, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {
@@ -106,13 +95,18 @@ const CorrespondenceQuery = ({ setListInfo, queryApi, value }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         //海纜名稱
-        fetch(submarineCableInfoList, { method: 'GET' })
+        fetch(submarineCableInfoList, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 setSubmarineCableList(data);
@@ -123,18 +117,18 @@ const CorrespondenceQuery = ({ setListInfo, queryApi, value }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         fetch(getWorkTitle, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify({}),
+            body: JSON.stringify({})
         })
             .then((res) => res.json())
             .then((data) => {
@@ -151,9 +145,9 @@ const CorrespondenceQuery = ({ setListInfo, queryApi, value }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     }, []);
@@ -167,7 +161,7 @@ const CorrespondenceQuery = ({ setListInfo, queryApi, value }) => {
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                            ml: { lg: '0.5rem', xl: '1.5rem' }
                         }}
                     >
                         發票號碼：
@@ -175,14 +169,7 @@ const CorrespondenceQuery = ({ setListInfo, queryApi, value }) => {
                 </Grid>
                 <Grid item md={2} lg={2}>
                     <FormControl fullWidth size="small">
-                        <TextField
-                            fullWidth
-                            variant="outlined"
-                            value={invoiceNo}
-                            size="small"
-                            label="填寫發票號碼"
-                            onChange={(e) => setInvoiceNo(e.target.value)}
-                        />
+                        <TextField fullWidth variant="outlined" value={invoiceNo} size="small" label="填寫發票號碼" onChange={(e) => setInvoiceNo(e.target.value)} />
                     </FormControl>
                 </Grid>
                 <Grid item md={1} lg={1}>
@@ -190,7 +177,7 @@ const CorrespondenceQuery = ({ setListInfo, queryApi, value }) => {
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                            ml: { lg: '0.5rem', xl: '1.5rem' }
                         }}
                     >
                         海纜名稱：
@@ -199,11 +186,7 @@ const CorrespondenceQuery = ({ setListInfo, queryApi, value }) => {
                 <Grid item md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇海纜</InputLabel>
-                        <Select
-                            value={submarineCable}
-                            label="海纜"
-                            onChange={(e) => setSubmarineCable(e.target.value)}
-                        >
+                        <Select value={submarineCable} label="海纜" onChange={(e) => setSubmarineCable(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {submarineCableList.map((i) => (
                                 <MenuItem key={i.CableName} value={i.CableName}>
@@ -218,7 +201,7 @@ const CorrespondenceQuery = ({ setListInfo, queryApi, value }) => {
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                            ml: { lg: '0.5rem', xl: '1.5rem' }
                         }}
                     >
                         海纜作業：
@@ -227,11 +210,7 @@ const CorrespondenceQuery = ({ setListInfo, queryApi, value }) => {
                 <Grid item md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇海纜作業</InputLabel>
-                        <Select
-                            value={workTitle}
-                            label="海纜作業"
-                            onChange={(e) => setWorkTitle(e.target.value)}
-                        >
+                        <Select value={workTitle} label="海纜作業" onChange={(e) => setWorkTitle(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {workTitleList.map((i) => (
                                 <MenuItem key={i.Title} value={i.Title}>
@@ -246,7 +225,7 @@ const CorrespondenceQuery = ({ setListInfo, queryApi, value }) => {
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                            ml: { lg: '0.5rem', xl: '1.5rem' }
                         }}
                     >
                         供應商：
@@ -255,11 +234,7 @@ const CorrespondenceQuery = ({ setListInfo, queryApi, value }) => {
                 <Grid item md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇供應商</InputLabel>
-                        <Select
-                            value={supplierName}
-                            label="供應商"
-                            onChange={(e) => setSupplierName(e.target.value)}
-                        >
+                        <Select value={supplierName} label="供應商" onChange={(e) => setSupplierName(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {supNmList.map((i) => (
                                 <MenuItem key={i} value={i}>
@@ -277,7 +252,7 @@ const CorrespondenceQuery = ({ setListInfo, queryApi, value }) => {
                                 variant="h5"
                                 sx={{
                                     fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                    ml: { lg: '0.5rem', xl: '1.5rem' },
+                                    ml: { lg: '0.5rem', xl: '1.5rem' }
                                 }}
                             >
                                 發文日期：
@@ -292,26 +267,13 @@ const CorrespondenceQuery = ({ setListInfo, queryApi, value }) => {
                                         onChange={(e) => {
                                             setIssueDate(e);
                                         }}
-                                        renderInput={(params) => (
-                                            <TextField size="small" {...params} />
-                                        )}
+                                        renderInput={(params) => <TextField size="small" {...params} />}
                                     />
                                 </LocalizationProvider>
                             </FormControl>
                         </Grid>
-                        <Grid
-                            item
-                            md={9}
-                            lg={9}
-                            display="flex"
-                            justifyContent="end"
-                            alignItems="center"
-                        >
-                            <Button
-                                sx={{ mr: '0.5rem' }}
-                                variant="contained"
-                                onClick={correspondenceQuery}
-                            >
+                        <Grid item md={9} lg={9} display="flex" justifyContent="end" alignItems="center">
+                            <Button sx={{ mr: '0.5rem' }} variant="contained" onClick={correspondenceQuery}>
                                 查詢
                             </Button>
                             <Button variant="contained" onClick={initData}>
@@ -320,19 +282,8 @@ const CorrespondenceQuery = ({ setListInfo, queryApi, value }) => {
                         </Grid>
                     </>
                 ) : (
-                    <Grid
-                        item
-                        md={12}
-                        lg={12}
-                        display="flex"
-                        justifyContent="end"
-                        alignItems="center"
-                    >
-                        <Button
-                            sx={{ mr: '0.5rem' }}
-                            variant="contained"
-                            onClick={correspondenceQuery}
-                        >
+                    <Grid item md={12} lg={12} display="flex" justifyContent="end" alignItems="center">
+                        <Button sx={{ mr: '0.5rem' }} variant="contained" onClick={correspondenceQuery}>
                             查詢
                         </Button>
                         <Button variant="contained" onClick={initData}>
@@ -348,7 +299,7 @@ const CorrespondenceQuery = ({ setListInfo, queryApi, value }) => {
 CorrespondenceQuery.propTypes = {
     setListInfo: PropTypes.func,
     queryApi: PropTypes.object,
-    value: PropTypes.number,
+    value: PropTypes.number
 };
 
 export default CorrespondenceQuery;

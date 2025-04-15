@@ -63,7 +63,9 @@ const ToBillDataList = ({ listInfo, apiQuery }) => {
         console.log('tmpQuery=>>', tmpQuery);
         fetch(tmpQuery, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {
@@ -149,7 +151,7 @@ const ToBillDataList = ({ listInfo, apiQuery }) => {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
                 },
                 body: JSON.stringify(tmpData)
             })

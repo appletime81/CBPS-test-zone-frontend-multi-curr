@@ -28,14 +28,14 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
         // backgroundColor: theme.palette.common.gary,
         color: theme.palette.common.black,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
+        paddingBottom: '0.2rem'
     },
     [`&.${tableCellClasses.body}.totalAmount`]: {
         fontSize: 14,
         paddingTop: '0.2rem',
         paddingBottom: '0.2rem',
-        backgroundColor: '#CFD8DC',
-    },
+        backgroundColor: '#CFD8DC'
+    }
 }));
 
 const SignedDataList = ({ dataList, receivableQuery }) => {
@@ -52,15 +52,15 @@ const SignedDataList = ({ dataList, receivableQuery }) => {
     const toWriteOff = (billMasterID) => {
         let tmpData = {
             BillMasterID: billMasterID,
-            Status: 'TO_WRITEOFF',
+            Status: 'TO_WRITEOFF'
         };
         fetch(updateBM, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify(tmpData),
+            body: JSON.stringify(tmpData)
         })
             .then((res) => res.json())
             .then(() => {
@@ -70,9 +70,9 @@ const SignedDataList = ({ dataList, receivableQuery }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'success',
-                            message: '進待銷帳成功',
-                        },
-                    }),
+                            message: '進待銷帳成功'
+                        }
+                    })
                 );
             })
             .catch(() => {
@@ -81,9 +81,9 @@ const SignedDataList = ({ dataList, receivableQuery }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -122,18 +122,8 @@ const SignedDataList = ({ dataList, receivableQuery }) => {
                 editBillingNo={editBillingNo.current}
                 editBillMasterID={editBillMasterID.current}
             />
-            <SignedDataWork
-                isViewOpen={isViewOpen}
-                codeType={codeType.current}
-                handleDeductedClose={handleDeductedClose}
-                billDetailInfo={billDetailInfo.current}
-            />
-            <UploadBillMasterAttachment
-                isUploadOpen={isUploadOpen}
-                handleUploadClose={handleUploadClose}
-                billMasterID={billMasterID.current}
-                receivableQuery={receivableQuery}
-            />
+            <SignedDataWork isViewOpen={isViewOpen} codeType={codeType.current} handleDeductedClose={handleDeductedClose} billDetailInfo={billDetailInfo.current} />
+            <UploadBillMasterAttachment isUploadOpen={isUploadOpen} handleUploadClose={handleUploadClose} billMasterID={billMasterID.current} receivableQuery={receivableQuery} />
             <TableContainer component={Paper} sx={{ maxHeight: window.screen.height * 0.5 }}>
                 <Table sx={{ minWidth: 300 }} stickyHeader>
                     <TableHead>
@@ -154,42 +144,17 @@ const SignedDataList = ({ dataList, receivableQuery }) => {
                     <TableBody>
                         {dataList?.map((row, id) => {
                             return (
-                                <TableRow
-                                    key={
-                                        row.BillMaster?.BillingNo +
-                                        row.BillMaster?.SubmarineCable +
-                                        id
-                                    }
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
+                                <TableRow key={row.BillMaster?.BillingNo + row.BillMaster?.SubmarineCable + id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <StyledTableCell align="center">{id + 1}</StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.BillMaster.PartyName}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.BillMaster.SubmarineCable}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.BillMaster.WorkTitle}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.BillMaster.BillingNo}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {dayjs(row.BillMaster.IssueDate).format('YYYY/MM/DD')}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {dayjs(row.BillMaster.DueDate).format('YYYY/MM/DD')}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.BillDetail ? row.BillDetail.length : 0}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {handleNumber(row.BillMaster.FeeAmountSum)}{' '}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.BillMaster.Code}
-                                    </StyledTableCell>
+                                    <StyledTableCell align="center">{row.BillMaster.PartyName}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.BillMaster.SubmarineCable}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.BillMaster.WorkTitle}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.BillMaster.BillingNo}</StyledTableCell>
+                                    <StyledTableCell align="center">{dayjs(row.BillMaster.IssueDate).format('YYYY/MM/DD')}</StyledTableCell>
+                                    <StyledTableCell align="center">{dayjs(row.BillMaster.DueDate).format('YYYY/MM/DD')}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.BillDetail ? row.BillDetail.length : 0}</StyledTableCell>
+                                    <StyledTableCell align="center">{handleNumber(row.BillMaster.FeeAmountSum)} </StyledTableCell>
+                                    <StyledTableCell align="center">{row.BillMaster.Code}</StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Box
                                             sx={{
@@ -197,8 +162,8 @@ const SignedDataList = ({ dataList, receivableQuery }) => {
                                                 justifyContent: 'center',
                                                 '& button': {
                                                     mx: { sm: 0.2, md: 0.2, lg: 0.2, xl: 1 },
-                                                    p: 0,
-                                                },
+                                                    p: 0
+                                                }
                                             }}
                                         >
                                             <Button
@@ -206,20 +171,13 @@ const SignedDataList = ({ dataList, receivableQuery }) => {
                                                 size="small"
                                                 variant="outlined"
                                                 onClick={() => {
-                                                    handleViewOpen(
-                                                        row.BillDetail,
-                                                        row.BillMaster.Code,
-                                                    );
+                                                    handleViewOpen(row.BillDetail, row.BillMaster.Code);
                                                 }}
                                             >
                                                 檢視
                                             </Button>
                                             {row.BillMaster.Status === 'TO_WRITEOFF' ? (
-                                                <Button
-                                                    color="inherit"
-                                                    size="small"
-                                                    variant="outlined"
-                                                >
+                                                <Button color="inherit" size="small" variant="outlined">
                                                     已進待銷
                                                 </Button>
                                             ) : (
@@ -239,10 +197,7 @@ const SignedDataList = ({ dataList, receivableQuery }) => {
                                                 size="small"
                                                 variant="outlined"
                                                 onClick={() => {
-                                                    handleInfoTerminal(
-                                                        row.BillMaster.BillingNo,
-                                                        row.BillMaster.BillMasterID,
-                                                    );
+                                                    handleInfoTerminal(row.BillMaster.BillingNo, row.BillMaster.BillMasterID);
                                                 }}
                                             >
                                                 作廢

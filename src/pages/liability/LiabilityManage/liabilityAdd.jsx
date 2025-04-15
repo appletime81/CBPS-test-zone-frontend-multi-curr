@@ -236,7 +236,7 @@ const LiabilityAdd = ({
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
                 },
                 body: JSON.stringify({ LBRawID: lBRawID.current })
             })
@@ -247,7 +247,7 @@ const LiabilityAdd = ({
                         method: 'POST',
                         headers: {
                             'Content-type': 'application/json',
-                            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                            Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
                         },
                         body: JSON.stringify(listInfo)
                     })
@@ -306,7 +306,12 @@ const LiabilityAdd = ({
 
     useEffect(() => {
         //海纜名稱
-        fetch(submarineCableInfoList, { method: 'GET' })
+        fetch(submarineCableInfoList, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 setSubmarineCableList(data);
@@ -323,7 +328,12 @@ const LiabilityAdd = ({
                 );
             });
         //會員名稱
-        fetch(dropdownmenuParties, { method: 'GET' })
+        fetch(dropdownmenuParties, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 setPartiesList(data);
@@ -343,7 +353,7 @@ const LiabilityAdd = ({
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
             body: JSON.stringify({})
         })
@@ -380,7 +390,7 @@ const LiabilityAdd = ({
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
                 },
                 body: JSON.stringify(tmpArray)
             })

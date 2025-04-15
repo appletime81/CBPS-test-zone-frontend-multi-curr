@@ -77,7 +77,12 @@ const GeneratedDataList = ({}) => {
     };
 
     const queryCorporatesInfo = () => {
-        fetch(getCorporatesInfo, { method: 'GET' })
+        fetch(getCorporatesInfo, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 console.log('取得Corporates資料成功=>', data);

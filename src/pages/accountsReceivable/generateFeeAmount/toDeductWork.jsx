@@ -6,17 +6,7 @@ import { queryCB, sendDuctInfo } from 'components/apis';
 import MainCard from 'components/MainCard';
 import Decimal from 'decimal.js';
 // material-ui
-import {
-    Box,
-    Typography,
-    Button,
-    Table,
-    Dialog,
-    DialogContent,
-    Grid,
-    DialogActions,
-    TextField,
-} from '@mui/material';
+import { Box, Typography, Button, Table, Dialog, DialogContent, Grid, DialogActions, TextField } from '@mui/material';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
@@ -36,29 +26,22 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
         // backgroundColor: theme.palette.common.gary,
         color: theme.palette.common.black,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
+        paddingBottom: '0.2rem'
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
+        paddingBottom: '0.2rem'
     },
     [`&.${tableCellClasses.body}.totalAmount`]: {
         fontSize: 14,
         paddingTop: '0.2rem',
         paddingBottom: '0.2rem',
-        backgroundColor: '#CFD8DC',
-    },
+        backgroundColor: '#CFD8DC'
+    }
 }));
 
-const ToDeductWork = ({
-    isDeductOpen,
-    handleDeductClose,
-    billDetailInfo,
-    billMasterInfo,
-    actionName,
-    receivableQuery,
-}) => {
+const ToDeductWork = ({ isDeductOpen, handleDeductClose, billDetailInfo, billMasterInfo, actionName, receivableQuery }) => {
     const dispatch = useDispatch();
     const [isDeductWorkOpen, setIsDeductWorkOpen] = useState(false);
     const [cbDataList, setCbDataList] = useState([]); //可折抵的Data List
@@ -83,24 +66,15 @@ const ToDeductWork = ({
     //按下折抵
     const deductWork = (data) => {
         console.log('data=>>', data);
-        let tmpArrayFilter = tmpDeductArray.current.filter(
-            (i) => i.BillDetailID === data.BillDetailID,
-        );
+        let tmpArrayFilter = tmpDeductArray.current.filter((i) => i.BillDetailID === data.BillDetailID);
         if (tmpArrayFilter.length === 0) {
-            let tmpQuery =
-                queryCB +
-                '/SubmarineCable=' +
-                data.SubmarineCable +
-                '&WorkTitle=' +
-                data.WorkTitle +
-                '&PartyName=' +
-                data.PartyName +
-                '&Code=' +
-                data.Code;
+            let tmpQuery = queryCB + '/SubmarineCable=' + data.SubmarineCable + '&WorkTitle=' + data.WorkTitle + '&PartyName=' + data.PartyName + '&Code=' + data.Code;
             console.log('=>>>', 123, tmpQuery);
             fetch(tmpQuery, {
                 method: 'GET',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+                }
             })
                 .then((res) => res.json())
                 .then((response) => {
@@ -113,9 +87,9 @@ const ToDeductWork = ({
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'error',
-                                    message: '無可折抵項目',
-                                },
-                            }),
+                                    message: '無可折抵項目'
+                                }
+                            })
                         );
                     }
                 })
@@ -125,9 +99,9 @@ const ToDeductWork = ({
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
         } else {
@@ -150,10 +124,8 @@ const ToDeductWork = ({
                         resule = Number(currAmount);
                         i.TransAmount = 0;
                     } else if (Number(value) >= Number(maxValue)) {
-                        resule =
-                            Number(value) === Number(maxValue) ? Number(value) : Number(maxValue);
-                        i.TransAmount =
-                            Number(value) === Number(maxValue) ? Number(value) : Number(maxValue);
+                        resule = Number(value) === Number(maxValue) ? Number(value) : Number(maxValue);
+                        i.TransAmount = Number(value) === Number(maxValue) ? Number(value) : Number(maxValue);
                     } else if (Number(value) >= Number(currAmount)) {
                         resule = Number(currAmount);
                         i.TransAmount = Number(currAmount);
@@ -173,7 +145,7 @@ const ToDeductWork = ({
                         ? Number(maxValue)
                         : Number(value) > Number(currAmount)
                         ? Number(currAmount)
-                        : Number(value),
+                        : Number(value)
             });
         }
         setTmpCBArray(tmpArray); //秀於畫面中抵扣
@@ -182,9 +154,7 @@ const ToDeductWork = ({
     const saveDeduct = () => {
         let tmpFeeAmount = 0;
         let deductAmount = 0;
-        let tmpArrayFilter = tmpDeductArray.current.filter(
-            (i) => i.BillDetailID === editItem.current,
-        );
+        let tmpArrayFilter = tmpDeductArray.current.filter((i) => i.BillDetailID === editItem.current);
         let tmpArray = tmpDeductArray.current.map((i) => i);
         if (tmpArrayFilter.length > 0) {
             tmpArray.forEach((i) => {
@@ -221,15 +191,15 @@ const ToDeductWork = ({
     const sendDuctWork = () => {
         let tmpArray = {
             BillMaster: billMasterInfo,
-            Deduct: tmpDeductArray.current,
+            Deduct: tmpDeductArray.current
         };
         fetch(sendDuctInfo, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify(tmpArray),
+            body: JSON.stringify(tmpArray)
         })
             .then((res) => res.json())
             .then(() => {
@@ -238,9 +208,9 @@ const ToDeductWork = ({
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'success',
-                            message: '送出成功',
-                        },
-                    }),
+                            message: '送出成功'
+                        }
+                    })
                 );
                 receivableQuery();
             })
@@ -250,9 +220,9 @@ const ToDeductWork = ({
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         handleDeductClose();
@@ -276,68 +246,40 @@ const ToDeductWork = ({
 
     return (
         <Dialog maxWidth="xxl" open={isDeductOpen}>
-            <BootstrapDialogTitle>
-                {actionName === 'deduct' ? '折抵作業' : '檢視待抵扣帳單明細'}
-            </BootstrapDialogTitle>
+            <BootstrapDialogTitle>{actionName === 'deduct' ? '折抵作業' : '檢視待抵扣帳單明細'}</BootstrapDialogTitle>
             <DialogContent>
-                <Grid
-                    container
-                    spacing={1}
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                    sx={{ fontSize: 10 }}
-                >
+                <Grid container spacing={1} display="flex" justifyContent="center" alignItems="center" sx={{ fontSize: 10 }}>
                     {actionName === 'view' ? (
                         <Grid item md={12} lg={12}>
-                            <Grid
-                                container
-                                spacing={1}
-                                display="flex"
-                                justifyContent="center"
-                                alignItems="center"
-                                sx={{ fontSize: 10 }}
-                            >
+                            <Grid container spacing={1} display="flex" justifyContent="center" alignItems="center" sx={{ fontSize: 10 }}>
                                 <Grid item md={1} lg={1} />
                                 <Grid item md={2} lg={2}>
                                     <Typography
                                         variant="h5"
                                         sx={{
                                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                                            ml: { lg: '0.5rem', xl: '1.5rem' }
                                         }}
                                     >
                                         會員：
                                     </Typography>
                                 </Grid>
                                 <Grid item md={3} lg={3}>
-                                    <TextField
-                                        value={billMasterInfo.PartyName}
-                                        fullWidth
-                                        readOnly
-                                        variant="outlined"
-                                        size="small"
-                                    />
+                                    <TextField value={billMasterInfo.PartyName} fullWidth readOnly variant="outlined" size="small" />
                                 </Grid>
                                 <Grid item md={2} lg={2}>
                                     <Typography
                                         variant="h5"
                                         sx={{
                                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                                            ml: { lg: '0.5rem', xl: '1.5rem' }
                                         }}
                                     >
                                         帳單截止日期：
                                     </Typography>
                                 </Grid>
                                 <Grid item md={3} lg={3}>
-                                    <TextField
-                                        value={dayjs(billMasterInfo.DueDate).format('YYYY/MM/DD')}
-                                        fullWidth
-                                        readOnly
-                                        variant="outlined"
-                                        size="small"
-                                    />
+                                    <TextField value={dayjs(billMasterInfo.DueDate).format('YYYY/MM/DD')} fullWidth readOnly variant="outlined" size="small" />
                                 </Grid>
                                 <Grid item md={1} lg={1} />
                                 <Grid item md={1} lg={1} />
@@ -346,40 +288,28 @@ const ToDeductWork = ({
                                         variant="h5"
                                         sx={{
                                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                                            ml: { lg: '0.5rem', xl: '1.5rem' }
                                         }}
                                     >
                                         海纜名稱：
                                     </Typography>
                                 </Grid>
                                 <Grid item md={3} lg={3}>
-                                    <TextField
-                                        value={billMasterInfo.SubmarineCable}
-                                        fullWidth
-                                        readOnly
-                                        variant="outlined"
-                                        size="small"
-                                    />
+                                    <TextField value={billMasterInfo.SubmarineCable} fullWidth readOnly variant="outlined" size="small" />
                                 </Grid>
                                 <Grid item md={2} lg={2}>
                                     <Typography
                                         variant="h5"
                                         sx={{
                                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                                            ml: { lg: '0.5rem', xl: '1.5rem' }
                                         }}
                                     >
                                         海纜作業：
                                     </Typography>
                                 </Grid>
                                 <Grid item md={3} lg={3}>
-                                    <TextField
-                                        value={billMasterInfo.WorkTitle}
-                                        fullWidth
-                                        readOnly
-                                        variant="outlined"
-                                        size="small"
-                                    />
+                                    <TextField value={billMasterInfo.WorkTitle} fullWidth readOnly variant="outlined" size="small" />
                                 </Grid>
                                 <Grid item md={1} lg={1} />
                             </Grid>
@@ -395,35 +325,19 @@ const ToDeductWork = ({
                                     <TableHead>
                                         <TableRow>
                                             <StyledTableCell align="center">NO</StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                計帳段號
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                費用項目
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                是否為税
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                費用金額
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                折抵金額
-                                            </StyledTableCell>
+                                            <StyledTableCell align="center">計帳段號</StyledTableCell>
+                                            <StyledTableCell align="center">費用項目</StyledTableCell>
+                                            <StyledTableCell align="center">是否為税</StyledTableCell>
+                                            <StyledTableCell align="center">費用金額</StyledTableCell>
+                                            <StyledTableCell align="center">折抵金額</StyledTableCell>
 
                                             <StyledTableCell align="center">總金額</StyledTableCell>
-                                            {actionName === 'deduct' ? (
-                                                <StyledTableCell align="center">
-                                                    Action
-                                                </StyledTableCell>
-                                            ) : null}
+                                            {actionName === 'deduct' ? <StyledTableCell align="center">Action</StyledTableCell> : null}
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
                                         {billDetailInfo.map((row, id) => {
-                                            let tmpFiliter = tmpDeductArray.current.filter(
-                                                (i) => i.BillDetailID === row.BillDetailID,
-                                            );
+                                            let tmpFiliter = tmpDeductArray.current.filter((i) => i.BillDetailID === row.BillDetailID);
                                             let dedAmountTmp = 0;
                                             if (tmpFiliter.length > 0) {
                                                 tmpFiliter[0].CB.forEach((i) => {
@@ -435,69 +349,41 @@ const ToDeductWork = ({
                                                     key={row.BillDetailID + row?.BillMasterID + id}
                                                     sx={{
                                                         '&:last-child td, &:last-child th': {
-                                                            border: 0,
-                                                        },
+                                                            border: 0
+                                                        }
                                                     }}
                                                 >
                                                     <TableCell align="center">{id + 1}</TableCell>
-                                                    <TableCell align="center">
-                                                        {row.BillMilestone}
-                                                    </TableCell>
-                                                    <TableCell align="center">
-                                                        {row.FeeItem}
-                                                    </TableCell>
-                                                    <TableCell align="center">
-                                                        {row?.IsTax ? '是' : '否'}
-                                                    </TableCell>
-                                                    <TableCell align="center">
-                                                        {handleNumber(row.OrgFeeAmount)}
-                                                    </TableCell>
-                                                    <TableCell align="center">
-                                                        {handleNumber(dedAmountTmp)}
-                                                    </TableCell>
+                                                    <TableCell align="center">{row.BillMilestone}</TableCell>
+                                                    <TableCell align="center">{row.FeeItem}</TableCell>
+                                                    <TableCell align="center">{row?.IsTax ? '是' : '否'}</TableCell>
+                                                    <TableCell align="center">{handleNumber(row.OrgFeeAmount)}</TableCell>
+                                                    <TableCell align="center">{handleNumber(dedAmountTmp)}</TableCell>
                                                     <TableCell
                                                         align="center"
                                                         sx={{
-                                                            color:
-                                                                row.OrgFeeAmount -
-                                                                    dedAmountTmp -
-                                                                    row.WHTAmount >=
-                                                                0
-                                                                    ? 'black'
-                                                                    : 'red',
+                                                            color: row.OrgFeeAmount - dedAmountTmp - row.WHTAmount >= 0 ? 'black' : 'red'
                                                         }}
                                                     >
-                                                        {handleNumber(
-                                                            new Decimal(row.OrgFeeAmount)
-                                                                .minus(new Decimal(dedAmountTmp))
-                                                                .minus(new Decimal(row.WHTAmount)),
-                                                        )}
+                                                        {handleNumber(new Decimal(row.OrgFeeAmount).minus(new Decimal(dedAmountTmp)).minus(new Decimal(row.WHTAmount)))}
                                                     </TableCell>
                                                     {actionName === 'deduct' ? (
                                                         <TableCell align="center">
                                                             <Button
                                                                 color="primary"
-                                                                variant={
-                                                                    editItem.current ===
-                                                                    row.BillDetailID
-                                                                        ? 'contained'
-                                                                        : 'outlined'
-                                                                }
+                                                                variant={editItem.current === row.BillDetailID ? 'contained' : 'outlined'}
                                                                 size="small"
                                                                 onClick={() => {
                                                                     editItem.current === ''
                                                                         ? deductWork(row)
                                                                         : dispatch(
                                                                               setMessageStateOpen({
-                                                                                  messageStateOpen:
-                                                                                      {
-                                                                                          isOpen: true,
-                                                                                          severity:
-                                                                                              'warning',
-                                                                                          message:
-                                                                                              '請先儲存目前折抵作業',
-                                                                                      },
-                                                                              }),
+                                                                                  messageStateOpen: {
+                                                                                      isOpen: true,
+                                                                                      severity: 'warning',
+                                                                                      message: '請先儲存目前折抵作業'
+                                                                                  }
+                                                                              })
                                                                           );
                                                                 }}
                                                             >
@@ -510,24 +396,15 @@ const ToDeductWork = ({
                                         })}
                                         <TableRow
                                             sx={{
-                                                '&:last-child td, &:last-child th': { border: 0 },
+                                                '&:last-child td, &:last-child th': { border: 0 }
                                             }}
                                         >
                                             <StyledTableCell className="totalAmount" align="center">
                                                 Total
                                             </StyledTableCell>
-                                            <StyledTableCell
-                                                className="totalAmount"
-                                                align="center"
-                                            ></StyledTableCell>
-                                            <StyledTableCell
-                                                className="totalAmount"
-                                                align="center"
-                                            ></StyledTableCell>
-                                            <StyledTableCell
-                                                className="totalAmount"
-                                                align="center"
-                                            ></StyledTableCell>
+                                            <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
+                                            <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
+                                            <StyledTableCell className="totalAmount" align="center"></StyledTableCell>
                                             <StyledTableCell className="totalAmount" align="center">
                                                 {handleNumber(orgFeeAmount.current)}
                                             </StyledTableCell>
@@ -537,12 +414,7 @@ const ToDeductWork = ({
                                             <StyledTableCell className="totalAmount" align="center">
                                                 {handleNumber(feeAmountTotal)}
                                             </StyledTableCell>
-                                            {actionName === 'deduct' ? (
-                                                <StyledTableCell
-                                                    className="totalAmount"
-                                                    align="center"
-                                                ></StyledTableCell>
-                                            ) : null}
+                                            {actionName === 'deduct' ? <StyledTableCell className="totalAmount" align="center"></StyledTableCell> : null}
                                         </TableRow>
                                     </TableBody>
                                 </Table>
@@ -558,24 +430,12 @@ const ToDeductWork = ({
                                             <Table sx={{ minWidth: 300 }} stickyHeader>
                                                 <TableHead>
                                                     <TableRow>
-                                                        <StyledTableCell align="center">
-                                                            NO
-                                                        </StyledTableCell>
-                                                        <StyledTableCell align="center">
-                                                            CB種類
-                                                        </StyledTableCell>
-                                                        <StyledTableCell align="center">
-                                                            可折抵金額
-                                                        </StyledTableCell>
-                                                        <StyledTableCell align="center">
-                                                            摘要說明
-                                                        </StyledTableCell>
-                                                        <StyledTableCell align="center">
-                                                            折抵金額
-                                                        </StyledTableCell>
-                                                        <StyledTableCell align="center">
-                                                            剩餘可折抵金額
-                                                        </StyledTableCell>
+                                                        <StyledTableCell align="center">NO</StyledTableCell>
+                                                        <StyledTableCell align="center">CB種類</StyledTableCell>
+                                                        <StyledTableCell align="center">可折抵金額</StyledTableCell>
+                                                        <StyledTableCell align="center">摘要說明</StyledTableCell>
+                                                        <StyledTableCell align="center">折抵金額</StyledTableCell>
+                                                        <StyledTableCell align="center">剩餘可折抵金額</StyledTableCell>
                                                     </TableRow>
                                                 </TableHead>
                                                 <TableBody>
@@ -585,36 +445,19 @@ const ToDeductWork = ({
                                                         let afterDiff = 0; //剩餘可折抵金額
                                                         //其他項目目前折抵金額-開始
                                                         tmpDeductArray.current.forEach((i1) => {
-                                                            if (
-                                                                i1.BillDetailID !== editItem.current
-                                                            ) {
+                                                            if (i1.BillDetailID !== editItem.current) {
                                                                 i1.CB.forEach((i2) => {
                                                                     if (i2.CBID === row.CBID) {
-                                                                        otherItemsDeducted =
-                                                                            new Decimal(
-                                                                                otherItemsDeducted,
-                                                                            )
-                                                                                .add(
-                                                                                    new Decimal(
-                                                                                        i2.TransAmount,
-                                                                                    ),
-                                                                                )
-                                                                                .toNumber();
+                                                                        otherItemsDeducted = new Decimal(otherItemsDeducted).add(new Decimal(i2.TransAmount)).toNumber();
                                                                     }
                                                                 });
                                                             }
                                                         });
                                                         //其他項目目前折抵金額-結束
                                                         //當前項目目前折抵金額-開始
-                                                        let tmpArray = tmpCBArray.filter(
-                                                            (i) => i.CBID === row.CBID,
-                                                        );
-                                                        let deductNumber = tmpArray[0]
-                                                            ? tmpArray[0].TransAmount
-                                                            : 0;
-                                                        deductFee = new Decimal(row.CurrAmount)
-                                                            .minus(new Decimal(otherItemsDeducted))
-                                                            .toNumber();
+                                                        let tmpArray = tmpCBArray.filter((i) => i.CBID === row.CBID);
+                                                        let deductNumber = tmpArray[0] ? tmpArray[0].TransAmount : 0;
+                                                        deductFee = new Decimal(row.CurrAmount).minus(new Decimal(otherItemsDeducted)).toNumber();
 
                                                         // afterDiff =
                                                         //     row.CurrAmount - otherItemsDeducted > 0
@@ -628,59 +471,34 @@ const ToDeductWork = ({
                                                         //           )
                                                         //           .toNumber()
                                                         //     : 0;
-                                                        afterDiff =
-                                                            deductFee - deductNumber > 0
-                                                                ? new Decimal(deductFee)
-                                                                      .minus(
-                                                                          new Decimal(deductNumber),
-                                                                      )
-                                                                      .toNumber()
-                                                                : 0;
+                                                        afterDiff = deductFee - deductNumber > 0 ? new Decimal(deductFee).minus(new Decimal(deductNumber)).toNumber() : 0;
                                                         return (
                                                             <TableRow
-                                                                key={
-                                                                    row.CBID + row?.BLDetailID + id
-                                                                }
+                                                                key={row.CBID + row?.BLDetailID + id}
                                                                 sx={{
-                                                                    '&:last-child td, &:last-child th':
-                                                                        { border: 0 },
+                                                                    '&:last-child td, &:last-child th': { border: 0 }
                                                                 }}
                                                             >
-                                                                <TableCell align="center">
-                                                                    {id + 1}
-                                                                </TableCell>
-                                                                <TableCell align="center">
-                                                                    {row.CBType}
-                                                                </TableCell>
-                                                                <TableCell align="center">
-                                                                    {handleNumber(deductFee)}
-                                                                </TableCell>
-                                                                <TableCell align="center">
-                                                                    {row.Note}
-                                                                </TableCell>
+                                                                <TableCell align="center">{id + 1}</TableCell>
+                                                                <TableCell align="center">{row.CBType}</TableCell>
+                                                                <TableCell align="center">{handleNumber(deductFee)}</TableCell>
+                                                                <TableCell align="center">{row.Note}</TableCell>
                                                                 <TableCell align="center">
                                                                     <TextField
                                                                         label="$"
                                                                         size="small"
                                                                         type="number"
                                                                         inputProps={{
-                                                                            step: '.000001',
+                                                                            step: '.000001'
                                                                         }}
                                                                         style={{ width: '50%' }}
                                                                         value={deductNumber}
                                                                         onChange={(e) => {
-                                                                            changeDiff(
-                                                                                row.CurrAmount,
-                                                                                deductFee,
-                                                                                e.target.value,
-                                                                                row.CBID,
-                                                                            );
+                                                                            changeDiff(row.CurrAmount, deductFee, e.target.value, row.CBID);
                                                                         }}
                                                                     />
                                                                 </TableCell>
-                                                                <TableCell align="center">
-                                                                    {handleNumber(afterDiff)}
-                                                                </TableCell>
+                                                                <TableCell align="center">{handleNumber(afterDiff)}</TableCell>
                                                             </TableRow>
                                                         );
                                                     })}

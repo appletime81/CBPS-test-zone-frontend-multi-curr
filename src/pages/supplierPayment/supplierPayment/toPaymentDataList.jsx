@@ -119,7 +119,7 @@ const ToPaymentDataList = ({ listInfo, cbToCn, setCbToCn, isSend, setIsSend, sup
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
             body: JSON.stringify({
                 InvoiceWKMaster: invoiceMasterInfo,
@@ -189,7 +189,7 @@ const ToPaymentDataList = ({ listInfo, cbToCn, setCbToCn, isSend, setIsSend, sup
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
             body: JSON.stringify(sendTmpArray)
         })

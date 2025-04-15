@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { Typography, Grid, Button, FormControl, Box, TextField, Table, TableCell, Paper, InputLabel, Select, MenuItem } from '@mui/material';
+import { Typography, Grid, Button, FormControl, Box, TextField, Table, TableCell, Paper, InputLabel, Select, MenuItem, RadioGroup, FormControlLabel, Radio } from '@mui/material';
 
 // day
 import Dialog from '@mui/material/Dialog';
@@ -139,6 +139,7 @@ const BillDraftMake = ({ isDialogOpen, handleDialogClose, billMasterID, pONo, wo
     const [logo, setLogo] = useState(1);
     const [subject1, setSubject1] = useState(''); //主旨1
     const [subject3, setSubject3] = useState(''); //主旨3
+    const [isShowLevel, setIsShowLevel] = useState(false); //顯示費用項目階層
     const isTax = useRef(false);
 
     const itemDetailInitial = () => {
@@ -180,7 +181,7 @@ const BillDraftMake = ({ isDialogOpen, handleDialogClose, billMasterID, pONo, wo
             method: 'POST',
             headers: {
                 Accept: 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
             body: JSON.stringify(tmpData)
         })
@@ -234,7 +235,7 @@ const BillDraftMake = ({ isDialogOpen, handleDialogClose, billMasterID, pONo, wo
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
                 },
                 body: JSON.stringify(tmpArray)
             })
@@ -274,7 +275,9 @@ const BillDraftMake = ({ isDialogOpen, handleDialogClose, billMasterID, pONo, wo
                 });
             fetch(dropdownmenuUsers, {
                 method: 'GET',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+                }
             })
                 .then((res) => res.json())
                 .then((data) => {
@@ -296,13 +299,13 @@ const BillDraftMake = ({ isDialogOpen, handleDialogClose, billMasterID, pONo, wo
         }
     }, [billMasterID, isDialogOpen]);
 
-    console.log('contact=>>', contact.UserID, contact.UserID ? 1 : 2);
+    console.log('isShowLevel=>>', isShowLevel, typeof isShowLevel);
 
     return (
         <Dialog maxWidth="xxl" fullWidth open={isDialogOpen}>
             <BootstrapDialogTitle className="no-print">產製帳單</BootstrapDialogTitle>
             <DialogContent dividers className="no-print">
-                <Grid container spacing={1} className="no-print">
+                <Grid container spacing={2} className="no-print">
                     <Grid item xs={6} sm={6} md={6} lg={6}>
                         <MainCard title="聯絡窗口及主管資訊" sx={{ width: '100%' }}>
                             <Grid container spacing={1}>
@@ -344,8 +347,50 @@ const BillDraftMake = ({ isDialogOpen, handleDialogClose, billMasterID, pONo, wo
                                 </Grid>
                             </Grid>
                         </MainCard>
-                        <MainCard title="帳單資訊" sx={{ width: '100%' }}>
-                            <Grid container spacing={1} display="flex">
+                        <MainCard title="顯示費用項目階層" sx={{ width: '100%' }}>
+                            <Grid container spacing={1} display="flex" alignItems="center">
+                                <Grid item md={3} display="flex" justifyContent="start">
+                                    <Typography
+                                        variant="h5"
+                                        sx={{
+                                            fontSize: { lg: '0.7rem', xl: '0.88rem' }
+                                        }}
+                                    >
+                                        顯示費用項目階層：
+                                    </Typography>
+                                </Grid>
+                                <Grid container item md={9} display="flex" alignItems="center">
+                                    <FormControl>
+                                        <RadioGroup row value={isShowLevel} onChange={(e) => setIsShowLevel(e.target.value)}>
+                                            <FormControlLabel
+                                                value={true}
+                                                control={
+                                                    <Radio
+                                                        sx={{
+                                                            '& .MuiSvgIcon-root': {
+                                                                fontSize: { lg: 14, xl: 20 }
+                                                            }
+                                                        }}
+                                                    />
+                                                }
+                                                label="是"
+                                            />
+                                            <FormControlLabel
+                                                value={false}
+                                                control={
+                                                    <Radio
+                                                        sx={{
+                                                            '& .MuiSvgIcon-root': {
+                                                                fontSize: { lg: 14, xl: 20 }
+                                                            }
+                                                        }}
+                                                    />
+                                                }
+                                                label="否"
+                                            />
+                                        </RadioGroup>
+                                    </FormControl>
+                                </Grid>
                                 <Grid item md={12} display="flex" justifyContent="start">
                                     <Typography variant="h5" sx={{ fontSize: { lg: '0.7rem', xl: '0.88rem' } }}>
                                         表頭一：
@@ -443,7 +488,6 @@ const BillDraftMake = ({ isDialogOpen, handleDialogClose, billMasterID, pONo, wo
                                     <Box sx={{ fontSize: '12px', textAlign: 'left' }}>{contact.UserName}</Box>
                                     <Box sx={{ fontSize: '12px', textAlign: 'left' }}>{contactInfo?.Address}</Box>
                                     <Box sx={{ fontSize: '12px', textAlign: 'left' }}>Tel：{contactInfo?.Tel}</Box>
-                                    {/* <Box sx={{ fontSize: '12px', textAlign: 'left' }}>Fax：{contactInfo?.Fax}</Box> */}
                                 </Box>
                             </Box>
                             <Box
@@ -499,8 +543,10 @@ const BillDraftMake = ({ isDialogOpen, handleDialogClose, billMasterID, pONo, wo
                                                 <StyledTableCell className="theTopFirst">No</StyledTableCell>
                                                 <StyledTableCell className="top">Supplier</StyledTableCell>
                                                 <StyledTableCell className="top">INV. No.</StyledTableCell>
+                                                {isShowLevel === 'true' ? <StyledTableCell className="top">Budget Description</StyledTableCell> : null}
                                                 <StyledTableCell className="top">Description</StyledTableCell>
-                                                <StyledTableCell className="top">Billed Amount</StyledTableCell>
+                                                <StyledTableCell className="top">Currency</StyledTableCell>
+                                                <StyledTableCell className="top">Amount</StyledTableCell>
                                                 <StyledTableCell className="top">Liability</StyledTableCell>
                                                 <StyledTableCell className="top">Share Amount</StyledTableCell>
                                                 <StyledTableCell className="top">Tax</StyledTableCell>
@@ -521,8 +567,16 @@ const BillDraftMake = ({ isDialogOpen, handleDialogClose, billMasterID, pONo, wo
                                                         <StyledTableCell align="left" className="theSecond">
                                                             {row.InvNumber}
                                                         </StyledTableCell>
+                                                        {isShowLevel === 'true' ? (
+                                                            <StyledTableCell align="left" className="theSecond">
+                                                                {row.BudgetDescription}
+                                                            </StyledTableCell>
+                                                        ) : null}
                                                         <StyledTableCell align="left" className="theSecond">
                                                             {row.Description}
+                                                        </StyledTableCell>
+                                                        <StyledTableCell align="left" className="theSecond">
+                                                            {row.ToCode}
                                                         </StyledTableCell>
                                                         <StyledTableCell align="right" className="theSecond">
                                                             {handleNumber(row.BilledAmount?.toFixed(2))}
@@ -543,11 +597,13 @@ const BillDraftMake = ({ isDialogOpen, handleDialogClose, billMasterID, pONo, wo
                                                 );
                                             })}
                                             <TableRow>
-                                                <StyledTableCell align="center" className="totalAmountFirst"></StyledTableCell>
-                                                <StyledTableCell align="center" className="totalAmount"></StyledTableCell>
-                                                <StyledTableCell align="center" className="totalAmount"></StyledTableCell>
-                                                <StyledTableCell align="center" className="totalAmount"></StyledTableCell>
-                                                <StyledTableCell align="center" className="totalAmount"></StyledTableCell>
+                                                <StyledTableCell align="center" className="totalAmountFirst" />
+                                                <StyledTableCell align="center" className="totalAmount" />
+                                                <StyledTableCell align="center" className="totalAmount" />
+                                                <StyledTableCell align="center" className="totalAmount" />
+                                                {isShowLevel === 'true' ? <StyledTableCell align="center" className="totalAmount" /> : null}
+                                                <StyledTableCell align="center" className="totalAmount" />
+                                                <StyledTableCell align="center" className="totalAmount" />
                                                 <StyledTableCell align="center" className="totalAmount">
                                                     Total Amount
                                                 </StyledTableCell>

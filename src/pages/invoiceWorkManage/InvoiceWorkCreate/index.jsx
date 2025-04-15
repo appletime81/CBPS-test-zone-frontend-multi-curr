@@ -429,7 +429,7 @@ const InvoiceWorkManage = () => {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
                 },
                 body: JSON.stringify(dataInfo)
             })
@@ -517,7 +517,13 @@ const InvoiceWorkManage = () => {
     };
 
     const getBmStoneList = (api) => {
-        fetch(api, { method: 'GET' })
+        fetch(api, {
+            method: 'GET',
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 if (Array.isArray(data)) {
@@ -588,7 +594,7 @@ const InvoiceWorkManage = () => {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
                 },
                 body: JSON.stringify({
                     SubmarineCable: submarineCable,

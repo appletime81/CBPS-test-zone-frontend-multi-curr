@@ -52,9 +52,9 @@ const CreateJournal = () => {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify(tmpArray),
+            body: JSON.stringify(tmpArray)
         })
             .then((res) => res.json())
             .then((data) => {
@@ -67,9 +67,9 @@ const CreateJournal = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -77,7 +77,7 @@ const CreateJournal = () => {
     const a11yProps = (index) => {
         return {
             id: `simple-tab-${index}`,
-            'aria-controls': `simple-tabpanel-${index}`,
+            'aria-controls': `simple-tabpanel-${index}`
         };
     };
 
@@ -108,11 +108,7 @@ const CreateJournal = () => {
                 />
             </Grid>
             <Grid item xs={12}>
-                <MainCard
-                    title={`${
-                        value === 0 ? '尚未立帳' : value === 1 ? '已立帳' : '已作廢'
-                    }發票資料列表`}
-                >
+                <MainCard title={`${value === 0 ? '尚未立帳' : value === 1 ? '已立帳' : '已作廢'}發票資料列表`}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <Tabs value={value} onChange={handleChange}>
                             <Tab label="尚未立帳" {...a11yProps(0)} />

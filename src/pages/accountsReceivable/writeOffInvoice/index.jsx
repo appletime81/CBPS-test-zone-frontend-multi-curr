@@ -25,17 +25,18 @@ const WriteOffInvoice = () => {
     const a11yProps = (index) => {
         return {
             id: `simple-tab-${index}`,
-            'aria-controls': `simple-tabpanel-${index}`,
+            'aria-controls': `simple-tabpanel-${index}`
         };
     };
 
     const [listInfo, setListInfo] = useState([]);
     const writeOffInitQuery = () => {
-        let tmpQuery =
-            queryToDecutBill + (value === 0 ? '/Status=TO_WRITEOFF' : '/Status=COMPLETE');
+        let tmpQuery = queryToDecutBill + (value === 0 ? '/Status=TO_WRITEOFF' : '/Status=COMPLETE');
         fetch(tmpQuery, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {
@@ -48,9 +49,9 @@ const WriteOffInvoice = () => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'info',
-                                message: '查無資料',
-                            },
-                        }),
+                                message: '查無資料'
+                            }
+                        })
                     );
                 }
             })
@@ -60,9 +61,9 @@ const WriteOffInvoice = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -81,10 +82,7 @@ const WriteOffInvoice = () => {
                         </Tabs>
                     </Box>
                     <CustomTabPanel value={value} index={0}>
-                        <ToWriteOffDataList
-                            listInfo={listInfo}
-                            writeOffInitQuery={writeOffInitQuery}
-                        />
+                        <ToWriteOffDataList listInfo={listInfo} writeOffInitQuery={writeOffInitQuery} />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={1}>
                         <WriteOffedDataList listInfo={listInfo} />

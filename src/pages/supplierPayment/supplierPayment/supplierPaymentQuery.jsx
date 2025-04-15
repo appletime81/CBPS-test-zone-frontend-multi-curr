@@ -73,7 +73,9 @@ const SupplierPaymentQuery = ({ setListInfo, queryApi, value }) => {
         queryApi.current = tmpQuery;
         fetch(tmpQuery, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {
@@ -102,7 +104,9 @@ const SupplierPaymentQuery = ({ setListInfo, queryApi, value }) => {
     useEffect(() => {
         fetch(supplierNameDropDownUnique, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {
@@ -122,7 +126,12 @@ const SupplierPaymentQuery = ({ setListInfo, queryApi, value }) => {
                 );
             });
         //海纜名稱
-        fetch(submarineCableInfoList, { method: 'GET' })
+        fetch(submarineCableInfoList, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 setSubmarineCableList(data);
@@ -142,7 +151,7 @@ const SupplierPaymentQuery = ({ setListInfo, queryApi, value }) => {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
             body: JSON.stringify({})
         })

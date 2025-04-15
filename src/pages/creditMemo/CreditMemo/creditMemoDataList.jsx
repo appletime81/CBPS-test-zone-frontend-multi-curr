@@ -24,13 +24,13 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
         // backgroundColor: theme.palette.common.gary,
         color: theme.palette.common.black,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
+        paddingBottom: '0.2rem'
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
-    },
+        paddingBottom: '0.2rem'
+    }
 }));
 
 const CreditBalanceDataList = ({ listInfo }) => {
@@ -53,9 +53,9 @@ const CreditBalanceDataList = ({ listInfo }) => {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify(tmpObject),
+            body: JSON.stringify(tmpObject)
         })
             .then((res) => {
                 if (!res.ok) {
@@ -96,9 +96,9 @@ const CreditBalanceDataList = ({ listInfo }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '產製失敗',
-                        },
-                    }),
+                            message: '產製失敗'
+                        }
+                    })
                 );
                 // 处理错误
             });
@@ -112,8 +112,8 @@ const CreditBalanceDataList = ({ listInfo }) => {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-            },
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => {
                 if (!res.ok) {
@@ -154,9 +154,9 @@ const CreditBalanceDataList = ({ listInfo }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '尚未上傳檔案',
-                        },
-                    }),
+                            message: '尚未上傳檔案'
+                        }
+                    })
                 );
                 // 处理错误
             });
@@ -164,11 +164,7 @@ const CreditBalanceDataList = ({ listInfo }) => {
 
     return (
         <>
-            <CreditMemoUpload
-                isUploadOpen={isUploadOpen}
-                handleUploadClose={handleUploadClose}
-                itemID={itemID.current}
-            />
+            <CreditMemoUpload isUploadOpen={isUploadOpen} handleUploadClose={handleUploadClose} itemID={itemID.current} />
             <Grid container spacing={1}>
                 <Grid item xs={12}>
                     <TableContainer component={Paper} sx={{ maxHeight: 350 }}>
@@ -191,30 +187,16 @@ const CreditBalanceDataList = ({ listInfo }) => {
                                         <TableRow
                                             key={row.CNNo + id}
                                             sx={{
-                                                '&:last-child td, &:last-child th': { border: 0 },
+                                                '&:last-child td, &:last-child th': { border: 0 }
                                             }}
                                         >
-                                            <StyledTableCell align="center">
-                                                {id + 1}
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                {row.CMNo}
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                {row.SubmarineCable}
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                {row.WorkTitle}
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                {row.PartyName}
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                {dayjs(row.LastIssueDate).format('YYYY/MM/DD')}
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                {row.Note}
-                                            </StyledTableCell>
+                                            <StyledTableCell align="center">{id + 1}</StyledTableCell>
+                                            <StyledTableCell align="center">{row.CMNo}</StyledTableCell>
+                                            <StyledTableCell align="center">{row.SubmarineCable}</StyledTableCell>
+                                            <StyledTableCell align="center">{row.WorkTitle}</StyledTableCell>
+                                            <StyledTableCell align="center">{row.PartyName}</StyledTableCell>
+                                            <StyledTableCell align="center">{dayjs(row.LastIssueDate).format('YYYY/MM/DD')}</StyledTableCell>
+                                            <StyledTableCell align="center">{row.Note}</StyledTableCell>
                                             <StyledTableCell align="center">
                                                 <Box
                                                     sx={{
@@ -225,10 +207,10 @@ const CreditBalanceDataList = ({ listInfo }) => {
                                                                 sm: 0.2,
                                                                 md: 0.2,
                                                                 lg: 0.2,
-                                                                xl: 1,
+                                                                xl: 1
                                                             },
-                                                            p: 0,
-                                                        },
+                                                            p: 0
+                                                        }
                                                     }}
                                                 >
                                                     <Button

@@ -9,14 +9,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
-import {
-    suppliers,
-    supplierNameList,
-    deleteSuppliers,
-    editSuppliers,
-    submarineCableInfoList,
-    getWorkTitle,
-} from 'components/apis.jsx';
+import { suppliers, supplierNameList, deleteSuppliers, editSuppliers, submarineCableInfoList, getWorkTitle } from 'components/apis.jsx';
 
 // redux
 import { useDispatch } from 'react-redux';
@@ -70,20 +63,20 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
             color: theme.palette.common.black,
             paddingTop: '0rem',
             paddingBottom: '0rem',
-            fontSize: '0.7rem',
+            fontSize: '0.7rem'
         },
         [`&.${tableCellClasses.body}`]: {
             paddingTop: '0.1rem',
             paddingBottom: '0.1rem',
-            fontSize: '0.7rem',
-        },
+            fontSize: '0.7rem'
+        }
     }));
 
     const columns1 = [
         { id: '海纜名稱', label: '海纜名稱', align: 'center' },
         { id: '海纜作業', label: '海纜作業', align: 'center' },
         { id: '供應商簡稱', label: '供應商簡稱', align: 'center' },
-        { id: '供應商全名', label: '供應商全名', align: 'center' },
+        { id: '供應商全名', label: '供應商全名', align: 'center' }
     ];
 
     const columns2 = [
@@ -91,15 +84,15 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
             id: 'Bank Name',
             label: 'Bank Name',
 
-            align: 'center',
+            align: 'center'
         },
         { id: 'Branch Name', label: 'Branch Name', align: 'center' },
         {
             id: 'Bank Address',
             label: 'Bank Address',
 
-            align: 'center',
-        },
+            align: 'center'
+        }
     ];
 
     const columns3 = [
@@ -107,39 +100,39 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
             id: 'A/C Name',
             label: 'A/C Name',
 
-            align: 'center',
+            align: 'center'
         },
         { id: 'A/C No.', label: 'A/C No.', align: 'center' },
         {
             id: 'Saving A/C No.',
             label: 'Saving A/C No.',
 
-            align: 'center',
+            align: 'center'
         },
         {
             id: 'ACH No',
             label: 'ACH No',
 
-            align: 'center',
+            align: 'center'
         },
         {
             id: 'Wire/Routing',
             label: 'Wire/Routing',
 
-            align: 'center',
+            align: 'center'
         },
         {
             id: 'SWIFT Code',
             label: 'SWIFT Code',
 
-            align: 'center',
+            align: 'center'
         },
         {
             id: 'IBAN',
             label: 'IBAN',
 
-            align: 'center',
-        },
+            align: 'center'
+        }
     ];
 
     const infoInit = () => {
@@ -176,7 +169,12 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
     };
 
     const querySuppliersInfo = () => {
-        fetch(supplierNameList, { method: 'GET' })
+        fetch(supplierNameList, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 console.log('取得Suppliers資料成功=>', data);
@@ -190,9 +188,9 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -204,9 +202,9 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入海纜名稱',
-                    },
-                }),
+                        message: '請輸入海纜名稱'
+                    }
+                })
             );
             return false;
         }
@@ -216,9 +214,9 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入海纜作業',
-                    },
-                }),
+                        message: '請輸入海纜作業'
+                    }
+                })
             );
             return false;
         }
@@ -228,9 +226,9 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入供應商簡稱',
-                    },
-                }),
+                        message: '請輸入供應商簡稱'
+                    }
+                })
             );
             return false;
         }
@@ -240,9 +238,9 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入供應商全名',
-                    },
-                }),
+                        message: '請輸入供應商全名'
+                    }
+                })
             );
             return false;
         }
@@ -265,15 +263,15 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                 ACHNo: aCHNo,
                 WireRouting: wireRouting,
                 SubmarineCable: submarineCable,
-                WorkTitle: workTitle,
+                WorkTitle: workTitle
             };
             fetch(suppliers, {
                 method: 'POST',
                 body: JSON.stringify(tmpArray),
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-                },
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+                }
             })
                 .then((res) => res.json())
                 .then(() => {
@@ -282,9 +280,9 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'success',
-                                message: '新增供應商資料成功',
-                            },
-                        }),
+                                message: '新增供應商資料成功'
+                            }
+                        })
                     );
                     infoInit();
                     querySuppliersInfo();
@@ -295,9 +293,9 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
         }
@@ -309,8 +307,8 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
             body: JSON.stringify(row),
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-            },
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then(() => {
@@ -319,9 +317,9 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'success',
-                            message: '刪除供應商資料成功',
-                        },
-                    }),
+                            message: '刪除供應商資料成功'
+                        }
+                    })
                 );
                 querySuppliersInfo();
             })
@@ -331,9 +329,9 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -363,9 +361,9 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入海纜名稱',
-                    },
-                }),
+                        message: '請輸入海纜名稱'
+                    }
+                })
             );
             return false;
         }
@@ -375,9 +373,9 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入海纜作業',
-                    },
-                }),
+                        message: '請輸入海纜作業'
+                    }
+                })
             );
             return false;
         }
@@ -387,9 +385,9 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入供應商簡稱',
-                    },
-                }),
+                        message: '請輸入供應商簡稱'
+                    }
+                })
             );
             return false;
         }
@@ -399,9 +397,9 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入供應商全名',
-                    },
-                }),
+                        message: '請輸入供應商全名'
+                    }
+                })
             );
             return false;
         }
@@ -425,15 +423,15 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                 ACHNo: aCHNoEdit,
                 WireRouting: wireRoutingEdit,
                 SubmarineCable: submarineCableEdit,
-                WorkTitle: workTitleEdit,
+                WorkTitle: workTitleEdit
             };
             fetch(editSuppliers, {
                 method: 'POST',
                 body: JSON.stringify(tmpArray),
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-                },
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+                }
             })
                 .then((res) => res.json())
                 .then(() => {
@@ -442,9 +440,9 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'success',
-                                message: '更新供應商資料成功',
-                            },
-                        }),
+                                message: '更新供應商資料成功'
+                            }
+                        })
                     );
                     editInfoInit();
                     querySuppliersInfo();
@@ -455,9 +453,9 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
         }
@@ -465,7 +463,12 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
 
     useEffect(() => {
         //海纜名稱
-        fetch(submarineCableInfoList, { method: 'GET' })
+        fetch(submarineCableInfoList, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 setSubmarineCableList(data);
@@ -476,18 +479,18 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         fetch(getWorkTitle, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify({}),
+            body: JSON.stringify({})
         })
             .then((res) => res.json())
             .then((data) => {
@@ -504,9 +507,9 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     }, []);
@@ -529,11 +532,7 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                                                     setIsColumn1Open(!isColumn1Open);
                                                 }}
                                             >
-                                                {isColumn1Open ? (
-                                                    <DoNotDisturbOnIcon />
-                                                ) : (
-                                                    <AddCircleIcon />
-                                                )}
+                                                {isColumn1Open ? <DoNotDisturbOnIcon /> : <AddCircleIcon />}
                                             </Button>
                                         ) : null}
                                         {column.label}
@@ -564,11 +563,7 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                                                     setIsColumn2Open(!isColumn2Open);
                                                 }}
                                             >
-                                                {isColumn2Open ? (
-                                                    <DoNotDisturbOnIcon />
-                                                ) : (
-                                                    <AddCircleIcon />
-                                                )}
+                                                {isColumn2Open ? <DoNotDisturbOnIcon /> : <AddCircleIcon />}
                                             </Button>
                                         ) : null}
                                         {column.label}
@@ -599,11 +594,7 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                                                     setIsColumn3Open(!isColumn3Open);
                                                 }}
                                             >
-                                                {isColumn3Open ? (
-                                                    <DoNotDisturbOnIcon />
-                                                ) : (
-                                                    <AddCircleIcon />
-                                                )}
+                                                {isColumn3Open ? <DoNotDisturbOnIcon /> : <AddCircleIcon />}
                                             </Button>
                                         ) : null}
                                         {column.label}
@@ -632,14 +623,10 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                                 sx={{
                                     display: 'flex',
                                     justifyContent: 'center',
-                                    '& button': { mx: { md: 0.6, lg: 1, xl: 1.8 }, p: 0 },
+                                    '& button': { mx: { md: 0.6, lg: 1, xl: 1.8 }, p: 0 }
                                 }}
                             >
-                                <Button
-                                    color="success"
-                                    variant="outlined"
-                                    onClick={addSupplierInfo}
-                                >
+                                <Button color="success" variant="outlined" onClick={addSupplierInfo}>
                                     新增
                                 </Button>
                             </Box>
@@ -648,11 +635,7 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                         {isColumn1Open ? (
                             <>
                                 <TableCell align="center">
-                                    <Select
-                                        size="small"
-                                        value={submarineCable}
-                                        onChange={(e) => setSubmarineCable(e.target.value)}
-                                    >
+                                    <Select size="small" value={submarineCable} onChange={(e) => setSubmarineCable(e.target.value)}>
                                         {submarineCableList.map((i) => (
                                             <MenuItem key={i.CableName} value={i.CableName}>
                                                 {i.CableName}
@@ -661,12 +644,7 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                                     </Select>
                                 </TableCell>
                                 <TableCell align="center">
-                                    <Select
-                                        size="small"
-                                        value={workTitle}
-                                        label="填寫海纜作業"
-                                        onChange={(e) => setWorkTitle(e.target.value)}
-                                    >
+                                    <Select size="small" value={workTitle} label="填寫海纜作業" onChange={(e) => setWorkTitle(e.target.value)}>
                                         {workTitleList.map((i) => (
                                             <MenuItem key={i.Title} value={i.Title}>
                                                 {i.Title}
@@ -697,11 +675,7 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                             </>
                         ) : (
                             <TableCell align="center">
-                                <Select
-                                    size="small"
-                                    value={submarineCable}
-                                    onChange={(e) => setSubmarineCable(e.target.value)}
-                                >
+                                <Select size="small" value={submarineCable} onChange={(e) => setSubmarineCable(e.target.value)}>
                                     {submarineCableList.map((i) => (
                                         <MenuItem key={i.CableName} value={i.CableName}>
                                             {i.CableName}
@@ -766,9 +740,7 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                                     <TextField
                                         size="small"
                                         value={bankAcctNo}
-                                        disabled={
-                                            savingbankAcctNo?.length > 0 || !!savingbankAcctNo
-                                        }
+                                        disabled={savingbankAcctNo?.length > 0 || !!savingbankAcctNo}
                                         onChange={(e) => {
                                             setBankAcctNo(e.target.value);
                                         }}
@@ -835,10 +807,7 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                     </TableRow>
                     {infoList?.map((row, id) => {
                         return (
-                            <TableRow
-                                key={row.SubmarineCable + id}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
+                            <TableRow key={row.SubmarineCable + id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                 {row.SupplierID !== supplierID.current ? (
                                     <>
                                         <StyledTableCell align="center">
@@ -848,8 +817,8 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                                                     justifyContent: 'center',
                                                     '& button': {
                                                         mx: { md: 0.1, lg: 0.1, xl: 0.2 },
-                                                        p: 0,
-                                                    },
+                                                        p: 0
+                                                    }
                                                 }}
                                             >
                                                 <Button
@@ -875,69 +844,35 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                                         <StyledTableCell align="center">{id + 1}</StyledTableCell>
                                         {isColumn1Open ? (
                                             <>
-                                                <StyledTableCell align="center">
-                                                    {row.SubmarineCable}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    {row.WorkTitle}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    {row.SupplierName}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    {row.CompanyName}
-                                                </StyledTableCell>
+                                                <StyledTableCell align="center">{row.SubmarineCable}</StyledTableCell>
+                                                <StyledTableCell align="center">{row.WorkTitle}</StyledTableCell>
+                                                <StyledTableCell align="center">{row.SupplierName}</StyledTableCell>
+                                                <StyledTableCell align="center">{row.CompanyName}</StyledTableCell>
                                             </>
                                         ) : (
-                                            <StyledTableCell align="center">
-                                                {row.SubmarineCable}
-                                            </StyledTableCell>
+                                            <StyledTableCell align="center">{row.SubmarineCable}</StyledTableCell>
                                         )}
                                         {isColumn2Open ? (
                                             <>
-                                                <StyledTableCell align="center">
-                                                    {row.BankName}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    {row.Branch}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    {row.BankAddress}
-                                                </StyledTableCell>
+                                                <StyledTableCell align="center">{row.BankName}</StyledTableCell>
+                                                <StyledTableCell align="center">{row.Branch}</StyledTableCell>
+                                                <StyledTableCell align="center">{row.BankAddress}</StyledTableCell>
                                             </>
                                         ) : (
-                                            <StyledTableCell align="center">
-                                                {row.BankName}
-                                            </StyledTableCell>
+                                            <StyledTableCell align="center">{row.BankName}</StyledTableCell>
                                         )}
                                         {isColumn3Open ? (
                                             <>
-                                                <StyledTableCell align="center">
-                                                    {row.BankAcctName}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    {row.BankAcctNo}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    {row.SavingAcctNo}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    {row.ACHNo}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    {row.WireRouting}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    {row.SWIFTCode}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    {row.IBAN}
-                                                </StyledTableCell>
+                                                <StyledTableCell align="center">{row.BankAcctName}</StyledTableCell>
+                                                <StyledTableCell align="center">{row.BankAcctNo}</StyledTableCell>
+                                                <StyledTableCell align="center">{row.SavingAcctNo}</StyledTableCell>
+                                                <StyledTableCell align="center">{row.ACHNo}</StyledTableCell>
+                                                <StyledTableCell align="center">{row.WireRouting}</StyledTableCell>
+                                                <StyledTableCell align="center">{row.SWIFTCode}</StyledTableCell>
+                                                <StyledTableCell align="center">{row.IBAN}</StyledTableCell>
                                             </>
                                         ) : (
-                                            <StyledTableCell align="center">
-                                                {row.BankAcctName}
-                                            </StyledTableCell>
+                                            <StyledTableCell align="center">{row.BankAcctName}</StyledTableCell>
                                         )}
                                     </>
                                 ) : (
@@ -949,8 +884,8 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                                                     justifyContent: 'center',
                                                     '& button': {
                                                         mx: { md: 0.1, lg: 0.1, xl: 1 },
-                                                        p: 0,
-                                                    },
+                                                        p: 0
+                                                    }
                                                 }}
                                             >
                                                 <Button
@@ -977,38 +912,18 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                                         {isColumn1Open ? (
                                             <>
                                                 <TableCell align="center">
-                                                    <Select
-                                                        size="small"
-                                                        value={submarineCableEdit}
-                                                        onChange={(e) =>
-                                                            setSubmarineCableEdit(e.target.value)
-                                                        }
-                                                    >
+                                                    <Select size="small" value={submarineCableEdit} onChange={(e) => setSubmarineCableEdit(e.target.value)}>
                                                         {submarineCableList.map((i) => (
-                                                            <MenuItem
-                                                                key={i.CableName}
-                                                                value={i.CableName}
-                                                            >
+                                                            <MenuItem key={i.CableName} value={i.CableName}>
                                                                 {i.CableName}
                                                             </MenuItem>
                                                         ))}
                                                     </Select>
                                                 </TableCell>
                                                 <TableCell align="center">
-                                                    <Select
-                                                        size="small"
-                                                        value={workTitleEdit}
-                                                        label="填寫海纜作業"
-                                                        onChange={(e) =>
-                                                            setWorkTitleEdit(e.target.value)
-                                                        }
-                                                    >
-                                                        <MenuItem value={'Upgrade'}>
-                                                            Upgrade
-                                                        </MenuItem>
-                                                        <MenuItem value={'Construction'}>
-                                                            Construction
-                                                        </MenuItem>
+                                                    <Select size="small" value={workTitleEdit} label="填寫海纜作業" onChange={(e) => setWorkTitleEdit(e.target.value)}>
+                                                        <MenuItem value={'Upgrade'}>Upgrade</MenuItem>
+                                                        <MenuItem value={'Construction'}>Construction</MenuItem>
                                                         <MenuItem value={'O&M'}>O&M</MenuItem>
                                                     </Select>
                                                 </TableCell>
@@ -1035,18 +950,9 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                                             </>
                                         ) : (
                                             <TableCell align="center">
-                                                <Select
-                                                    size="small"
-                                                    value={submarineCableEdit}
-                                                    onChange={(e) =>
-                                                        setSubmarineCableEdit(e.target.value)
-                                                    }
-                                                >
+                                                <Select size="small" value={submarineCableEdit} onChange={(e) => setSubmarineCableEdit(e.target.value)}>
                                                     {submarineCableList.map((i) => (
-                                                        <MenuItem
-                                                            key={i.CableName}
-                                                            value={i.CableName}
-                                                        >
+                                                        <MenuItem key={i.CableName} value={i.CableName}>
                                                             {i.CableName}
                                                         </MenuItem>
                                                     ))}
@@ -1109,10 +1015,7 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                                                     <TextField
                                                         size="small"
                                                         value={bankAcctNoEdit}
-                                                        disabled={
-                                                            savingBankAcctNoEdit?.length > 0 ||
-                                                            !!savingBankAcctNoEdit
-                                                        }
+                                                        disabled={savingBankAcctNoEdit?.length > 0 || !!savingBankAcctNoEdit}
                                                         onChange={(e) => {
                                                             setBankAcctNoEdit(e.target.value);
                                                         }}
@@ -1122,10 +1025,7 @@ const SupplierDataList = ({ infoList, setInfoList }) => {
                                                     <TextField
                                                         size="small"
                                                         value={savingBankAcctNoEdit}
-                                                        disabled={
-                                                            bankAcctNoEdit?.length > 0 ||
-                                                            !!bankAcctNoEdit
-                                                        }
+                                                        disabled={bankAcctNoEdit?.length > 0 || !!bankAcctNoEdit}
                                                         onChange={(e) => {
                                                             setSavingBankAcctNoEdit(e.target.value);
                                                         }}

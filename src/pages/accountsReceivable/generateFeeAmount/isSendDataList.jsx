@@ -63,7 +63,10 @@ const IsSendDataList = ({ dataList, receivableQuery }) => {
         let tmpApi = downBM + '/' + billMasterID;
         const tmpArray = url.split('/');
         fetch(tmpApi, {
-            method: 'GET'
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => {
                 return res.blob();
@@ -106,11 +109,7 @@ const IsSendDataList = ({ dataList, receivableQuery }) => {
                 editBillingNo={editBillingNo.current}
                 editBillMasterID={editBillMasterID.current}
             />
-            <SignedDataWork
-                isDeductedWorkOpen={isDeductedWorkOpen}
-                handleDeductedClose={handleDeductedClose}
-                billDetailInfo={billDetailInfo.current}
-            />
+            <SignedDataWork isDeductedWorkOpen={isDeductedWorkOpen} handleDeductedClose={handleDeductedClose} billDetailInfo={billDetailInfo.current} />
             <TableContainer component={Paper} sx={{ maxHeight: 350 }}>
                 <Table sx={{ minWidth: 300 }} stickyHeader aria-label="sticky table">
                     <TableHead>
@@ -130,10 +129,7 @@ const IsSendDataList = ({ dataList, receivableQuery }) => {
                     <TableBody>
                         {dataList?.map((row, id) => {
                             return (
-                                <TableRow
-                                    key={row.BillMaster?.BillingNo + row.BillMaster?.FeeAmountSum}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
+                                <TableRow key={row.BillMaster?.BillingNo + row.BillMaster?.FeeAmountSum} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <StyledTableCell align="center">{id + 1}</StyledTableCell>
                                     <StyledTableCell align="center">{row.BillMaster.PartyName}</StyledTableCell>
                                     <StyledTableCell align="center">{row.BillMaster.SubmarineCable}</StyledTableCell>

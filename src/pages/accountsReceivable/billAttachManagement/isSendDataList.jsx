@@ -20,24 +20,20 @@ import dayjs from 'dayjs';
 import { useDispatch } from 'react-redux';
 import { setMessageStateOpen, setIsLoading } from 'store/reducers/dropdown';
 
-import {
-    downloadBillMaster,
-    downloadBillMasterAttachment,
-    billMasterAndAttachment,
-} from 'components/apis.jsx';
+import { downloadBillMaster, downloadBillMasterAttachment, billMasterAndAttachment } from 'components/apis.jsx';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
         color: theme.palette.common.black,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
+        paddingBottom: '0.2rem'
     },
     [`&.${tableCellClasses.body}.totalAmount`]: {
         fontSize: 14,
         paddingTop: '0.2rem',
         paddingBottom: '0.2rem',
-        backgroundColor: '#CFD8DC',
-    },
+        backgroundColor: '#CFD8DC'
+    }
 }));
 
 const IsSendDataList = ({ listInfo }) => {
@@ -79,8 +75,8 @@ const IsSendDataList = ({ listInfo }) => {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-            },
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => {
                 if (!res.ok) {
@@ -120,9 +116,9 @@ const IsSendDataList = ({ listInfo }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '尚未上傳檔案',
-                        },
-                    }),
+                            message: '尚未上傳檔案'
+                        }
+                    })
                 );
                 // 处理错误
             });
@@ -136,8 +132,8 @@ const IsSendDataList = ({ listInfo }) => {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-            },
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => {
                 // 解析 content-disposition 来获取文件名
@@ -174,9 +170,9 @@ const IsSendDataList = ({ listInfo }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '尚未上傳檔案',
-                        },
-                    }),
+                            message: '尚未上傳檔案'
+                        }
+                    })
                 );
                 // 处理错误
             });
@@ -188,8 +184,8 @@ const IsSendDataList = ({ listInfo }) => {
         fetch(tmpApi, {
             method: 'GET',
             headers: {
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-            },
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {
@@ -199,9 +195,9 @@ const IsSendDataList = ({ listInfo }) => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'success',
-                                message: '寄信成功',
-                            },
-                        }),
+                                message: '寄信成功'
+                            }
+                        })
                     );
                 } else {
                     dispatch(
@@ -209,9 +205,9 @@ const IsSendDataList = ({ listInfo }) => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: data.message,
-                            },
-                        }),
+                                message: data.message
+                            }
+                        })
                     );
                 }
                 dispatch(setIsLoading({ isLoading: false }));
@@ -222,31 +218,18 @@ const IsSendDataList = ({ listInfo }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
 
     return (
         <>
-            <BillDetail
-                modifyItem={modifyItem}
-                isDetailOpen={isDetailOpen}
-                isDetailClose={isDetailClose}
-                codeType={codeType.current}
-            />
-            <BillUpload
-                isUploadOpen={isUploadOpen}
-                handleUploadClose={handleUploadClose}
-                itemID={itemID.current}
-            />
-            <AttachmentUpload
-                isAttachUploadOpen={isAttachUploadOpen}
-                handleAttachUploadClose={handleAttachUploadClose}
-                itemID={itemID.current}
-            />
+            <BillDetail modifyItem={modifyItem} isDetailOpen={isDetailOpen} isDetailClose={isDetailClose} codeType={codeType.current} />
+            <BillUpload isUploadOpen={isUploadOpen} handleUploadClose={handleUploadClose} itemID={itemID.current} />
+            <AttachmentUpload isAttachUploadOpen={isAttachUploadOpen} handleAttachUploadClose={handleAttachUploadClose} itemID={itemID.current} />
             <TableContainer component={Paper} sx={{ maxHeight: window.screen.height * 0.5 }}>
                 <Table sx={{ minWidth: 300 }} stickyHeader>
                     <TableHead>
@@ -269,42 +252,17 @@ const IsSendDataList = ({ listInfo }) => {
                     <TableBody>
                         {listInfo?.map((row, id) => {
                             return (
-                                <TableRow
-                                    key={
-                                        row.BillMaster?.BillingNo +
-                                        row.BillMaster?.FeeAmountSum +
-                                        id
-                                    }
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
+                                <TableRow key={row.BillMaster?.BillingNo + row.BillMaster?.FeeAmountSum + id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <StyledTableCell align="center">{id + 1}</StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.BillMaster.PartyName}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.BillMaster.SubmarineCable}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.BillMaster.WorkTitle}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.BillMaster.BillingNo}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {dayjs(row.BillMaster.IssueDate).format('YYYY/MM/DD')}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {dayjs(row.BillMaster.DueDate).format('YYYY/MM/DD')}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.BillDetail ? row.BillDetail.length : 0}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {handleNumber(row.BillMaster.FeeAmountSum)}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.BillMaster.Code}
-                                    </StyledTableCell>
+                                    <StyledTableCell align="center">{row.BillMaster.PartyName}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.BillMaster.SubmarineCable}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.BillMaster.WorkTitle}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.BillMaster.BillingNo}</StyledTableCell>
+                                    <StyledTableCell align="center">{dayjs(row.BillMaster.IssueDate).format('YYYY/MM/DD')}</StyledTableCell>
+                                    <StyledTableCell align="center">{dayjs(row.BillMaster.DueDate).format('YYYY/MM/DD')}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.BillDetail ? row.BillDetail.length : 0}</StyledTableCell>
+                                    <StyledTableCell align="center">{handleNumber(row.BillMaster.FeeAmountSum)}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.BillMaster.Code}</StyledTableCell>
                                     <StyledTableCell align="center">是</StyledTableCell>
                                     <StyledTableCell align="center">
                                         {row.BillMaster.Status === 'SIGNED'
@@ -327,8 +285,8 @@ const IsSendDataList = ({ listInfo }) => {
                                                 justifyContent: 'center',
                                                 '& button': {
                                                     mx: { sm: 0.2, md: 0.2, lg: 0.2, xl: 1 },
-                                                    p: 0,
-                                                },
+                                                    p: 0
+                                                }
                                             }}
                                         >
                                             <Button
@@ -358,9 +316,7 @@ const IsSendDataList = ({ listInfo }) => {
                                                 size="small"
                                                 variant="outlined"
                                                 onClick={() => {
-                                                    handleAttachUploadOpen(
-                                                        row.BillMaster?.BillMasterID,
-                                                    );
+                                                    handleAttachUploadOpen(row.BillMaster?.BillMasterID);
                                                 }}
                                             >
                                                 上傳附件
@@ -380,9 +336,7 @@ const IsSendDataList = ({ listInfo }) => {
                                                 size="small"
                                                 variant="outlined"
                                                 onClick={() => {
-                                                    handleAttacDownload(
-                                                        row.BillMaster?.BillMasterID,
-                                                    );
+                                                    handleAttacDownload(row.BillMaster?.BillMasterID);
                                                 }}
                                             >
                                                 下載附件

@@ -1,23 +1,9 @@
 import { useEffect, useState } from 'react';
-import {
-    Typography,
-    Grid,
-    Button,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    Box,
-} from '@mui/material';
+import { Typography, Grid, Button, FormControl, InputLabel, Select, MenuItem, Box } from '@mui/material';
 
 // project import
 import MainCard from 'components/MainCard';
-import {
-    supplierNameDropDownUnique,
-    submarineCableInfoList,
-    getPayMasterPayStatement,
-    getWorkTitle,
-} from 'components/apis';
+import { supplierNameDropDownUnique, submarineCableInfoList, getPayMasterPayStatement, getWorkTitle } from 'components/apis';
 
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
@@ -67,18 +53,16 @@ const SupplierPaymentQuery = ({ setListInfo }) => {
         if (paidDate[0] || paidDate[1]) {
             tmpQuery.IssueDate = {
                 start: paidDate[0] ? dayjs(paidDate[0]).format('YYYYMMDD') : '19110101',
-                end: paidDate[1]
-                    ? dayjs(paidDate[1]).format('YYYYMMDD')
-                    : dayjs(new Date()).format('YYYYMMDD'),
+                end: paidDate[1] ? dayjs(paidDate[1]).format('YYYYMMDD') : dayjs(new Date()).format('YYYYMMDD')
             };
         }
         fetch(getPayMasterPayStatement, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify(tmpQuery),
+            body: JSON.stringify(tmpQuery)
         })
             .then((res) => res.json())
             .then((data) => {
@@ -93,9 +77,9 @@ const SupplierPaymentQuery = ({ setListInfo }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -103,7 +87,9 @@ const SupplierPaymentQuery = ({ setListInfo }) => {
     useEffect(() => {
         fetch(supplierNameDropDownUnique, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {
@@ -117,13 +103,18 @@ const SupplierPaymentQuery = ({ setListInfo }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         //海纜名稱
-        fetch(submarineCableInfoList, { method: 'GET' })
+        fetch(submarineCableInfoList, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 setSubmarineCableList(data);
@@ -134,18 +125,18 @@ const SupplierPaymentQuery = ({ setListInfo }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         fetch(getWorkTitle, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify({}),
+            body: JSON.stringify({})
         })
             .then((res) => res.json())
             .then((data) => {
@@ -162,9 +153,9 @@ const SupplierPaymentQuery = ({ setListInfo }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     }, []);
@@ -178,7 +169,7 @@ const SupplierPaymentQuery = ({ setListInfo }) => {
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                            ml: { lg: '0.5rem', xl: '1.5rem' }
                         }}
                     >
                         海纜名稱：
@@ -187,12 +178,7 @@ const SupplierPaymentQuery = ({ setListInfo }) => {
                 <Grid item lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇海纜名稱</InputLabel>
-                        <Select
-                            value={submarineCable}
-                            label="海纜名稱"
-                            size="small"
-                            onChange={(e) => setSubmarineCable(e.target.value)}
-                        >
+                        <Select value={submarineCable} label="海纜名稱" size="small" onChange={(e) => setSubmarineCable(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {submarineCableList.map((i) => (
                                 <MenuItem key={i.CableName} value={i.CableName}>
@@ -207,7 +193,7 @@ const SupplierPaymentQuery = ({ setListInfo }) => {
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                            ml: { lg: '0.5rem', xl: '1.5rem' }
                         }}
                     >
                         海纜作業：
@@ -216,11 +202,7 @@ const SupplierPaymentQuery = ({ setListInfo }) => {
                 <Grid item lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇海纜作業</InputLabel>
-                        <Select
-                            value={workTitle}
-                            label="海纜作業"
-                            onChange={(e) => setWorkTitle(e.target.value)}
-                        >
+                        <Select value={workTitle} label="海纜作業" onChange={(e) => setWorkTitle(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {workTitleList.map((i) => (
                                 <MenuItem key={i.Title} value={i.Title}>
@@ -235,7 +217,7 @@ const SupplierPaymentQuery = ({ setListInfo }) => {
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                            ml: { lg: '0.5rem', xl: '1.5rem' }
                         }}
                     >
                         供應商：
@@ -244,11 +226,7 @@ const SupplierPaymentQuery = ({ setListInfo }) => {
                 <Grid item lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇供應商</InputLabel>
-                        <Select
-                            value={supplierName}
-                            label="供應商"
-                            onChange={(e) => setSupplierName(e.target.value)}
-                        >
+                        <Select value={supplierName} label="供應商" onChange={(e) => setSupplierName(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {supNmList.map((i) => (
                                 <MenuItem key={i} value={i}>
@@ -263,7 +241,7 @@ const SupplierPaymentQuery = ({ setListInfo }) => {
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                            ml: { lg: '0.5rem', xl: '1.5rem' }
                         }}
                     >
                         發票號碼：
@@ -271,14 +249,7 @@ const SupplierPaymentQuery = ({ setListInfo }) => {
                 </Grid>
                 <Grid item lg={2}>
                     <FormControl fullWidth size="small">
-                        <TextField
-                            fullWidth
-                            variant="outlined"
-                            value={invoiceNo}
-                            size="small"
-                            label="填寫發票號碼"
-                            onChange={(e) => setInvoiceNo(e.target.value)}
-                        />
+                        <TextField fullWidth variant="outlined" value={invoiceNo} size="small" label="填寫發票號碼" onChange={(e) => setInvoiceNo(e.target.value)} />
                     </FormControl>
                 </Grid>
                 <Grid item lg={1}>
@@ -286,17 +257,14 @@ const SupplierPaymentQuery = ({ setListInfo }) => {
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                            ml: { lg: '0.5rem', xl: '1.5rem' }
                         }}
                     >
                         付款日期：
                     </Typography>
                 </Grid>
                 <Grid item lg={5}>
-                    <LocalizationProvider
-                        dateAdapter={AdapterDayjs}
-                        localeText={{ start: '起始日', end: '結束日' }}
-                    >
+                    <LocalizationProvider dateAdapter={AdapterDayjs} localeText={{ start: '起始日', end: '結束日' }}>
                         <DateRangePicker
                             inputFormat="YYYY/MM/DD"
                             value={paidDate}

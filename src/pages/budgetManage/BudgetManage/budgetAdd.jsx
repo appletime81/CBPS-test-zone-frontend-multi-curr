@@ -56,7 +56,9 @@ const BudgetAdd = ({ isDialogOpen, handleDialogClose, currencyListInfo, submarin
     const isAddOrEdit = dialogAction === 'Add' || isEditMode;
     const isViewMode = dialogAction === 'View';
     const isDisabled = isEditMode || dataList.length > 0;
-
+    const showError = (message) => {
+        dispatch(setMessageStateOpen({ messageStateOpen: { isOpen: true, severity: 'error', message } }));
+    };
     const initAddInfo = () => {
         if (dataList.length > 0) {
             setBudget_fee_item_seq('');
@@ -85,10 +87,6 @@ const BudgetAdd = ({ isDialogOpen, handleDialogClose, currencyListInfo, submarin
         setCode('');
         setRemark('');
         setDataList([]);
-    };
-
-    const showError = (message) => {
-        dispatch(setMessageStateOpen({ messageStateOpen: { isOpen: true, severity: 'error', message } }));
     };
 
     const infoCheck = () => {
@@ -126,8 +124,8 @@ const BudgetAdd = ({ isDialogOpen, handleDialogClose, currencyListInfo, submarin
                 body: JSON.stringify(bodyData)
             });
             const data = await response.json();
-            if (data.alert_msg) {
-                showError(data.alert_msg || '請洽管理人員');
+            if (data.alert_msg || data.detail) {
+                showError(data.alert_msg || data.detail || '請洽管理人員');
             } else {
                 handleDialogClose();
                 dispatch(setMessageStateOpen({ messageStateOpen: { isOpen: true, severity: 'success', message: method === 'POST' ? '新增成功' : '更新成功' } }));
@@ -140,15 +138,18 @@ const BudgetAdd = ({ isDialogOpen, handleDialogClose, currencyListInfo, submarin
         }
     };
 
-    const addBudgetData = () => {
+    const sendBudgetData = () => {
+        if (dataList.length === 0) {
+            showError('請至少新增一筆資料');
+            return;
+        }
         if (dialogAction === 'Add') {
             handleFetch(addLevelsFromFrontend, 'POST', { levels: Object.fromEntries(dataList.map((item) => [item.budget_fee_item_seq, item])) });
-        }
-    };
-
-    const updateBudgetData = () => {
-        if (dialogAction === 'Edit') {
+        } else if (dialogAction === 'Edit') {
             handleFetch(updateLevels, 'POST', { levels: Object.fromEntries(dataList.map((item) => [item.budget_fee_item_seq, item])) });
+        } else {
+            showError('無效操作');
+            return;
         }
     };
 
@@ -422,16 +423,9 @@ const BudgetAdd = ({ isDialogOpen, handleDialogClose, currencyListInfo, submarin
                 </Grid>
             </DialogContent>
             <DialogActions>
-                {dialogAction === 'Add' ? (
-                    <Button sx={{ mr: '0.05rem' }} variant="contained" onClick={addBudgetData}>
-                        新增
-                    </Button>
-                ) : (
-                    <Button sx={{ mr: '0.05rem' }} variant="contained" onClick={updateBudgetData}>
-                        更新
-                    </Button>
-                )}
-
+                <Button sx={{ mr: '0.05rem' }} variant="contained" onClick={sendBudgetData}>
+                    新增
+                </Button>
                 <Button
                     sx={{ mr: '0.05rem' }}
                     variant="contained"

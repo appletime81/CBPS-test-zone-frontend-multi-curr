@@ -80,7 +80,7 @@ const InvoiceDataList = ({ listInfo, page, setPage }) => {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             }
         })
             .then((res) => {
@@ -138,7 +138,7 @@ const InvoiceDataList = ({ listInfo, page, setPage }) => {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             }
         })
             .then((res) => {

@@ -161,7 +161,7 @@ const LiabilityManage = () => {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
             body: JSON.stringify(tmpArray)
         })
@@ -209,13 +209,26 @@ const LiabilityManage = () => {
     const fetchData = useCallback(async () => {
         try {
             const [parties, workTitles, submarineCables] = await Promise.all([
-                fetch(dropdownmenuParties).then((res) => res.json()),
+                fetch(dropdownmenuParties, {
+                    headers: {
+                        'Content-type': 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+                    }
+                }).then((res) => res.json()),
                 fetch(getWorkTitle, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-type': 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+                    },
                     body: JSON.stringify({})
                 }).then((res) => res.json()),
-                fetch(dropdownmenuSubmarineCable).then((res) => res.json())
+                fetch(dropdownmenuSubmarineCable, {
+                    headers: {
+                        'Content-type': 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+                    }
+                }).then((res) => res.json())
             ]);
             setPartyList(Array.isArray(parties) ? parties : []);
             setWorkTitleList(Array.isArray(workTitles) ? workTitles : []);

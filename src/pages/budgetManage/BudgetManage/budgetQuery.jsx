@@ -30,6 +30,9 @@ const BudgetQuery = ({ setListInfo, submarineCableList, queryApi, workTitleList 
     const initQuery = () => {
         setSubmarineCable('All');
         setWorkTitle('All');
+        setBudget_fee_item_name('');
+        setBudget_fee_item_seq('');
+        setBudget_year(dayjs().startOf('year'));
     };
 
     const fetchData = useCallback(
@@ -62,9 +65,15 @@ const BudgetQuery = ({ setListInfo, submarineCableList, queryApi, workTitleList 
         if (workTitle !== 'All') {
             tmpArray.WorkTitle = workTitle;
         }
-        if (Object.keys(tmpArray).length !== 0) {
-            tmpArray.budget_year = dayjs().startOf('year').format('YYYY');
+        if (budget_fee_item_name !== '') {
+            console.log('budget_fee_item_name=>>', budget_fee_item_name);
+            tmpArray.budget_fee_item_name = budget_fee_item_name;
         }
+        if (bBudget_fee_item_seq !== '') {
+            console.log('bBudget_fee_item_seq=>>', bBudget_fee_item_seq);
+            tmpArray.bBudget_fee_item_seq = bBudget_fee_item_seq;
+        }
+        tmpArray.budget_year = dayjs(budget_year).format('YYYY').toString();
         queryApi.current = tmpArray;
         try {
             const budgetListData = await fetchData(getLevels, 'POST', tmpArray);
@@ -174,7 +183,7 @@ const BudgetQuery = ({ setListInfo, submarineCableList, queryApi, workTitleList 
                             variant="outlined"
                             value={bBudget_fee_item_seq}
                             size="small"
-                            label="填寫發票號碼"
+                            label="填寫項目序號"
                             onChange={(e) => setBudget_fee_item_seq(e.target.value)}
                         />
                     </FormControl>

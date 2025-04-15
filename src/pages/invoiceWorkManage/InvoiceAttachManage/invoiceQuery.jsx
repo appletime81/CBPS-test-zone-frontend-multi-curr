@@ -1,19 +1,5 @@
 import { useState, useEffect } from 'react';
-import {
-    Typography,
-    Grid,
-    Button,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    RadioGroup,
-    FormGroup,
-    FormControlLabel,
-    Radio,
-    Box,
-    Checkbox,
-} from '@mui/material';
+import { Typography, Grid, Button, FormControl, InputLabel, Select, MenuItem, RadioGroup, FormGroup, FormControlLabel, Radio, Box, Checkbox } from '@mui/material';
 import PropTypes from 'prop-types';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -23,13 +9,7 @@ import { TextField } from '@mui/material/index';
 import MainCard from 'components/MainCard';
 
 // api
-import {
-    getInvoiceWKMasterInvoiceWKDetail,
-    supplierNameDropDownUnique,
-    submarineCableInfoList,
-    billMilestoneLiabilityList,
-    getWorkTitle,
-} from 'components/apis.jsx';
+import { getInvoiceWKMasterInvoiceWKDetail, supplierNameDropDownUnique, submarineCableInfoList, dropdownmenuBillMilestone, getWorkTitle } from 'components/apis.jsx';
 import dayjs from 'dayjs';
 
 // redux
@@ -55,7 +35,7 @@ const InvoiceQuery = ({ setListInfo }) => {
         INVALID: false,
         PAYING: false,
         TEMPORARY: false,
-        VALIDATED: false,
+        VALIDATED: false
     }); //處理狀態
 
     const initQuery = () => {
@@ -72,7 +52,7 @@ const InvoiceQuery = ({ setListInfo }) => {
             INVALID: false,
             PAYING: false,
             TEMPORARY: false,
-            VALIDATED: false,
+            VALIDATED: false
         });
     };
 
@@ -100,17 +80,13 @@ const InvoiceQuery = ({ setListInfo }) => {
         if (isIssueDate === 'true') {
             tmpQuery.IssueDate = {
                 start: issueDate[0] ? dayjs(issueDate[0]).format('YYYYMMDD') : '19110101',
-                end: issueDate[1]
-                    ? dayjs(issueDate[1]).format('YYYYMMDD')
-                    : dayjs(new Date()).format('YYYYMMDD'),
+                end: issueDate[1] ? dayjs(issueDate[1]).format('YYYYMMDD') : dayjs(new Date()).format('YYYYMMDD')
             };
         }
         if (isIssueDate === 'false') {
             tmpQuery.DueDate = {
                 start: issueDate[0] ? dayjs(issueDate[0]).format('YYYYMMDD') : '19110101',
-                end: issueDate[1]
-                    ? dayjs(issueDate[1]).format('YYYYMMDD')
-                    : dayjs(new Date()).format('YYYYMMDD'),
+                end: issueDate[1] ? dayjs(issueDate[1]).format('YYYYMMDD') : dayjs(new Date()).format('YYYYMMDD')
             };
         }
         if (
@@ -155,9 +131,9 @@ const InvoiceQuery = ({ setListInfo }) => {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify(tmpQuery),
+            body: JSON.stringify(tmpQuery)
         })
             .then((res) => res.json())
             .then((data) => {
@@ -172,9 +148,9 @@ const InvoiceQuery = ({ setListInfo }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -182,7 +158,9 @@ const InvoiceQuery = ({ setListInfo }) => {
     useEffect(() => {
         fetch(supplierNameDropDownUnique, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {
@@ -196,13 +174,18 @@ const InvoiceQuery = ({ setListInfo }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         //海纜名稱
-        fetch(submarineCableInfoList, { method: 'GET' })
+        fetch(submarineCableInfoList, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 setSubmarineCableList(data);
@@ -213,12 +196,17 @@ const InvoiceQuery = ({ setListInfo }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
-        fetch(billMilestoneLiabilityList, { method: 'GET' })
+        fetch(dropdownmenuBillMilestone, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 setBmsList(data);
@@ -229,18 +217,18 @@ const InvoiceQuery = ({ setListInfo }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         fetch(getWorkTitle, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify({}),
+            body: JSON.stringify({})
         })
             .then((res) => res.json())
             .then((data) => {
@@ -257,9 +245,9 @@ const InvoiceQuery = ({ setListInfo }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     }, []);
@@ -276,11 +264,7 @@ const InvoiceQuery = ({ setListInfo }) => {
                 <Grid item xs={4} sm={4} md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇供應商</InputLabel>
-                        <Select
-                            value={supplierName}
-                            label="供應商"
-                            onChange={(e) => setSupplierName(e.target.value)}
-                        >
+                        <Select value={supplierName} label="供應商" onChange={(e) => setSupplierName(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {supNmList.map((i) => (
                                 <MenuItem key={i} value={i}>
@@ -298,11 +282,7 @@ const InvoiceQuery = ({ setListInfo }) => {
                 <Grid item xs={2} sm={2} md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇海纜名稱</InputLabel>
-                        <Select
-                            value={submarineCable}
-                            label="海纜名稱"
-                            onChange={(e) => setSubmarineCable(e.target.value)}
-                        >
+                        <Select value={submarineCable} label="海纜名稱" onChange={(e) => setSubmarineCable(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {submarineCableList.map((i) => (
                                 <MenuItem key={i.CableName} value={i.CableName}>
@@ -320,11 +300,7 @@ const InvoiceQuery = ({ setListInfo }) => {
                 <Grid item xs={2} sm={2} md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇海纜作業</InputLabel>
-                        <Select
-                            value={workTitle}
-                            label="海纜作業"
-                            onChange={(e) => setWorkTitle(e.target.value)}
-                        >
+                        <Select value={workTitle} label="海纜作業" onChange={(e) => setWorkTitle(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {workTitleList.map((i) => (
                                 <MenuItem key={i.Title} value={i.Title}>
@@ -342,11 +318,7 @@ const InvoiceQuery = ({ setListInfo }) => {
                 <Grid item xs={2} sm={2} md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇計帳段號</InputLabel>
-                        <Select
-                            value={billMilestone}
-                            label="發票供應商"
-                            onChange={(e) => setBillMilestone(e.target.value)}
-                        >
+                        <Select value={billMilestone} label="發票供應商" onChange={(e) => setBillMilestone(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {bmsList.map((i) => (
                                 <MenuItem key={i} value={i}>
@@ -364,14 +336,7 @@ const InvoiceQuery = ({ setListInfo }) => {
                 </Grid>
                 <Grid item xs={2} sm={2} md={2} lg={2}>
                     <FormControl fullWidth size="small">
-                        <TextField
-                            fullWidth
-                            variant="outlined"
-                            value={invoiceNo}
-                            size="small"
-                            label="填寫發票號碼"
-                            onChange={(e) => setInvoiceNo(e.target.value)}
-                        />
+                        <TextField fullWidth variant="outlined" value={invoiceNo} size="small" label="填寫發票號碼" onChange={(e) => setInvoiceNo(e.target.value)} />
                     </FormControl>
                 </Grid>
                 <Grid item sm={1} md={1} lg={1}>
@@ -381,17 +346,13 @@ const InvoiceQuery = ({ setListInfo }) => {
                 </Grid>
                 <Grid item xs={8} sm={8} md={8} lg={8} display="flex" alignItems="center">
                     <FormControl>
-                        <RadioGroup
-                            row
-                            value={isIssueDate}
-                            onChange={(e) => setIsIssueDate(e.target.value)}
-                        >
+                        <RadioGroup row value={isIssueDate} onChange={(e) => setIsIssueDate(e.target.value)}>
                             <FormControlLabel
                                 value={true}
                                 control={
                                     <Radio
                                         sx={{
-                                            '& .MuiSvgIcon-root': { fontSize: { lg: 14, xl: 20 } },
+                                            '& .MuiSvgIcon-root': { fontSize: { lg: 14, xl: 20 } }
                                         }}
                                     />
                                 }
@@ -402,7 +363,7 @@ const InvoiceQuery = ({ setListInfo }) => {
                                 control={
                                     <Radio
                                         sx={{
-                                            '& .MuiSvgIcon-root': { fontSize: { lg: 14, xl: 20 } },
+                                            '& .MuiSvgIcon-root': { fontSize: { lg: 14, xl: 20 } }
                                         }}
                                     />
                                 }
@@ -410,10 +371,7 @@ const InvoiceQuery = ({ setListInfo }) => {
                             />
                         </RadioGroup>
                     </FormControl>
-                    <LocalizationProvider
-                        dateAdapter={AdapterDayjs}
-                        localeText={{ start: '起始日', end: '結束日' }}
-                    >
+                    <LocalizationProvider dateAdapter={AdapterDayjs} localeText={{ start: '起始日', end: '結束日' }}>
                         <DateRangePicker
                             inputFormat="YYYY/MM/DD"
                             value={issueDate}
@@ -519,7 +477,7 @@ const InvoiceQuery = ({ setListInfo }) => {
 };
 
 InvoiceQuery.propTypes = {
-    setListInfo: PropTypes.func,
+    setListInfo: PropTypes.func
 };
 
 export default InvoiceQuery;

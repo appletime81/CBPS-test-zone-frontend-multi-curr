@@ -72,7 +72,7 @@ const LiabilityQuery = ({ setListInfo, currencyListInfo, submarineCableList, que
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
             body: JSON.stringify(tmpObject)
         })

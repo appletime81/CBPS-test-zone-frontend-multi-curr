@@ -14,13 +14,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 
 // api
-import {
-    dropdownmenuParties,
-    submarineCableInfoList,
-    queryCB,
-    creditBalanceRefund,
-    getWorkTitle,
-} from 'components/apis';
+import { dropdownmenuParties, submarineCableInfoList, queryCB, creditBalanceRefund, getWorkTitle } from 'components/apis';
 
 // redux
 import { useDispatch } from 'react-redux';
@@ -44,7 +38,9 @@ const CreditBalance = () => {
         queryApi.current = tmpQuery;
         fetch(tmpQuery, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {
@@ -59,9 +55,9 @@ const CreditBalance = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -73,9 +69,9 @@ const CreditBalance = () => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請至少勾選一筆項目',
-                    },
-                }),
+                        message: '請至少勾選一筆項目'
+                    }
+                })
             );
         } else if (note === '') {
             dispatch(
@@ -83,9 +79,9 @@ const CreditBalance = () => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請填寫終止原因',
-                    },
-                }),
+                        message: '請填寫終止原因'
+                    }
+                })
             );
         } else {
             console.log('cbRefundData=>>', cbRefundData);
@@ -94,15 +90,15 @@ const CreditBalance = () => {
             });
             let sendData = {
                 CBRefundData: tmpArray,
-                Note: note,
+                Note: note
             };
             fetch(creditBalanceRefund, {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
                 },
-                body: JSON.stringify(sendData),
+                body: JSON.stringify(sendData)
             })
                 .then((res) => res.json())
                 .then(() => {
@@ -114,9 +110,9 @@ const CreditBalance = () => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'success',
-                                message: '終止成功',
-                            },
-                        }),
+                                message: '終止成功'
+                            }
+                        })
                     );
                     creditBalanceQuery();
                 })
@@ -126,9 +122,9 @@ const CreditBalance = () => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
         }
@@ -136,7 +132,12 @@ const CreditBalance = () => {
 
     useEffect(() => {
         //海纜名稱
-        fetch(submarineCableInfoList, { method: 'GET' })
+        fetch(submarineCableInfoList, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 setSubmarineCableList(data);
@@ -147,13 +148,18 @@ const CreditBalance = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         //會員名稱
-        fetch(dropdownmenuParties, { method: 'GET' })
+        fetch(dropdownmenuParties, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 setPartiesList(data);
@@ -164,18 +170,18 @@ const CreditBalance = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         fetch(getWorkTitle, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify({}),
+            body: JSON.stringify({})
         })
             .then((res) => res.json())
             .then((data) => {
@@ -192,9 +198,9 @@ const CreditBalance = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     }, []);
@@ -214,21 +220,11 @@ const CreditBalance = () => {
                 </Grid>
                 <Grid item xs={12}>
                     <MainCard title="Credit Balance資料列表">
-                        <CreditBalanceDataList
-                            listInfo={listInfo}
-                            cbToCn={cbToCn}
-                            setCbToCn={setCbToCn}
-                            cbRefundData={cbRefundData}
-                            setCbRefundData={setCbRefundData}
-                        />
+                        <CreditBalanceDataList listInfo={listInfo} cbToCn={cbToCn} setCbToCn={setCbToCn} cbRefundData={cbRefundData} setCbRefundData={setCbRefundData} />
                     </MainCard>
                 </Grid>
                 <Grid item xs={12} display="flex" justifyContent="center" alignItems="center">
-                    <Button
-                        variant="contained"
-                        sx={{ mx: 1 }}
-                        onClick={() => setInfoTerminal(true)}
-                    >
+                    <Button variant="contained" sx={{ mx: 1 }} onClick={() => setInfoTerminal(true)}>
                         送出退費
                     </Button>
                 </Grid>
@@ -236,34 +232,21 @@ const CreditBalance = () => {
             <Dialog maxWidth="xs" fullWidth open={infoTerminal}>
                 <BootstrapDialogTitle>確認終止訊息</BootstrapDialogTitle>
                 <DialogContent dividers>
-                    <Grid
-                        container
-                        spacing={1}
-                        display="flex"
-                        justifyContent="center"
-                        alignItems="center"
-                    >
+                    <Grid container spacing={1} display="flex" justifyContent="center" alignItems="center">
                         {/* row3 */}
                         <Grid item xs={12} sm={12} md={12} lg={12} display="flex">
                             <Typography
                                 variant="h5"
                                 sx={{
                                     fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                    ml: { lg: '0.5rem', xl: '1.5rem' },
+                                    ml: { lg: '0.5rem', xl: '1.5rem' }
                                 }}
                             >
                                 是否確定終止此Credit Balance資料
                             </Typography>
                         </Grid>
                         <Grid item xs={12} sm={12} md={12} lg={12} display="flex">
-                            <TextField
-                                fullWidth
-                                variant="outlined"
-                                value={note}
-                                size="small"
-                                label="填寫終止原因"
-                                onChange={(e) => setNote(e.target.value)}
-                            />
+                            <TextField fullWidth variant="outlined" value={note} size="small" label="填寫終止原因" onChange={(e) => setNote(e.target.value)} />
                         </Grid>
                     </Grid>
                 </DialogContent>
@@ -277,11 +260,7 @@ const CreditBalance = () => {
                     >
                         確定
                     </Button>
-                    <Button
-                        sx={{ mr: '0.05rem' }}
-                        variant="contained"
-                        onClick={() => setInfoTerminal(false)}
-                    >
+                    <Button sx={{ mr: '0.05rem' }} variant="contained" onClick={() => setInfoTerminal(false)}>
                         關閉
                     </Button>
                 </DialogActions>

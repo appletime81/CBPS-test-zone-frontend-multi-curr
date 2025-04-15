@@ -11,12 +11,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 
-import {
-    submarineCables,
-    submarineCableInfoList,
-    deleteSubmarineCables,
-    editSubmarineCables,
-} from 'components/apis.jsx';
+import { submarineCables, submarineCableInfoList, deleteSubmarineCables, editSubmarineCables } from 'components/apis.jsx';
 
 // redux
 import { useDispatch } from 'react-redux';
@@ -38,13 +33,13 @@ const SubmarineCableDataList = ({ infoList, setInfoList }) => {
             color: theme.palette.common.black,
             paddingTop: '0rem',
             paddingBottom: '0rem',
-            fontSize: '0.7rem',
+            fontSize: '0.7rem'
         },
         [`&.${tableCellClasses.body}`]: {
             paddingTop: '0.1rem',
             paddingBottom: '0.1rem',
-            fontSize: '0.7rem',
-        },
+            fontSize: '0.7rem'
+        }
     }));
 
     const infoCheck = () => {
@@ -54,9 +49,9 @@ const SubmarineCableDataList = ({ infoList, setInfoList }) => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入海纜名稱',
-                    },
-                }),
+                        message: '請輸入海纜名稱'
+                    }
+                })
             );
             return false;
         }
@@ -66,9 +61,9 @@ const SubmarineCableDataList = ({ infoList, setInfoList }) => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入海纜代號',
-                    },
-                }),
+                        message: '請輸入海纜代號'
+                    }
+                })
             );
             return false;
         }
@@ -89,7 +84,12 @@ const SubmarineCableDataList = ({ infoList, setInfoList }) => {
     };
 
     const querySubmarineCablesInfo = () => {
-        fetch(submarineCableInfoList, { method: 'GET' })
+        fetch(submarineCableInfoList, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 console.log('取得海纜資料成功=>', data);
@@ -103,9 +103,9 @@ const SubmarineCableDataList = ({ infoList, setInfoList }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -115,15 +115,15 @@ const SubmarineCableDataList = ({ infoList, setInfoList }) => {
             let tmpArray = {
                 CableCode: cableCode,
                 CableName: cableName,
-                Note: note,
+                Note: note
             };
             fetch(submarineCables, {
                 method: 'POST',
                 body: JSON.stringify(tmpArray),
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-                },
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+                }
             })
                 .then((res) => res.json())
                 .then(() => {
@@ -132,9 +132,9 @@ const SubmarineCableDataList = ({ infoList, setInfoList }) => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'success',
-                                message: '新增海纜資料成功',
-                            },
-                        }),
+                                message: '新增海纜資料成功'
+                            }
+                        })
                     );
                     infoInit();
                     querySubmarineCablesInfo();
@@ -145,9 +145,9 @@ const SubmarineCableDataList = ({ infoList, setInfoList }) => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
         }
@@ -159,8 +159,8 @@ const SubmarineCableDataList = ({ infoList, setInfoList }) => {
             body: JSON.stringify(row),
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-            },
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then(() => {
@@ -169,9 +169,9 @@ const SubmarineCableDataList = ({ infoList, setInfoList }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'success',
-                            message: '刪除海纜資料成功',
-                        },
-                    }),
+                            message: '刪除海纜資料成功'
+                        }
+                    })
                 );
                 querySubmarineCablesInfo();
             })
@@ -181,9 +181,9 @@ const SubmarineCableDataList = ({ infoList, setInfoList }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -202,9 +202,9 @@ const SubmarineCableDataList = ({ infoList, setInfoList }) => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入海纜名稱',
-                    },
-                }),
+                        message: '請輸入海纜名稱'
+                    }
+                })
             );
             return false;
         }
@@ -214,9 +214,9 @@ const SubmarineCableDataList = ({ infoList, setInfoList }) => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入海纜代號',
-                    },
-                }),
+                        message: '請輸入海纜代號'
+                    }
+                })
             );
             return false;
         }
@@ -229,15 +229,15 @@ const SubmarineCableDataList = ({ infoList, setInfoList }) => {
                 CableID: cableIDEdit.current,
                 CableCode: cableCodeEdit,
                 CableName: cableNameEdit,
-                Note: noteEdit,
+                Note: noteEdit
             };
             fetch(editSubmarineCables, {
                 method: 'POST',
                 body: JSON.stringify(tmpArray),
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-                },
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+                }
             })
                 .then((res) => res.json())
                 .then(() => {
@@ -246,9 +246,9 @@ const SubmarineCableDataList = ({ infoList, setInfoList }) => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'success',
-                                message: '更新海纜資料成功',
-                            },
-                        }),
+                                message: '更新海纜資料成功'
+                            }
+                        })
                     );
                     editInfoInit();
                     querySubmarineCablesInfo();
@@ -259,9 +259,9 @@ const SubmarineCableDataList = ({ infoList, setInfoList }) => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
         }
@@ -287,14 +287,10 @@ const SubmarineCableDataList = ({ infoList, setInfoList }) => {
                                     sx={{
                                         display: 'flex',
                                         justifyContent: 'center',
-                                        '& button': { mx: { md: 0.6, lg: 1, xl: 1.8 }, p: 0 },
+                                        '& button': { mx: { md: 0.6, lg: 1, xl: 1.8 }, p: 0 }
                                     }}
                                 >
-                                    <Button
-                                        color="success"
-                                        variant="outlined"
-                                        onClick={addPartyInfo}
-                                    >
+                                    <Button color="success" variant="outlined" onClick={addPartyInfo}>
                                         新增
                                     </Button>
                                 </Box>
@@ -330,10 +326,7 @@ const SubmarineCableDataList = ({ infoList, setInfoList }) => {
                         </TableRow>
                         {infoList?.map((row, id) => {
                             return (
-                                <TableRow
-                                    key={row.CableCode + id}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
+                                <TableRow key={row.CableCode + id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     {row.CableID !== cableIDEdit.current ? (
                                         <>
                                             <StyledTableCell align="center">
@@ -343,8 +336,8 @@ const SubmarineCableDataList = ({ infoList, setInfoList }) => {
                                                         justifyContent: 'center',
                                                         '& button': {
                                                             mx: { md: 0.6, lg: 1, xl: 1.8 },
-                                                            p: 0,
-                                                        },
+                                                            p: 0
+                                                        }
                                                     }}
                                                 >
                                                     <Button
@@ -367,18 +360,10 @@ const SubmarineCableDataList = ({ infoList, setInfoList }) => {
                                                     </Button>
                                                 </Box>
                                             </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                {id + 1}
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                {row.CableCode}
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                {row.CableName}
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                {row.Note}
-                                            </StyledTableCell>
+                                            <StyledTableCell align="center">{id + 1}</StyledTableCell>
+                                            <StyledTableCell align="center">{row.CableCode}</StyledTableCell>
+                                            <StyledTableCell align="center">{row.CableName}</StyledTableCell>
+                                            <StyledTableCell align="center">{row.Note}</StyledTableCell>
                                         </>
                                     ) : (
                                         <>
@@ -389,8 +374,8 @@ const SubmarineCableDataList = ({ infoList, setInfoList }) => {
                                                         justifyContent: 'center',
                                                         '& button': {
                                                             mx: { md: 0.6, lg: 1, xl: 1.8 },
-                                                            p: 0,
-                                                        },
+                                                            p: 0
+                                                        }
                                                     }}
                                                 >
                                                     <Button

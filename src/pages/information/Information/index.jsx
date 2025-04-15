@@ -1,16 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-    Grid,
-    Button,
-    Box,
-    Tabs,
-    Tab,
-    Typography,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-} from '@mui/material';
+import { Grid, Button, Box, Tabs, Tab, Typography, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
 // project import
 import CustomTabPanel from 'components/CustomTabPanel';
@@ -22,16 +11,7 @@ import WorkTitleDataList from './WorkTitleDataList';
 import CBPBankAccount from './cBPBankAccount';
 
 //api
-import {
-    getWorkTitle,
-    submarineCableInfoList,
-    supplierNameDropDownUnique,
-    submarineCables,
-    suppliers,
-    dropdownmenuParties,
-    parties,
-    corporates,
-} from 'components/apis.jsx';
+import { getWorkTitle, submarineCableInfoList, supplierNameDropDownUnique, submarineCables, suppliers, dropdownmenuParties, parties, corporates } from 'components/apis.jsx';
 
 // redux
 import { useDispatch } from 'react-redux';
@@ -57,7 +37,7 @@ const Information = () => {
     const a11yProps = (index) => {
         return {
             id: `simple-tab-${index}`,
-            'aria-controls': `simple-tabpanel-${index}`,
+            'aria-controls': `simple-tabpanel-${index}`
         };
     };
 
@@ -91,9 +71,9 @@ const Information = () => {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
                 },
-                body: JSON.stringify(tmpObject),
+                body: JSON.stringify(tmpObject)
             })
                 .then((res) => res.json())
                 .then((data) => {
@@ -107,9 +87,9 @@ const Information = () => {
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'error',
-                                    message: data?.alert_msg,
-                                },
-                            }),
+                                    message: data?.alert_msg
+                                }
+                            })
                         );
                     }
                 })
@@ -120,9 +100,9 @@ const Information = () => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
         }
@@ -132,9 +112,9 @@ const Information = () => {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
                 },
-                body: JSON.stringify(tmpObject),
+                body: JSON.stringify(tmpObject)
             })
                 .then((res) => res.json())
                 .then((data) => {
@@ -151,9 +131,9 @@ const Information = () => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
         }
@@ -163,9 +143,9 @@ const Information = () => {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
                 },
-                body: JSON.stringify(tmpObject),
+                body: JSON.stringify(tmpObject)
             })
                 .then((res) => res.json())
                 .then((data) => {
@@ -182,9 +162,9 @@ const Information = () => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
         }
@@ -194,9 +174,9 @@ const Information = () => {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
                 },
-                body: JSON.stringify(tmpObject),
+                body: JSON.stringify(tmpObject)
             })
                 .then((res) => res.json())
                 .then((data) => {
@@ -213,9 +193,9 @@ const Information = () => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
         }
@@ -225,9 +205,9 @@ const Information = () => {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
                 },
-                body: JSON.stringify(tmpObject),
+                body: JSON.stringify(tmpObject)
             })
                 .then((res) => res.json())
                 .then((data) => {
@@ -244,9 +224,9 @@ const Information = () => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
         }
@@ -264,9 +244,9 @@ const Information = () => {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify({}),
+            body: JSON.stringify({})
         })
             .then((res) => res.json())
             .then((data) => {
@@ -283,9 +263,9 @@ const Information = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -293,7 +273,9 @@ const Information = () => {
     useEffect(() => {
         fetch(supplierNameDropDownUnique, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {
@@ -307,13 +289,18 @@ const Information = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         //海纜名稱
-        fetch(submarineCableInfoList, { method: 'GET' })
+        fetch(submarineCableInfoList, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 setSubmarineCableList(data);
@@ -324,13 +311,18 @@ const Information = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         //會員名稱
-        fetch(dropdownmenuParties, { method: 'GET' })
+        fetch(dropdownmenuParties, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 setPartiesList(data);
@@ -341,9 +333,9 @@ const Information = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         getWorkTitleList();
@@ -357,13 +349,7 @@ const Information = () => {
         <Grid container spacing={1} id="tableContainer">
             <Grid item xs={12}>
                 <MainCard title="基本資料查詢" sx={{ width: '100%' }}>
-                    <Grid
-                        container
-                        display="flex"
-                        justifyContent="center"
-                        alignItems="center"
-                        spacing={2}
-                    >
+                    <Grid container display="flex" justifyContent="center" alignItems="center" spacing={2}>
                         {value !== 0 ? (
                             <>
                                 <Grid item sm={1} md={1} lg={1}>
@@ -371,7 +357,7 @@ const Information = () => {
                                         sx={{
                                             fontWeight: 'bold',
                                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                                            ml: { lg: '0.5rem', xl: '1.5rem' }
                                         }}
                                     >
                                         海纜名稱：
@@ -380,12 +366,7 @@ const Information = () => {
                                 <Grid item sm={2} md={2} lg={2}>
                                     <FormControl fullWidth size="small">
                                         <InputLabel>選擇海纜名稱</InputLabel>
-                                        <Select
-                                            value={submarineCable}
-                                            label="海纜名稱"
-                                            size="small"
-                                            onChange={(e) => setSubmarineCable(e.target.value)}
-                                        >
+                                        <Select value={submarineCable} label="海纜名稱" size="small" onChange={(e) => setSubmarineCable(e.target.value)}>
                                             <MenuItem value={'All'}>All</MenuItem>
                                             {submarineCableList.map((i) => (
                                                 <MenuItem key={i.CableName} value={i.CableName}>
@@ -403,7 +384,7 @@ const Information = () => {
                                         sx={{
                                             fontWeight: 'bold',
                                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                                            ml: { lg: '0.5rem', xl: '1.5rem' }
                                         }}
                                     >
                                         海纜作業：
@@ -412,11 +393,7 @@ const Information = () => {
                                 <Grid item sm={2} md={2} lg={2}>
                                     <FormControl fullWidth size="small">
                                         <InputLabel>選擇海纜作業</InputLabel>
-                                        <Select
-                                            value={workTitle}
-                                            label="海纜作業"
-                                            onChange={(e) => setWorkTitle(e.target.value)}
-                                        >
+                                        <Select value={workTitle} label="海纜作業" onChange={(e) => setWorkTitle(e.target.value)}>
                                             <MenuItem value={'All'}>All</MenuItem>
                                             {workTitleList.map((i) => (
                                                 <MenuItem key={i.Title} value={i.Title}>
@@ -435,7 +412,7 @@ const Information = () => {
                                         sx={{
                                             fontWeight: 'bold',
                                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                                            ml: { lg: '0.5rem', xl: '1.5rem' }
                                         }}
                                     >
                                         海纜作業：
@@ -444,11 +421,7 @@ const Information = () => {
                                 <Grid item sm={2} md={2} lg={2}>
                                     <FormControl fullWidth size="small">
                                         <InputLabel>選擇海纜作業</InputLabel>
-                                        <Select
-                                            value={workTitle}
-                                            label="海纜作業"
-                                            onChange={(e) => setWorkTitle(e.target.value)}
-                                        >
+                                        <Select value={workTitle} label="海纜作業" onChange={(e) => setWorkTitle(e.target.value)}>
                                             <MenuItem value={'All'}>All</MenuItem>
                                             {workTitleList.map((i) => (
                                                 <MenuItem key={i.Title} value={i.Title}>
@@ -469,7 +442,7 @@ const Information = () => {
                                         sx={{
                                             fontWeight: 'bold',
                                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                                            ml: { lg: '0.5rem', xl: '1.5rem' }
                                         }}
                                     >
                                         供應商：
@@ -478,11 +451,7 @@ const Information = () => {
                                 <Grid item sm={2} md={2} lg={2}>
                                     <FormControl fullWidth size="small">
                                         <InputLabel>選擇供應商</InputLabel>
-                                        <Select
-                                            value={supplierName}
-                                            label="供應商"
-                                            onChange={(e) => setSupplierName(e.target.value)}
-                                        >
+                                        <Select value={supplierName} label="供應商" onChange={(e) => setSupplierName(e.target.value)}>
                                             <MenuItem value={'All'}>All</MenuItem>
                                             {supNmList.map((i) => (
                                                 <MenuItem key={i} value={i}>
@@ -500,7 +469,7 @@ const Information = () => {
                                         sx={{
                                             fontWeight: 'bold',
                                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                            ml: { lg: '0.5rem', xl: '1.5rem' },
+                                            ml: { lg: '0.5rem', xl: '1.5rem' }
                                         }}
                                     >
                                         會員名稱：
@@ -509,11 +478,7 @@ const Information = () => {
                                 <Grid item sm={2} md={2} lg={2}>
                                     <FormControl fullWidth size="small">
                                         <InputLabel>選擇會員名稱</InputLabel>
-                                        <Select
-                                            value={partyName}
-                                            label="會員"
-                                            onChange={(e) => setPartyName(e.target.value)}
-                                        >
+                                        <Select value={partyName} label="會員" onChange={(e) => setPartyName(e.target.value)}>
                                             <MenuItem value={'All'}>All</MenuItem>
                                             {partiesList.map((i) => (
                                                 <MenuItem key={i} value={i}>
@@ -541,9 +506,7 @@ const Information = () => {
             </Grid>
             <Grid item xs={12}>
                 <MainCard title="資料列表" sx={{ width: '100%' }}>
-                    <Box
-                        sx={{ p: 0, borderBottom: 1, borderColor: 'divider', position: 'relative' }}
-                    >
+                    <Box sx={{ p: 0, borderBottom: 1, borderColor: 'divider', position: 'relative' }}>
                         <Tabs value={value} onChange={handleChange}>
                             <Tab sx={{ p: 0 }} label="海纜作業" {...a11yProps(0)} />
                             <Tab sx={{ p: 0 }} label="海纜代號" {...a11yProps(1)} />
@@ -553,11 +516,7 @@ const Information = () => {
                         </Tabs>
                     </Box>
                     <CustomTabPanel value={value} index={0}>
-                        <WorkTitleDataList
-                            infoList={infoList}
-                            setInfoList={setInfoList}
-                            getWorkTitleList={getWorkTitleList}
-                        />
+                        <WorkTitleDataList infoList={infoList} setInfoList={setInfoList} getWorkTitleList={getWorkTitleList} />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={1}>
                         <SubmarineCableDataList infoList={infoList} setInfoList={setInfoList} />

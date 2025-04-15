@@ -38,7 +38,7 @@ const CorrespondenceMake = ({ isDialogOpen, handleDialogClose, payDraftID, payCo
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
             body: JSON.stringify(tmpArray)
         })
@@ -78,7 +78,7 @@ const CorrespondenceMake = ({ isDialogOpen, handleDialogClose, payDraftID, payCo
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
                 },
                 body: JSON.stringify(tmpArray)
             })
@@ -101,7 +101,12 @@ const CorrespondenceMake = ({ isDialogOpen, handleDialogClose, payDraftID, payCo
                     );
                 });
 
-            fetch(getCurrencyDataChineseName, { method: 'GET' })
+            fetch(getCurrencyDataChineseName, {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+                }
+            })
                 .then((res) => res.json())
                 .then((data) => {
                     setCCode(data);

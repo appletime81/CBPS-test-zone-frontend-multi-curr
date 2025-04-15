@@ -31,21 +31,16 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
         // backgroundColor: theme.palette.common.gary,
         color: theme.palette.common.black,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
+        paddingBottom: '0.2rem'
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
-    },
+        paddingBottom: '0.2rem'
+    }
 }));
 
-const CurrencyManage = ({
-    handleCurrencyManageClose,
-    isCurrencyOpen,
-    currencyListInfo,
-    getCurrencyDataFun,
-}) => {
+const CurrencyManage = ({ handleCurrencyManageClose, isCurrencyOpen, currencyListInfo, getCurrencyDataFun }) => {
     const dispatch = useDispatch();
     const [cName, setCName] = useState(''); //貨幣中文
     const [code, setCode] = useState(''); //貨幣代碼
@@ -71,9 +66,9 @@ const CurrencyManage = ({
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入貨幣代碼',
-                    },
-                }),
+                        message: '請輸入貨幣代碼'
+                    }
+                })
             );
             return false;
         }
@@ -83,9 +78,9 @@ const CurrencyManage = ({
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入貨幣中文',
-                    },
-                }),
+                        message: '請輸入貨幣中文'
+                    }
+                })
             );
             return false;
         }
@@ -99,9 +94,9 @@ const CurrencyManage = ({
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入貨幣代碼',
-                    },
-                }),
+                        message: '請輸入貨幣代碼'
+                    }
+                })
             );
             return false;
         }
@@ -111,9 +106,9 @@ const CurrencyManage = ({
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入貨幣中文',
-                    },
-                }),
+                        message: '請輸入貨幣中文'
+                    }
+                })
             );
             return false;
         }
@@ -130,9 +125,9 @@ const CurrencyManage = ({
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
                 },
-                body: JSON.stringify(tmpObject),
+                body: JSON.stringify(tmpObject)
             })
                 .then((res) => res.json())
                 .then((data) => {
@@ -142,9 +137,9 @@ const CurrencyManage = ({
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'error',
-                                    message: data.alert_msg,
-                                },
-                            }),
+                                    message: data.alert_msg
+                                }
+                            })
                         );
                     } else {
                         dispatch(
@@ -152,9 +147,9 @@ const CurrencyManage = ({
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'success',
-                                    message: '新增成功',
-                                },
-                            }),
+                                    message: '新增成功'
+                                }
+                            })
                         );
                         initData();
                         getCurrencyDataFun();
@@ -180,9 +175,9 @@ const CurrencyManage = ({
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify(tmpObject),
+            body: JSON.stringify(tmpObject)
         })
             .then((res) => res.json())
             .then((data) => {
@@ -192,9 +187,9 @@ const CurrencyManage = ({
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: data.alert_msg,
-                            },
-                        }),
+                                message: data.alert_msg
+                            }
+                        })
                     );
                 } else {
                     dispatch(
@@ -202,9 +197,9 @@ const CurrencyManage = ({
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'success',
-                                message: '刪除成功',
-                            },
-                        }),
+                                message: '刪除成功'
+                            }
+                        })
                     );
                     getCurrencyDataFun();
                 }
@@ -223,9 +218,9 @@ const CurrencyManage = ({
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
                 },
-                body: JSON.stringify(tmpObject),
+                body: JSON.stringify(tmpObject)
             })
                 .then((res) => res.json())
                 .then((data) => {
@@ -235,9 +230,9 @@ const CurrencyManage = ({
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'error',
-                                    message: data.alert_msg,
-                                },
-                            }),
+                                    message: data.alert_msg
+                                }
+                            })
                         );
                     } else {
                         dispatch(
@@ -245,9 +240,9 @@ const CurrencyManage = ({
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'success',
-                                    message: '編輯成功',
-                                },
-                            }),
+                                    message: '編輯成功'
+                                }
+                            })
                         );
                         initEditData();
                         getCurrencyDataFun();
@@ -302,14 +297,10 @@ const CurrencyManage = ({
                                         sx={{
                                             display: 'flex',
                                             justifyContent: 'center',
-                                            '& button': { mx: { md: 0.6, lg: 1, xl: 1.8 }, p: 0 },
+                                            '& button': { mx: { md: 0.6, lg: 1, xl: 1.8 }, p: 0 }
                                         }}
                                     >
-                                        <Button
-                                            color="success"
-                                            variant="outlined"
-                                            onClick={addCode}
-                                        >
+                                        <Button color="success" variant="outlined" onClick={addCode}>
                                             新增
                                         </Button>
                                     </Box>
@@ -317,21 +308,12 @@ const CurrencyManage = ({
                             </TableRow>
                             {currencyListInfo?.map((row, id) => {
                                 return (
-                                    <TableRow
-                                        key={row.Code + id}
-                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                    >
+                                    <TableRow key={row.Code + id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                         {row.CurrencyID !== currencyIDEdit.current ? (
                                             <>
-                                                <StyledTableCell align="center">
-                                                    {id + 1}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    {row.Code}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    {row.CName}
-                                                </StyledTableCell>
+                                                <StyledTableCell align="center">{id + 1}</StyledTableCell>
+                                                <StyledTableCell align="center">{row.Code}</StyledTableCell>
+                                                <StyledTableCell align="center">{row.CName}</StyledTableCell>
                                                 <StyledTableCell align="center">
                                                     <Box
                                                         sx={{
@@ -339,8 +321,8 @@ const CurrencyManage = ({
                                                             justifyContent: 'center',
                                                             '& button': {
                                                                 mx: { md: 0.6, lg: 1, xl: 1.8 },
-                                                                p: 0,
-                                                            },
+                                                                p: 0
+                                                            }
                                                         }}
                                                     >
                                                         <Button
@@ -394,8 +376,8 @@ const CurrencyManage = ({
                                                             justifyContent: 'center',
                                                             '& button': {
                                                                 mx: { md: 0.6, lg: 1, xl: 1.8 },
-                                                                p: 0,
-                                                            },
+                                                                p: 0
+                                                            }
                                                         }}
                                                     >
                                                         <Button
@@ -407,11 +389,7 @@ const CurrencyManage = ({
                                                         >
                                                             儲存
                                                         </Button>
-                                                        <Button
-                                                            color="error"
-                                                            variant="outlined"
-                                                            onClick={cancelEdit}
-                                                        >
+                                                        <Button color="error" variant="outlined" onClick={cancelEdit}>
                                                             關閉
                                                         </Button>
                                                     </Box>
@@ -426,11 +404,7 @@ const CurrencyManage = ({
                 </TableContainer>
             </DialogContent>
             <DialogActions>
-                <Button
-                    sx={{ mr: '0.05rem' }}
-                    variant="contained"
-                    onClick={handleCurrencyManageClose}
-                >
+                <Button sx={{ mr: '0.05rem' }} variant="contained" onClick={handleCurrencyManageClose}>
                     關閉
                 </Button>
             </DialogActions>

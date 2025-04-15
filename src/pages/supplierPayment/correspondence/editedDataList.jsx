@@ -6,21 +6,7 @@ import CorrespondenceQuery from './correspondenceQuery';
 import MainCard from 'components/MainCard';
 import CorrespondenceMake from './correspondenceMake';
 // material-ui
-import {
-    Typography,
-    Button,
-    Table,
-    Dialog,
-    DialogContent,
-    DialogContentText,
-    Grid,
-    FormControl,
-    InputLabel,
-    Select,
-    DialogActions,
-    TextField,
-    Box,
-} from '@mui/material';
+import { Typography, Button, Table, Dialog, DialogContent, DialogContentText, Grid, FormControl, InputLabel, Select, DialogActions, TextField, Box } from '@mui/material';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
@@ -42,13 +28,13 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
         // backgroundColor: theme.palette.common.gary,
         color: theme.palette.common.black,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
+        paddingBottom: '0.2rem'
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
-    },
+        paddingBottom: '0.2rem'
+    }
 }));
 
 const EditedDataList = ({ listInfo }) => {
@@ -56,15 +42,15 @@ const EditedDataList = ({ listInfo }) => {
     const handleDownload = (id) => {
         let tmpArray = {
             PayDraftID: id,
-            DownloadTemplate: true,
+            DownloadTemplate: true
         };
         fetch(getPayDraftStream, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify(tmpArray),
+            body: JSON.stringify(tmpArray)
         })
             .then((res) => {
                 if (!res.ok) {
@@ -103,9 +89,9 @@ const EditedDataList = ({ listInfo }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '尚未上傳檔案',
-                        },
-                    }),
+                            message: '尚未上傳檔案'
+                        }
+                    })
                 );
                 // 处理错误
             });
@@ -128,19 +114,12 @@ const EditedDataList = ({ listInfo }) => {
                 <TableBody>
                     {listInfo.map((row) => {
                         return (
-                            <TableRow
-                                key={row?.PayDraftID + row?.PayMID}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
+                            <TableRow key={row?.PayDraftID + row?.PayMID} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                 <StyledTableCell align="center">{row?.Payee}</StyledTableCell>
                                 <StyledTableCell align="center">{row?.InvoiceNo}</StyledTableCell>
-                                <StyledTableCell align="center">
-                                    {row?.SubmarineCable}
-                                </StyledTableCell>
+                                <StyledTableCell align="center">{row?.SubmarineCable}</StyledTableCell>
                                 <StyledTableCell align="center">{row?.WorkTitle}</StyledTableCell>
-                                <StyledTableCell align="center">
-                                    {row?.TotalFeeAmount}
-                                </StyledTableCell>
+                                <StyledTableCell align="center">{row?.TotalFeeAmount}</StyledTableCell>
                                 <StyledTableCell align="center">{row?.PayCode}</StyledTableCell>
                                 <StyledTableCell align="center">
                                     <Box
@@ -149,8 +128,8 @@ const EditedDataList = ({ listInfo }) => {
                                             justifyContent: 'center',
                                             '& button': {
                                                 mx: { sm: 0.3, md: 0.3, lg: 0.6, xl: 1.5 },
-                                                p: 0,
-                                            },
+                                                p: 0
+                                            }
                                         }}
                                     >
                                         <Button

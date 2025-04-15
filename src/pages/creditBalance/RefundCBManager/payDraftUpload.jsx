@@ -1,14 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-    Typography,
-    Grid,
-    Button,
-    FormControl,
-    Box,
-    RadioGroup,
-    FormControlLabel,
-    Radio,
-} from '@mui/material';
+import { Typography, Grid, Button, FormControl, Box, RadioGroup, FormControlLabel, Radio } from '@mui/material';
 import { DropzoneArea } from 'mui-file-dropzone';
 // import { FileUploader } from 'react-drag-drop-files';
 
@@ -50,8 +41,8 @@ const PayDraftUpload = ({ isUploadOpen, handleUploadClose, payDraftID }) => {
                 body: pdfData,
                 headers: {
                     Accept: 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-                },
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+                }
             })
                 .then((res) => res.json())
                 .then(() => {
@@ -60,9 +51,9 @@ const PayDraftUpload = ({ isUploadOpen, handleUploadClose, payDraftID }) => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'success',
-                                message: '上傳成功',
-                            },
-                        }),
+                                message: '上傳成功'
+                            }
+                        })
                     );
                     setUploadFile(null);
                     handleUploadClose();
@@ -73,16 +64,16 @@ const PayDraftUpload = ({ isUploadOpen, handleUploadClose, payDraftID }) => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
         } else {
             dispatch(
                 setMessageStateOpen({
-                    messageStateOpen: { isOpen: true, severity: 'error', message: '請上傳檔案' },
-                }),
+                    messageStateOpen: { isOpen: true, severity: 'error', message: '請上傳檔案' }
+                })
             );
         }
     };
@@ -102,29 +93,21 @@ const PayDraftUpload = ({ isUploadOpen, handleUploadClose, payDraftID }) => {
             <BootstrapDialogTitle>上傳函稿作業</BootstrapDialogTitle>
             <DialogContent dividers>
                 {/* 第二階段優化 */}
-                <Grid
-                    container
-                    spacing={2}
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                >
+                <Grid container spacing={2} display="flex" justifyContent="center" alignItems="center">
                     <Grid item xs={12} sm={12} md={12} lg={12} display="flex">
                         <Box
                             sx={{
                                 display: 'flex',
                                 flexFlow: 'column',
                                 alignItems: 'center',
-                                width: '100%',
+                                width: '100%'
                             }}
                         >
                             <DropzoneArea onChange={handleUploadChange} acceptedFiles={['.pdf']} />
                         </Box>
                     </Grid>
                     <Grid item xs={12} sm={12} md={12} lg={12} display="flex">
-                        <Box sx={{ fontSize: 0.1, textAlign: 'left' }}>
-                            {displayName[0] ? `上傳成功：${displayName[0]}` : ''}
-                        </Box>
+                        <Box sx={{ fontSize: 0.1, textAlign: 'left' }}>{displayName[0] ? `上傳成功：${displayName[0]}` : ''}</Box>
                     </Grid>
                 </Grid>
             </DialogContent>

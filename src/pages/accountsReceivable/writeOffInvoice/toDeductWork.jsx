@@ -108,7 +108,9 @@ const ToDeductWork = ({ isDeductOpen, handleDeductClose, cbData, writeOffInfo, t
         const fetchCBData = (query) => {
             fetch(query, {
                 method: 'GET',
-                Authorization: 'Bearer ' + (localStorage.getItem('accessToken') ?? '')
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+                }
             })
                 .then((res) => res.json())
                 .then(handleFetchResponse)
@@ -139,7 +141,7 @@ const ToDeductWork = ({ isDeductOpen, handleDeductClose, cbData, writeOffInfo, t
         //         writeOffInfo.Code;
         //     fetch(tmpQuery, {
         //         method: 'GET',
-        //         Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+        //         Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
         //     })
         //         .then((res) => res.json())
         //         .then((response) => {
@@ -184,7 +186,7 @@ const ToDeductWork = ({ isDeductOpen, handleDeductClose, cbData, writeOffInfo, t
         //         writeOffInfo.Code;
         //     fetch(tmpQuery, {
         //         method: 'GET',
-        //         Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+        //         Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
         //     })
         //         .then((res) => res.json())
         //         .then((response) => {

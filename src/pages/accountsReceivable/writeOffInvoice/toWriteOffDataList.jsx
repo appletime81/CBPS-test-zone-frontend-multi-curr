@@ -62,7 +62,7 @@ const ToWriteOffDataList = ({ listInfo, writeOffInitQuery }) => {
         fetch(tmpQuery, {
             method: 'GET',
             headers: {
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             }
         })
             .then((res) => res.json())
@@ -95,7 +95,7 @@ const ToWriteOffDataList = ({ listInfo, writeOffInitQuery }) => {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
             body: JSON.stringify(tmpArray)
         })
@@ -130,7 +130,7 @@ const ToWriteOffDataList = ({ listInfo, writeOffInitQuery }) => {
         fetch(tmpQuery, {
             method: 'GET',
             headers: {
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             }
         })
             .then((res) => res.json())

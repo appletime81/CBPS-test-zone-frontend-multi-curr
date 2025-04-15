@@ -73,13 +73,17 @@ const ToBillDataList = ({ listInfo, page, setPage }) => {
         let tmpQueryMaster = journalMasterView + tmpQuery;
         fetch(tmpQueryMaster, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {
                 fetch(tmpQueryDetail, {
                     method: 'GET',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+                    }
                 })
                     .then((res) => res.json())
                     .then((data2) => {

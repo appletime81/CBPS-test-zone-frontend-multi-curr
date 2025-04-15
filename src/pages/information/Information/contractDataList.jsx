@@ -82,7 +82,12 @@ const ContractDataList = ({}) => {
     };
 
     const queryContractsInfo = () => {
-        fetch(getContractsInfo, { method: 'GET' })
+        fetch(getContractsInfo, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 console.log('取得合約資料成功=>', data);

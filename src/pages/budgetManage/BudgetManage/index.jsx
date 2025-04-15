@@ -59,126 +59,36 @@ const BudgetManage = () => {
     const budgetQuery = async () => {
         try {
             const budgetListData = await fetchQueryData(getLevels, 'POST', queryApi.current);
-            console.log('budgetListData=>>', budgetListData);
+            console.log('哈哈=>>', budgetListData);
             setListInfo(budgetListData || []);
         } catch (error) {
             console.error('Error fetching supplier list:', error);
         }
     };
 
-    //新增
-    const addBudget = (list, setAdd) => {
-        let tmpNumber = 0;
-        list.forEach((e) => {
-            tmpNumber = Number(e.LBRatio) + Number(tmpNumber);
-        });
-        console.log('tmpNumber=>>', tmpNumber.toFixed(10), tmpNumber.toFixed(10) !== '100.0000000000');
-        if (tmpNumber.toFixed(10) !== '100.0000000000') {
-            dispatch(
-                setMessageStateOpen({
-                    messageStateOpen: {
-                        isOpen: true,
-                        severity: 'error',
-                        message: '攤分比例加總須等於100'
-                    }
-                })
-            );
-        }
-        if (list.length > 0 && tmpNumber.toFixed(10) === '100.0000000000') {
-            fetch(compareLiability, {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
-                },
-                body: JSON.stringify(list)
-            })
-                .then((res) => res.json())
-                .then((data) => {
-                    console.log('compareLiability成功', data, data.compareResult);
-                    if (data.compareResult.length > 0) {
-                        dispatch(
-                            setMessageStateOpen({
-                                messageStateOpen: {
-                                    isOpen: true,
-                                    severity: 'error',
-                                    message: '已增加此會員'
-                                }
-                            })
-                        );
-                    } else {
-                        fetch(addLiabilityapi, {
-                            method: 'POST',
-                            headers: {
-                                'Content-type': 'application/json',
-                                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
-                            },
-                            body: JSON.stringify(list)
-                        })
-                            .then((res) => res.json())
-                            .then((data) => {
-                                if (data.message === 'No same data') {
-                                    dispatch(
-                                        setMessageStateOpen({
-                                            messageStateOpen: {
-                                                isOpen: true,
-                                                severity: 'success',
-                                                message: '新增成功'
-                                            }
-                                        })
-                                    );
-                                    setAdd([]);
-                                    handleDialogClose();
-                                } else {
-                                    dispatch(
-                                        setMessageStateOpen({
-                                            messageStateOpen: {
-                                                isOpen: true,
-                                                severity: 'error',
-                                                message: data.alert_msg
-                                            }
-                                        })
-                                    );
-                                }
-                            })
-                            .catch(() => {
-                                dispatch(
-                                    setMessageStateOpen({
-                                        messageStateOpen: {
-                                            isOpen: true,
-                                            severity: 'error',
-                                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
-                                        }
-                                    })
-                                );
-                            });
-                    }
-                })
-                .catch(() => {
-                    dispatch(
-                        setMessageStateOpen({
-                            messageStateOpen: {
-                                isOpen: true,
-                                severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
-                            }
-                        })
-                    );
-                });
-        }
-    };
-
     const fetchData = useCallback(async () => {
         try {
             const [parties, workTitles, submarineCables, currencies] = await Promise.all([
-                fetch(dropdownmenuParties).then((res) => res.json()),
+                fetch(dropdownmenuParties, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+                    }
+                }).then((res) => res.json()),
                 fetch(getWorkTitle, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}` },
                     body: JSON.stringify({})
                 }).then((res) => res.json()),
-                fetch(dropdownmenuSubmarineCable).then((res) => res.json()),
-                fetch(getCurrencyData).then((res) => res.json())
+                fetch(dropdownmenuSubmarineCable, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+                    }
+                }).then((res) => res.json()),
+                fetch(getCurrencyData, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+                    }
+                }).then((res) => res.json())
             ]);
             setPartyList(Array.isArray(parties) ? parties : []);
             setWorkTitleList(Array.isArray(workTitles) ? workTitles : []);
@@ -210,7 +120,6 @@ const BudgetManage = () => {
                 <BudgetAdd
                     isDialogOpen={isDialogOpen}
                     handleDialogClose={handleDialogClose}
-                    addBudget={addBudget}
                     submarineCableList={submarineCableList}
                     workTitleList={workTitleList}
                     currencyListInfo={currencyListInfo}

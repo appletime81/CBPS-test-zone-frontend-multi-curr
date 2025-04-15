@@ -9,13 +9,7 @@ import CurrencyAdd from './currencyAdd';
 import CurrencyManage from './currencyManage';
 
 // api
-import {
-    getWorkTitle,
-    dropdownmenuSubmarineCable,
-    dropdownmenuParties,
-    getCurrencyExchangeData,
-    getCurrencyData,
-} from 'components/apis.jsx';
+import { getWorkTitle, dropdownmenuSubmarineCable, dropdownmenuParties, getCurrencyExchangeData, getCurrencyData } from 'components/apis.jsx';
 
 // redux
 import { useDispatch } from 'react-redux';
@@ -41,7 +35,9 @@ const LiabilityManage = () => {
     const getCurrencyDataFun = () => {
         fetch(getCurrencyData, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {
@@ -84,9 +80,9 @@ const LiabilityManage = () => {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify(queryApi.current),
+            body: JSON.stringify(queryApi.current)
         })
             .then((res) => res.json())
             .then((data) => {
@@ -107,13 +103,23 @@ const LiabilityManage = () => {
     }, [editItem]);
 
     useEffect(() => {
-        fetch(dropdownmenuSubmarineCable, { method: 'GET' })
+        fetch(dropdownmenuSubmarineCable, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 setSubmarineCableList(data);
             })
             .catch((e) => console.log('e1=>', e));
-        fetch(dropdownmenuParties, { method: 'GET' })
+        fetch(dropdownmenuParties, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 setPartyList(data);
@@ -124,9 +130,9 @@ const LiabilityManage = () => {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify({}),
+            body: JSON.stringify({})
         })
             .then((res) => res.json())
             .then((data) => {
@@ -143,9 +149,9 @@ const LiabilityManage = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         getCurrencyDataFun();
@@ -154,11 +160,7 @@ const LiabilityManage = () => {
     return (
         <Grid container spacing={1}>
             <Grid item xs={12} display="flex" justifyContent="right">
-                <Button
-                    sx={{ mr: '0.25rem' }}
-                    variant="contained"
-                    onClick={handleCurrencyManageOpen}
-                >
+                <Button sx={{ mr: '0.25rem' }} variant="contained" onClick={handleCurrencyManageOpen}>
                     $ 貨幣管理
                 </Button>
                 <Button sx={{ mr: '0.25rem' }} variant="contained" onClick={handleAddCurrencyOpen}>

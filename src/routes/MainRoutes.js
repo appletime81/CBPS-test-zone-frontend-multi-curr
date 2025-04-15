@@ -10,7 +10,7 @@ import Loadable from 'components/Loadable';
 import MainLayout from 'layout/MainLayout';
 
 // api & redux actions
-import { ssoUrlOL, ssoUrlQA, checktokenForLDAP, redirectUriOL, redirectUriQA, accessSSOOL, accessSSOQA, genToken } from 'components/apis.jsx';
+import { ssoUrlOL, ssoUrlQA, ssoUrlTest, ssoUrlLogout, checktokenForLDAP, redirectUriOL, redirectUriQA, accessSSOOL, accessSSOQA, genToken } from 'components/apis.jsx';
 import { setLoginInInfo, setUserInfo, setMessageStateOpen } from 'store/reducers/dropdown';
 
 // render - dashboard
@@ -61,15 +61,17 @@ const RequireAuth = ({ children, item }) => {
     // haha2
     console.log('haha2=>>');
     const [isFetching, setIsFetching] = useState(false);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const getExpireTime = dayjs(localStorage.getItem('expireTimeCBPS'));
+    const getExpireTime = dayjs.unix(localStorage.getItem('expireTimeCBPS'));
+    const accessToken = localStorage.getItem('accessToken');
     const now = dayjs();
-    let accessSSO = isOL ? accessSSOOL : accessSSOQA;
-    const sendNoPermission = () => {
+    // let accessSSO = isOL ? accessSSOOL : accessSSOQA;
+    const redirectToHome = () => {
+        console.log('ggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg');
         return window.location.replace(window.location.protocol + '//' + window.location.host);
     };
-    const redirectToHome = () => {
-        return window.location.replace(window.location.protocol + '//' + window.location.host);
+    const directRouter = () => {
+        console.log('ggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg');
+        return window.location.replace(window.location.href);
     };
     const handleNetworkError = () => {
         dispatch(
@@ -83,20 +85,36 @@ const RequireAuth = ({ children, item }) => {
         );
     };
 
+    const getPermission = async () => {
+        const ldapRes = await fetch(checktokenForLDAP, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer' + accessToken
+            },
+            body: JSON.stringify({ accessToken: accessToken })
+        });
+
+        const ldapData = await ldapRes.json();
+        dispatch(setUserInfo({ userInfo: ldapData }));
+        console.log('suck', ldapData, ldapData[item], item);
+        if (ldapData[item] === false) redirectToHome();
+    };
+
     useEffect(() => {
         const fetchToken = async () => {
             if (isFetching) return; // 避免重複執行
             setIsFetching(true);
 
             try {
-                const accessCode = new URLSearchParams(window.location.search).get('code');
-                if (!accessCode) return;
+                const accessCodeWebsite = new URLSearchParams(window.location.search).get('code');
+                if (!accessCodeWebsite) return;
 
-                console.log('accessCode=>>', accessCode);
+                console.log('accessCode=>>', accessCodeWebsite);
                 const res = await fetch(genToken, {
                     method: 'POST',
                     headers: { 'Content-type': 'application/json' },
-                    body: JSON.stringify({ iam_code: accessCode })
+                    body: JSON.stringify({ iam_code: accessCodeWebsite })
                 });
 
                 const data = await res.json();
@@ -104,7 +122,8 @@ const RequireAuth = ({ children, item }) => {
 
                 if (!data.access_token) {
                     console.log('取得 token 失敗，重新導向登入頁面');
-                    window.location.replace(isOL ? ssoUrlOL : ssoUrlQA);
+                    // window.location.replace(isOL ? ssoUrlOL : ssoUrlQA);
+                    window.location.replace(ssoUrlLogout);
                     return;
                 }
 
@@ -123,43 +142,47 @@ const RequireAuth = ({ children, item }) => {
                 console.log('使用者權限資料=>>', ldapData);
                 dispatch(setUserInfo({ userInfo: ldapData }));
 
-                if (ldapData[item] === false) return sendNoPermission();
+                if (ldapData[item] === false) return redirectToHome();
                 console.log('取得 token 成功');
-                setIsAuthenticated(true);
             } catch (error) {
-                dispatch(
-                    setMessageStateOpen({
-                        messageStateOpen: {
-                            isOpen: true,
-                            severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
-                        }
-                    })
-                );
+                console.log('error=>>', error);
             } finally {
                 setIsFetching(false);
             }
         };
 
-        if (window.location.href.includes('code=')) {
-            console.log('123');
+        // 未超時
+        if (!getExpireTime.isBefore(now)) {
+            if (accessToken) {
+                getPermission();
+            } else {
+                return window.location.replace(ssoUrlTest);
+            }
+
+            // return children;
+        } else if (window.location.href.includes('code=')) {
+            console.log('22222222222222222222');
+            console.log('time22', getExpireTime);
             fetchToken();
         } else {
-            console.log('456');
-            setIsAuthenticated(true); // 如果沒有 access code，直接認證通過
+            console.log('3333333333333333333');
+            // return window.location.replace(isOL ? ssoUrlOL : ssoUrlQA);
+            return window.location.replace(ssoUrlTest);
         }
     }, []);
 
-    if (getExpireTime.isBefore(now)) {
-        console.log('789');
-        if (userInfo[item] === false) {
-            window.location.replace(window.location.protocol + '//' + window.location.host);
-            return null;
-        }
-        return children;
-    }
-
-    return isAuthenticated ? children : null;
+    // if (!getExpireTime.isBefore(now) && accessToken) {
+    //     console.log('789', item, 'getExpireTime=>>', getExpireTime);
+    //     getPermission();
+    //     console.log('userInfo22222222222222222222222222222=>>', userInfo, item, userInfo[item] === false);
+    //     if (userInfo[item] === false) {
+    //         console.log('101112');
+    //         window.location.replace(window.location.protocol + '//' + window.location.host);
+    //         return null;
+    //     }
+    //     return children;
+    // }
+    return children;
 };
 
 const MainRoutes = {

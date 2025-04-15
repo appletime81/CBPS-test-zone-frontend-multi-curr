@@ -1,17 +1,5 @@
 import { useState } from 'react';
-import {
-    Typography,
-    Grid,
-    Button,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    Box,
-    FormGroup,
-    FormControlLabel,
-    Checkbox,
-} from '@mui/material';
+import { Typography, Grid, Button, FormControl, InputLabel, Select, MenuItem, Box, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
 
 // project import
 import MainCard from 'components/MainCard';
@@ -30,13 +18,7 @@ import { queryCB } from 'components/apis.jsx';
 import { useDispatch } from 'react-redux';
 import { setMessageStateOpen } from 'store/reducers/dropdown';
 
-const CreditBalanceQuery = ({
-    setListInfo,
-    partiesList,
-    submarineCableList,
-    queryApi,
-    workTitleList,
-}) => {
+const CreditBalanceQuery = ({ setListInfo, partiesList, submarineCableList, queryApi, workTitleList }) => {
     const dispatch = useDispatch();
     const [partyName, setPartyName] = useState('All'); //會員名稱
     const [cBType, setCBType] = useState('All'); //CB種類
@@ -69,34 +51,13 @@ const CreditBalanceQuery = ({
             tmpQuery = tmpQuery + 'WorkTitle=' + workTitle + '&';
         }
         if (createDate[0] && createDate[1]) {
-            tmpQuery =
-                tmpQuery +
-                'startCreateDate=' +
-                dayjs(createDate[0]).format('YYYYMMDD') +
-                '&' +
-                'endCreateDate=' +
-                dayjs(createDate[1]).format('YYYYMMDD') +
-                '&';
+            tmpQuery = tmpQuery + 'startCreateDate=' + dayjs(createDate[0]).format('YYYYMMDD') + '&' + 'endCreateDate=' + dayjs(createDate[1]).format('YYYYMMDD') + '&';
         }
         if (createDate[0] && !createDate[1]) {
-            tmpQuery =
-                tmpQuery +
-                'startCreateDate=' +
-                dayjs(createDate[0]).format('YYYYMMDD') +
-                '&' +
-                'endCreateDate=' +
-                dayjs(new Date()).format('YYYYMMDD') +
-                '&';
+            tmpQuery = tmpQuery + 'startCreateDate=' + dayjs(createDate[0]).format('YYYYMMDD') + '&' + 'endCreateDate=' + dayjs(new Date()).format('YYYYMMDD') + '&';
         }
         if (!createDate[0] && createDate[1]) {
-            tmpQuery =
-                tmpQuery +
-                'startCreateDate=' +
-                '19110101' +
-                '&' +
-                'endCreateDate=' +
-                dayjs(createDate[1]).format('YYYYMMDD') +
-                '&';
+            tmpQuery = tmpQuery + 'startCreateDate=' + '19110101' + '&' + 'endCreateDate=' + dayjs(createDate[1]).format('YYYYMMDD') + '&';
         }
         if (currAmount?.TRUE && !currAmount?.FALSE) {
             tmpQuery = tmpQuery + 'CurrAmount=true&';
@@ -116,7 +77,9 @@ const CreditBalanceQuery = ({
         queryApi.current = tmpQuery;
         fetch(tmpQuery, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {
@@ -131,9 +94,9 @@ const CreditBalanceQuery = ({
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -154,11 +117,7 @@ const CreditBalanceQuery = ({
                 <Grid item sm={3} md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇會員</InputLabel>
-                        <Select
-                            value={partyName}
-                            label="會員"
-                            onChange={(e) => setPartyName(e.target.value)}
-                        >
+                        <Select value={partyName} label="會員" onChange={(e) => setPartyName(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {partiesList.map((i) => (
                                 <MenuItem key={i} value={i}>
@@ -176,11 +135,7 @@ const CreditBalanceQuery = ({
                 <Grid item sm={3} md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇CB種類</InputLabel>
-                        <Select
-                            value={cBType}
-                            label="發票供應商"
-                            onChange={(e) => setCBType(e.target.value)}
-                        >
+                        <Select value={cBType} label="發票供應商" onChange={(e) => setCBType(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             <MenuItem value={'MWG'}>MWG</MenuItem>
                             <MenuItem value={'重溢繳'}>重溢繳</MenuItem>
@@ -198,11 +153,7 @@ const CreditBalanceQuery = ({
                 <Grid item sm={3} md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇海纜名稱</InputLabel>
-                        <Select
-                            value={submarineCable}
-                            label="海纜名稱"
-                            onChange={(e) => setSubmarineCable(e.target.value)}
-                        >
+                        <Select value={submarineCable} label="海纜名稱" onChange={(e) => setSubmarineCable(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {submarineCableList.map((i) => (
                                 <MenuItem key={i.CableName} value={i.CableName}>
@@ -220,11 +171,7 @@ const CreditBalanceQuery = ({
                 <Grid item sm={3} md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇海纜作業</InputLabel>
-                        <Select
-                            value={workTitle}
-                            label="海纜作業"
-                            onChange={(e) => setWorkTitle(e.target.value)}
-                        >
+                        <Select value={workTitle} label="海纜作業" onChange={(e) => setWorkTitle(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {workTitleList.map((i) => (
                                 <MenuItem key={i.Title} value={i.Title}>
@@ -240,7 +187,7 @@ const CreditBalanceQuery = ({
                         variant="h5"
                         sx={{
                             fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                            ml: { lg: '0rem', xl: '0rem' },
+                            ml: { lg: '0rem', xl: '0rem' }
                         }}
                     >
                         剩餘金額：
@@ -256,7 +203,7 @@ const CreditBalanceQuery = ({
                                         checked={currAmount.TRUE}
                                         onChange={handleChange}
                                         sx={{
-                                            '& .MuiSvgIcon-root': { fontSize: { lg: 14, xl: 20 } },
+                                            '& .MuiSvgIcon-root': { fontSize: { lg: 14, xl: 20 } }
                                         }}
                                     />
                                 }
@@ -269,7 +216,7 @@ const CreditBalanceQuery = ({
                                         checked={currAmount.FALSE}
                                         onChange={handleChange}
                                         sx={{
-                                            '& .MuiSvgIcon-root': { fontSize: { lg: 14, xl: 20 } },
+                                            '& .MuiSvgIcon-root': { fontSize: { lg: 14, xl: 20 } }
                                         }}
                                     />
                                 }
@@ -284,10 +231,7 @@ const CreditBalanceQuery = ({
                     </Typography>
                 </Grid>
                 <Grid item sm={4} md={4} lg={4}>
-                    <LocalizationProvider
-                        dateAdapter={AdapterDayjs}
-                        localeText={{ start: '起始日', end: '結束日' }}
-                    >
+                    <LocalizationProvider dateAdapter={AdapterDayjs} localeText={{ start: '起始日', end: '結束日' }}>
                         <DateRangePicker
                             inputFormat="YYYY/MM/DD"
                             value={createDate}
@@ -304,15 +248,7 @@ const CreditBalanceQuery = ({
                         />
                     </LocalizationProvider>
                 </Grid>
-                <Grid
-                    item
-                    sm={6}
-                    md={4}
-                    lg={4}
-                    display="flex"
-                    justifyContent="end"
-                    alignItems="center"
-                >
+                <Grid item sm={6} md={4} lg={4} display="flex" justifyContent="end" alignItems="center">
                     <Button sx={{ mr: '0.5rem' }} variant="contained" onClick={creditBalanceQuery}>
                         查詢
                     </Button>

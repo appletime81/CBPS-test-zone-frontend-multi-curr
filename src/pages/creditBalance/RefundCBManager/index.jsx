@@ -15,13 +15,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 
 // api
-import {
-    dropdownmenuParties,
-    submarineCableInfoList,
-    refundView,
-    cBRefund,
-    getWorkTitle,
-} from 'components/apis';
+import { dropdownmenuParties, submarineCableInfoList, refundView, cBRefund, getWorkTitle } from 'components/apis';
 
 // redux
 import { useDispatch } from 'react-redux';
@@ -40,7 +34,7 @@ const CreditBalance = () => {
     const a11yProps = (index) => {
         return {
             id: `simple-tab-${index}`,
-            'aria-controls': `simple-tabpanel-${index}`,
+            'aria-controls': `simple-tabpanel-${index}`
         };
     };
 
@@ -54,9 +48,9 @@ const CreditBalance = () => {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify(queryApi.current),
+            body: JSON.stringify(queryApi.current)
         })
             .then((res) => res.json())
             .then((data) => {
@@ -71,9 +65,9 @@ const CreditBalance = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -89,9 +83,9 @@ const CreditBalance = () => {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
                 },
-                body: JSON.stringify(tmpArray),
+                body: JSON.stringify(tmpArray)
             })
                 .then((res) => res.json())
                 .then(() => {
@@ -100,9 +94,9 @@ const CreditBalance = () => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'success',
-                                message: '送出成功',
-                            },
-                        }),
+                                message: '送出成功'
+                            }
+                        })
                     );
                     creditBalanceQuery();
                 })
@@ -112,9 +106,9 @@ const CreditBalance = () => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
         } else {
@@ -123,16 +117,21 @@ const CreditBalance = () => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請至少勾選一筆項目',
-                    },
-                }),
+                        message: '請至少勾選一筆項目'
+                    }
+                })
             );
         }
     };
 
     useEffect(() => {
         //海纜名稱
-        fetch(submarineCableInfoList, { method: 'GET' })
+        fetch(submarineCableInfoList, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 setSubmarineCableList(data);
@@ -143,13 +142,18 @@ const CreditBalance = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         //會員名稱
-        fetch(dropdownmenuParties, { method: 'GET' })
+        fetch(dropdownmenuParties, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 setPartiesList(data);
@@ -160,18 +164,18 @@ const CreditBalance = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         fetch(getWorkTitle, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify({}),
+            body: JSON.stringify({})
         })
             .then((res) => res.json())
             .then((data) => {
@@ -188,9 +192,9 @@ const CreditBalance = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     }, []);
@@ -210,11 +214,7 @@ const CreditBalance = () => {
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <MainCard
-                        title={`${
-                            value === 0 ? '已退費CB' : value === 1 ? '退費函稿' : '已完成'
-                        }資料列表`}
-                    >
+                    <MainCard title={`${value === 0 ? '已退費CB' : value === 1 ? '退費函稿' : '已完成'}資料列表`}>
                         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                             <Tabs value={value} onChange={handleChange}>
                                 <Tab label="已退費CB" {...a11yProps(0)} />
@@ -223,21 +223,13 @@ const CreditBalance = () => {
                             </Tabs>
                         </Box>
                         <CustomTabPanel value={value} index={0}>
-                            <RefundCBManagerDataList
-                                listInfo={listInfo}
-                                cbToCn={cbToCn}
-                                setCbToCn={setCbToCn}
-                            />
+                            <RefundCBManagerDataList listInfo={listInfo} cbToCn={cbToCn} setCbToCn={setCbToCn} />
                         </CustomTabPanel>
                         <CustomTabPanel value={value} index={1}>
                             <RefundDraftDataList listInfo={listInfo} />
                         </CustomTabPanel>
                         <CustomTabPanel value={value} index={2}>
-                            <RefundCBManagerDataList
-                                listInfo={listInfo}
-                                cbToCn={cbToCn}
-                                setCbToCn={setCbToCn}
-                            />
+                            <RefundCBManagerDataList listInfo={listInfo} cbToCn={cbToCn} setCbToCn={setCbToCn} />
                         </CustomTabPanel>
                     </MainCard>
                 </Grid>

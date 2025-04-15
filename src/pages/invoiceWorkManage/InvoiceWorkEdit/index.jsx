@@ -24,7 +24,7 @@ import {
     afterBilled,
     supplierNameListForInvoice,
     submarineCableInfoList,
-    billMilestoneLiabilityList,
+    dropdownmenuBillMilestone,
     getCurrencyData,
     dropdownmenuParties,
     getWorkTitle,
@@ -151,7 +151,7 @@ const InvoiceWorkManage = () => {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
             body: JSON.stringify(queryApi.current)
         })
@@ -178,7 +178,7 @@ const InvoiceWorkManage = () => {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
             body: JSON.stringify(queryApiTemporary)
         })
@@ -258,7 +258,12 @@ const InvoiceWorkManage = () => {
 
     const getBmStoneList = (api) => {
         if (action === '編輯') {
-            fetch(api, { method: 'GET' })
+            fetch(api, {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+                }
+            })
                 .then((res) => res.json())
                 .then((data) => {
                     if (Array.isArray(data)) {
@@ -297,7 +302,7 @@ const InvoiceWorkManage = () => {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
             body: JSON.stringify({
                 SubmarineCable: submarineCable,
@@ -481,7 +486,7 @@ const InvoiceWorkManage = () => {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
                 },
                 body: JSON.stringify(tmpWKMasterID)
             })
@@ -492,7 +497,7 @@ const InvoiceWorkManage = () => {
                         method: 'POST',
                         headers: {
                             'Content-type': 'application/json',
-                            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                            Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
                         },
                         body: JSON.stringify(tmpWKMasterID)
                     })
@@ -503,7 +508,7 @@ const InvoiceWorkManage = () => {
                                 method: 'POST',
                                 headers: {
                                     'Content-type': 'application/json',
-                                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
                                 },
                                 body: JSON.stringify(combineArray)
                             })
@@ -704,7 +709,7 @@ const InvoiceWorkManage = () => {
     //             method: 'POST',
     //             headers: {
     //                 'Content-type': 'application/json',
-    //                 Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+    //                 Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
     //             },
     //             body: JSON.stringify(tmpArray)
     //         })
@@ -743,7 +748,7 @@ const InvoiceWorkManage = () => {
     //             method: 'POST',
     //             headers: {
     //                 'Content-type': 'application/json',
-    //                 Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+    //                 Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
     //             },
     //             body: JSON.stringify(tmpArray)
     //         })
@@ -794,7 +799,7 @@ const InvoiceWorkManage = () => {
     //             method: 'POST',
     //             headers: {
     //                 'Content-type': 'application/json',
-    //                 Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+    //                 Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
     //             },
     //             body: JSON.stringify(tmpArray)
     //         })
@@ -845,7 +850,7 @@ const InvoiceWorkManage = () => {
     //             method: 'POST',
     //             headers: {
     //                 'Content-type': 'application/json',
-    //                 Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+    //                 Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
     //             },
     //             body: JSON.stringify(tmpArray)
     //         })
@@ -856,7 +861,7 @@ const InvoiceWorkManage = () => {
     //                     method: 'POST',
     //                     headers: {
     //                         'Content-type': 'application/json',
-    //                         Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+    //                         Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
     //                     },
     //                     body: JSON.stringify(tmpArray)
     //                 })
@@ -981,7 +986,7 @@ const InvoiceWorkManage = () => {
         };
         const fetchBMData = async () => {
             try {
-                const data = await fetchData(billMilestoneLiabilityList);
+                const data = await fetchData(dropdownmenuBillMilestone);
                 setDropdownLists((prev) => ({ ...prev, bmsList: data }));
             } catch (error) {
                 console.error('Error fetching currency data:', error);

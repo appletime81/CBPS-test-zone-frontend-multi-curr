@@ -1,14 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-    Typography,
-    Grid,
-    Button,
-    FormControl,
-    Box,
-    RadioGroup,
-    FormControlLabel,
-    Radio,
-} from '@mui/material';
+import { Typography, Grid, Button, FormControl, Box, RadioGroup, FormControlLabel, Radio } from '@mui/material';
 import { DropzoneArea } from 'mui-file-dropzone';
 // import { FileUploader } from 'react-drag-drop-files';
 
@@ -53,8 +44,8 @@ const SignAndUpload = ({ isUploadOpen, handleUploadClose, billMasterID, receivab
                 body: pdfData,
                 headers: {
                     Accept: 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-                },
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+                }
             })
                 .then((res) => res.json())
                 .then(() => {
@@ -63,9 +54,9 @@ const SignAndUpload = ({ isUploadOpen, handleUploadClose, billMasterID, receivab
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'success',
-                                message: '上傳成功',
-                            },
-                        }),
+                                message: '上傳成功'
+                            }
+                        })
                     );
                     setUploadFile(null);
                     handleUploadClose();
@@ -77,16 +68,16 @@ const SignAndUpload = ({ isUploadOpen, handleUploadClose, billMasterID, receivab
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
         } else {
             dispatch(
                 setMessageStateOpen({
-                    messageStateOpen: { isOpen: true, severity: 'error', message: '請上傳檔案' },
-                }),
+                    messageStateOpen: { isOpen: true, severity: 'error', message: '請上傳檔案' }
+                })
             );
         }
     };
@@ -108,13 +99,7 @@ const SignAndUpload = ({ isUploadOpen, handleUploadClose, billMasterID, receivab
                 {/* 第二階段優化 */}
                 {/* <FormControl row> */}
                 <RadioGroup row value={isUpload} onChange={(e) => setIsUpload(e.target.value)}>
-                    <Grid
-                        container
-                        spacing={2}
-                        display="flex"
-                        justifyContent="center"
-                        alignItems="center"
-                    >
+                    <Grid container spacing={2} display="flex" justifyContent="center" alignItems="center">
                         {/* <Grid item xs={6} sm={6} md={6} lg={6} display="flex">
                                 <Box sx={{ display: 'flex', flexFlow: 'column', alignItems: 'center', width: '100%' }}>
                                     <MainCard title="主管確認簽核" sx={{ minHeight: '250px' }}>
@@ -143,21 +128,18 @@ const SignAndUpload = ({ isUploadOpen, handleUploadClose, billMasterID, receivab
                                     display: 'flex',
                                     flexFlow: 'column',
                                     alignItems: 'center',
-                                    width: '100%',
+                                    width: '100%'
                                 }}
                             >
-                                <DropzoneArea
-                                    onChange={handleUploadChange}
-                                    acceptedFiles={['.pdf']}
-                                />
+                                <DropzoneArea onChange={handleUploadChange} acceptedFiles={['.pdf']} />
                                 <FormControlLabel
                                     value={true}
                                     control={
                                         <Radio
                                             sx={{
                                                 '& .MuiSvgIcon-root': {
-                                                    fontSize: { lg: 14, xl: 20 },
-                                                },
+                                                    fontSize: { lg: 14, xl: 20 }
+                                                }
                                             }}
                                         />
                                     }
@@ -165,9 +147,7 @@ const SignAndUpload = ({ isUploadOpen, handleUploadClose, billMasterID, receivab
                             </Box>
                         </Grid>
                         <Grid item xs={12} sm={12} md={12} lg={12} display="flex">
-                            <Box sx={{ fontSize: 0.1, textAlign: 'left' }}>
-                                {displayName[0] ? `上傳成功：${displayName[0]}` : ''}
-                            </Box>
+                            <Box sx={{ fontSize: 0.1, textAlign: 'left' }}>{displayName[0] ? `上傳成功：${displayName[0]}` : ''}</Box>
                         </Grid>
                     </Grid>
                 </RadioGroup>

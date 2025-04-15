@@ -1,14 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-    Typography,
-    Grid,
-    Button,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    Box,
-} from '@mui/material';
+import { Typography, Grid, Button, FormControl, InputLabel, Select, MenuItem, Box } from '@mui/material';
 
 // project import
 import MainCard from 'components/MainCard';
@@ -21,12 +12,7 @@ import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { TextField } from '@mui/material/index';
 
 //api
-import {
-    getInvoiceWKMasterInvoiceWKDetail,
-    supplierNameDropDownUnique,
-    submarineCableInfoList,
-    getCurrencyData,
-} from 'components/apis.jsx';
+import { getInvoiceWKMasterInvoiceWKDetail, supplierNameDropDownUnique, submarineCableInfoList, getCurrencyData } from 'components/apis.jsx';
 
 // redux
 import { useDispatch } from 'react-redux';
@@ -48,7 +34,7 @@ const JournalQuery = ({
     setToCode,
     issueDate,
     setIssueDate,
-    initQuery,
+    initQuery
 }) => {
     const dispatch = useDispatch();
     const [supNmList, setSupNmList] = useState([]); //供應商下拉選單
@@ -66,9 +52,7 @@ const JournalQuery = ({
         if (issueDate[0] || issueDate[1]) {
             tmpObject.CreateDate = {
                 start: issueDate[0] ? dayjs(issueDate[0]).format('YYYYMMDD') : '19110101',
-                end: issueDate[1]
-                    ? dayjs(issueDate[1]).format('YYYYMMDD')
-                    : dayjs(new Date()).format('YYYYMMDD'),
+                end: issueDate[1] ? dayjs(issueDate[1]).format('YYYYMMDD') : dayjs(new Date()).format('YYYYMMDD')
             };
         }
         if (code && code !== 'All') {
@@ -90,9 +74,9 @@ const JournalQuery = ({
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify(tmpObject),
+            body: JSON.stringify(tmpObject)
         })
             .then((res) => res.json())
             .then((data) => {
@@ -104,9 +88,9 @@ const JournalQuery = ({
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -114,7 +98,9 @@ const JournalQuery = ({
     useEffect(() => {
         fetch(supplierNameDropDownUnique, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {
@@ -129,14 +115,17 @@ const JournalQuery = ({
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         //海纜名稱
         fetch(submarineCableInfoList, {
             method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {
@@ -148,15 +137,17 @@ const JournalQuery = ({
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         //幣別
         fetch(getCurrencyData, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {
@@ -173,22 +164,14 @@ const JournalQuery = ({
             <Grid container display="flex" justifyContent="center" alignItems="center" spacing={2}>
                 {/* row1 */}
                 <Grid item md={1} lg={1}>
-                    <Typography
-                        textAlign="right"
-                        variant="h5"
-                        sx={{ fontSize: { lg: '0.7rem', xl: '0.88rem' } }}
-                    >
+                    <Typography textAlign="right" variant="h5" sx={{ fontSize: { lg: '0.7rem', xl: '0.88rem' } }}>
                         海纜名稱：
                     </Typography>
                 </Grid>
                 <Grid item md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇海纜</InputLabel>
-                        <Select
-                            value={submarineCable}
-                            label="海纜"
-                            onChange={(e) => setSubmarineCable(e.target.value)}
-                        >
+                        <Select value={submarineCable} label="海纜" onChange={(e) => setSubmarineCable(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {submarineCableList.map((i) => (
                                 <MenuItem key={i.CableName} value={i.CableName}>
@@ -199,22 +182,14 @@ const JournalQuery = ({
                     </FormControl>
                 </Grid>
                 <Grid item md={1} lg={1}>
-                    <Typography
-                        variant="h5"
-                        textAlign="right"
-                        sx={{ fontSize: { lg: '0.7rem', xl: '0.88rem' } }}
-                    >
+                    <Typography variant="h5" textAlign="right" sx={{ fontSize: { lg: '0.7rem', xl: '0.88rem' } }}>
                         供應商：
                     </Typography>
                 </Grid>
                 <Grid item md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇供應商</InputLabel>
-                        <Select
-                            value={supplierName}
-                            label="供應商"
-                            onChange={(e) => setSupplierName(e.target.value)}
-                        >
+                        <Select value={supplierName} label="供應商" onChange={(e) => setSupplierName(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {supNmList.map((i) => (
                                 <MenuItem key={i} value={i}>
@@ -225,19 +200,12 @@ const JournalQuery = ({
                     </FormControl>
                 </Grid>
                 <Grid item md={1} lg={1}>
-                    <Typography
-                        textAlign="right"
-                        variant="h5"
-                        sx={{ fontSize: { lg: '0.7rem', xl: '0.88rem' } }}
-                    >
+                    <Typography textAlign="right" variant="h5" sx={{ fontSize: { lg: '0.7rem', xl: '0.88rem' } }}>
                         發票日期：
                     </Typography>
                 </Grid>
                 <Grid item md={5} lg={5}>
-                    <LocalizationProvider
-                        dateAdapter={AdapterDayjs}
-                        localeText={{ start: '起始日', end: '結束日' }}
-                    >
+                    <LocalizationProvider dateAdapter={AdapterDayjs} localeText={{ start: '起始日', end: '結束日' }}>
                         <DateRangePicker
                             inputFormat="YYYY/MM/DD"
                             value={issueDate}
@@ -260,7 +228,7 @@ const JournalQuery = ({
                         variant="h5"
                         textAlign="right"
                         sx={{
-                            fontSize: { lg: '0.7rem', xl: '0.88rem' },
+                            fontSize: { lg: '0.7rem', xl: '0.88rem' }
                         }}
                     >
                         原始幣別：
@@ -284,7 +252,7 @@ const JournalQuery = ({
                         variant="h5"
                         textAlign="right"
                         sx={{
-                            fontSize: { lg: '0.7rem', xl: '0.88rem' },
+                            fontSize: { lg: '0.7rem', xl: '0.88rem' }
                         }}
                     >
                         兌換幣別：
@@ -303,15 +271,7 @@ const JournalQuery = ({
                         </Select>
                     </FormControl>
                 </Grid>
-                <Grid
-                    item
-                    md={6}
-                    lg={6}
-                    xl={6}
-                    display="flex"
-                    justifyContent="end"
-                    alignItems="center"
-                >
+                <Grid item md={6} lg={6} xl={6} display="flex" justifyContent="end" alignItems="center">
                     <Button sx={{ mr: '0.5rem' }} variant="contained" onClick={journalQuery}>
                         查詢
                     </Button>

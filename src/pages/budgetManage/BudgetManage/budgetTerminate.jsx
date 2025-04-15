@@ -16,64 +16,17 @@ import { BootstrapDialogTitle } from 'components/commonFunction';
 import { useDispatch } from 'react-redux';
 import { setMessageStateOpen } from 'store/reducers/dropdown';
 
-const LiabilityTerminate = ({ dialogTerminate, handleDialogClose, terminateInfo, budgetQuery }) => {
+const LiabilityTerminate = ({ dialogTerminate, handleDialogClose, actionName, budgetQuery, terminateInfo }) => {
     const dispatch = useDispatch();
     const [endNote, setEndNote] = useState('');
 
-    const terminalLiability = () => {
-        let tmpArray = {
-            LBRawID: terminateInfo.LBRawID,
-            EndDate: terminateInfo.EndDate,
-            ModifyNote: endNote ? endNote : ''
-        };
-        console.log('', tmpArray);
-        fetch(deleteLiability, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
-            },
-            body: JSON.stringify(tmpArray)
-        })
-            .then((res) => res.json())
-            .then(() => {
-                dispatch(
-                    setMessageStateOpen({
-                        messageStateOpen: {
-                            isOpen: true,
-                            severity: 'success',
-                            message: '終止成功'
-                        }
-                    })
-                );
-                budgetQuery();
-                handleDialogClose();
-            })
-            .catch(() => {
-                dispatch(
-                    setMessageStateOpen({
-                        messageStateOpen: {
-                            isOpen: true,
-                            severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
-                        }
-                    })
-                );
-            });
+    const terminalLiability = async () => {
+        console.log('尚未開發');
     };
 
     return (
-        <Dialog
-            // onClose={handleDialogClose}
-            maxWidth="xs"
-            fullWidth
-            open={dialogTerminate}
-        >
-            <BootstrapDialogTitle
-            //  onClose={handleDialogClose}
-            >
-                確認終止訊息
-            </BootstrapDialogTitle>
+        <Dialog maxWidth="xs" fullWidth open={dialogTerminate}>
+            <BootstrapDialogTitle>確認{actionName === 'stop' ? '停用' : '刪除'}訊息</BootstrapDialogTitle>
             <DialogContent dividers>
                 <Grid container spacing={1} display="flex" justifyContent="center" alignItems="center">
                     {/* row3 */}
@@ -85,7 +38,7 @@ const LiabilityTerminate = ({ dialogTerminate, handleDialogClose, terminateInfo,
                                 ml: { lg: '0.5rem', xl: '1.5rem' }
                             }}
                         >
-                            {`是否確定刪除${terminateInfo.BillMilestone}、${terminateInfo.PartyName}的Liability資料`}
+                            {/* {`是否確定刪除${terminateInfo.BillMilestone}、${terminateInfo.PartyName}的Liability資料`} */}
                         </Typography>
                     </Grid>
                     <Grid item xs={12} sm={12} md={12} lg={12} display="flex">

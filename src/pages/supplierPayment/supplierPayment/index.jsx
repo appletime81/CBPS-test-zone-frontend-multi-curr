@@ -32,7 +32,12 @@ const SupplierPayment = () => {
     };
 
     const supplierPaymentQuery = () => {
-        fetch(queryApi.current, { method: 'GET' })
+        fetch(queryApi.current, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 setListInfo(data);

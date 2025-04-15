@@ -207,7 +207,7 @@ const RuleAdd = ({ isDialogOpen, handleAddRuleClose, value, partiesList, submari
                     method: 'POST',
                     headers: {
                         'Content-type': 'application/json',
-                        Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                        Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
                     },
                     body: JSON.stringify(tmpArray)
                 })
@@ -261,7 +261,7 @@ const RuleAdd = ({ isDialogOpen, handleAddRuleClose, value, partiesList, submari
                     method: 'POST',
                     headers: {
                         'Content-type': 'application/json',
-                        Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                        Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
                     },
                     body: JSON.stringify(tmpArray)
                 })
@@ -314,7 +314,7 @@ const RuleAdd = ({ isDialogOpen, handleAddRuleClose, value, partiesList, submari
                     method: 'POST',
                     headers: {
                         'Content-type': 'application/json',
-                        Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+                        Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
                     },
                     body: JSON.stringify(tmpArray)
                 })

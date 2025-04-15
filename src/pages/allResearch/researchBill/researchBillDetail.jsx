@@ -63,7 +63,9 @@ const ResearchBillDetail = ({ detailInfo }) => {
         let tmpQuery = queryToDecutBill + '/BillMasterID=' + id;
         fetch(tmpQuery, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? ''
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {

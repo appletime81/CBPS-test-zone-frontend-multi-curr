@@ -9,12 +9,7 @@ import CreditBalanceDataList from './creditBalanceDataList';
 import CreditBalanceAdd from './creditBalanceAdd';
 
 // api
-import {
-    dropdownmenuParties,
-    submarineCableInfoList,
-    getWorkTitle,
-    getCurrencyData,
-} from 'components/apis';
+import { dropdownmenuParties, submarineCableInfoList, getWorkTitle, getCurrencyData } from 'components/apis';
 
 // redux
 import { useDispatch } from 'react-redux';
@@ -42,6 +37,9 @@ const CreditBalance = () => {
         //海纜名稱
         fetch(submarineCableInfoList, {
             method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {
@@ -53,13 +51,18 @@ const CreditBalance = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         //會員名稱
-        fetch(dropdownmenuParties, { method: 'GET' })
+        fetch(dropdownmenuParties, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 setPartiesList(data);
@@ -70,14 +73,16 @@ const CreditBalance = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         fetch(getCurrencyData, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {
@@ -91,18 +96,18 @@ const CreditBalance = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         fetch(getWorkTitle, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify({}),
+            body: JSON.stringify({})
         })
             .then((res) => res.json())
             .then((data) => {
@@ -119,9 +124,9 @@ const CreditBalance = () => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     }, []);
@@ -144,13 +149,7 @@ const CreditBalance = () => {
                 />
             </Grid>
             <Grid item xs={12}>
-                <CreditBalanceQuery
-                    setListInfo={setListInfo}
-                    partiesList={partiesList}
-                    submarineCableList={submarineCableList}
-                    workTitleList={workTitleList}
-                    queryApi={queryApi}
-                />
+                <CreditBalanceQuery setListInfo={setListInfo} partiesList={partiesList} submarineCableList={submarineCableList} workTitleList={workTitleList} queryApi={queryApi} />
             </Grid>
             <Grid item xs={12}>
                 <MainCard title="Credit Balance資料列表">

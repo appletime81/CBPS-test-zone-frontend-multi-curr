@@ -1,14 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-    Typography,
-    Grid,
-    Button,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    Box,
-} from '@mui/material';
+import { Typography, Grid, Button, FormControl, InputLabel, Select, MenuItem, Box } from '@mui/material';
 
 // project import
 import MainCard from 'components/MainCard';
@@ -21,12 +12,7 @@ import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { TextField } from '@mui/material/index';
 
 // api
-import {
-    creditMemoView,
-    submarineCableInfoList,
-    dropdownmenuParties,
-    getWorkTitle,
-} from 'components/apis.jsx';
+import { creditMemoView, submarineCableInfoList, dropdownmenuParties, getWorkTitle } from 'components/apis.jsx';
 
 // redux
 import { useDispatch } from 'react-redux';
@@ -70,9 +56,7 @@ const CreditMemoQuery = ({ setListInfo }) => {
         if (lastIssueDate[0] || lastIssueDate[1]) {
             tmpObject.LastIssueDate = {
                 start: lastIssueDate[0] ? dayjs(lastIssueDate[0]).format('YYYYMMDD') : '19110101',
-                end: lastIssueDate[1]
-                    ? dayjs(lastIssueDate[1]).format('YYYYMMDD')
-                    : dayjs(new Date()).format('YYYYMMDD'),
+                end: lastIssueDate[1] ? dayjs(lastIssueDate[1]).format('YYYYMMDD') : dayjs(new Date()).format('YYYYMMDD')
             };
         }
 
@@ -80,9 +64,9 @@ const CreditMemoQuery = ({ setListInfo }) => {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify(tmpObject),
+            body: JSON.stringify(tmpObject)
         })
             .then((res) => res.json())
             .then((data) => {
@@ -96,16 +80,21 @@ const CreditMemoQuery = ({ setListInfo }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
 
     useEffect(() => {
         //海纜名稱
-        fetch(submarineCableInfoList, { method: 'GET' })
+        fetch(submarineCableInfoList, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 setSubmarineCableList(data);
@@ -116,13 +105,18 @@ const CreditMemoQuery = ({ setListInfo }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         //會員名稱
-        fetch(dropdownmenuParties, { method: 'GET' })
+        fetch(dropdownmenuParties, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 setPartiesList(data);
@@ -133,18 +127,18 @@ const CreditMemoQuery = ({ setListInfo }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         fetch(getWorkTitle, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify({}),
+            body: JSON.stringify({})
         })
             .then((res) => res.json())
             .then((data) => {
@@ -161,9 +155,9 @@ const CreditMemoQuery = ({ setListInfo }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     }, []);
@@ -180,11 +174,7 @@ const CreditMemoQuery = ({ setListInfo }) => {
                 <Grid item lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇會員</InputLabel>
-                        <Select
-                            value={partyName}
-                            label="會員"
-                            onChange={(e) => setPartyName(e.target.value)}
-                        >
+                        <Select value={partyName} label="會員" onChange={(e) => setPartyName(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {partiesList.map((i) => (
                                 <MenuItem key={i} value={i}>
@@ -200,14 +190,7 @@ const CreditMemoQuery = ({ setListInfo }) => {
                     </Typography>
                 </Grid>
                 <Grid item lg={2}>
-                    <TextField
-                        fullWidth
-                        variant="outlined"
-                        value={cMNo}
-                        size="small"
-                        label="填寫CM號碼"
-                        onChange={(e) => setCMNo(e.target.value)}
-                    />
+                    <TextField fullWidth variant="outlined" value={cMNo} size="small" label="填寫CM號碼" onChange={(e) => setCMNo(e.target.value)} />
                 </Grid>
                 <Grid item lg={1}>
                     <Typography variant="h5" sx={{ fontSize: { lg: '0.7rem', xl: '0.88rem' } }}>
@@ -217,11 +200,7 @@ const CreditMemoQuery = ({ setListInfo }) => {
                 <Grid item lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇海纜名稱</InputLabel>
-                        <Select
-                            value={submarineCable}
-                            label="海纜名稱"
-                            onChange={(e) => setSubmarineCable(e.target.value)}
-                        >
+                        <Select value={submarineCable} label="海纜名稱" onChange={(e) => setSubmarineCable(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {submarineCableList.map((i) => (
                                 <MenuItem key={i.CableName} value={i.CableName}>
@@ -239,11 +218,7 @@ const CreditMemoQuery = ({ setListInfo }) => {
                 <Grid item lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇海纜作業</InputLabel>
-                        <Select
-                            value={workTitle}
-                            label="海纜作業"
-                            onChange={(e) => setWorkTitle(e.target.value)}
-                        >
+                        <Select value={workTitle} label="海纜作業" onChange={(e) => setWorkTitle(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {workTitleList.map((i) => (
                                 <MenuItem key={i.Title} value={i.Title}>
@@ -260,10 +235,7 @@ const CreditMemoQuery = ({ setListInfo }) => {
                     </Typography>
                 </Grid>
                 <Grid item lg={4}>
-                    <LocalizationProvider
-                        dateAdapter={AdapterDayjs}
-                        localeText={{ start: '起始日', end: '結束日' }}
-                    >
+                    <LocalizationProvider dateAdapter={AdapterDayjs} localeText={{ start: '起始日', end: '結束日' }}>
                         <DateRangePicker
                             inputFormat="YYYY/MM/DD"
                             value={lastIssueDate}

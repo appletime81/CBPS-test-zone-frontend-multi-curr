@@ -9,14 +9,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
-import {
-    parties,
-    getPartiesAllInfo,
-    deleteParties,
-    editParties,
-    submarineCableInfoList,
-    getWorkTitle,
-} from 'components/apis.jsx';
+import { parties, getPartiesAllInfo, deleteParties, editParties, submarineCableInfoList, getWorkTitle } from 'components/apis.jsx';
 
 // redux
 import { useDispatch } from 'react-redux';
@@ -32,18 +25,18 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
         color: theme.palette.common.black,
         paddingTop: '0rem',
         paddingBottom: '0rem',
-        fontSize: '0.7rem',
+        fontSize: '0.7rem'
     },
     [`&.${tableCellClasses.body}`]: {
         paddingTop: '0.1rem',
         paddingBottom: '0.1rem',
-        fontSize: '0.7rem',
-    },
+        fontSize: '0.7rem'
+    }
 }));
 
 const columns1 = [
     { id: '海纜名稱', label: '海纜名稱', align: 'center' },
-    { id: '海纜作業', label: '海纜作業', align: 'center' },
+    { id: '海纜作業', label: '海纜作業', align: 'center' }
 ];
 
 const columns2 = [
@@ -51,7 +44,7 @@ const columns2 = [
         id: '會員名稱',
         label: '會員名稱',
 
-        align: 'center',
+        align: 'center'
     },
     { id: '會員代碼', label: '會員代碼', align: 'center' },
     { id: '預付稅款百分比', label: '預付稅款百分比', align: 'center' },
@@ -59,32 +52,32 @@ const columns2 = [
         id: '公司名稱',
         label: '公司名稱',
 
-        align: 'center',
+        align: 'center'
     },
     {
         id: '公司地址',
         label: '公司地址',
 
-        align: 'center',
+        align: 'center'
     },
     {
         id: '聯絡窗口',
         label: '聯絡窗口',
 
-        align: 'center',
+        align: 'center'
     },
     {
         id: '電子郵件',
         label: '電子郵件',
 
-        align: 'center',
+        align: 'center'
     },
     {
         id: '電話',
         label: '電話',
 
-        align: 'center',
-    },
+        align: 'center'
+    }
 ];
 
 const columns3 = [
@@ -92,51 +85,51 @@ const columns3 = [
     {
         id: 'Bank Name',
         label: 'Bank Name',
-        align: 'center',
+        align: 'center'
     },
     {
         id: 'Branch',
         label: 'Branch',
-        align: 'center',
+        align: 'center'
     },
     {
         id: 'Bank Address',
         label: 'Bank Address',
-        align: 'center',
-    },
+        align: 'center'
+    }
 ];
 
 const columns4 = [
     {
         id: 'A/C No.',
         label: 'A/C No.',
-        align: 'center',
+        align: 'center'
     },
     {
         id: 'Saving A/C No.',
         label: 'Saving A/C No.',
-        align: 'center',
+        align: 'center'
     },
     {
         id: 'SWIFT Code',
         label: 'SWIFT Code',
-        align: 'center',
+        align: 'center'
     },
     {
         id: 'ACH No',
         label: 'ACH No',
-        align: 'center',
+        align: 'center'
     },
     {
         id: 'SWIFT Code',
         label: 'SWIFT Code',
-        align: 'center',
+        align: 'center'
     },
     {
         id: 'Wire/Routing',
         label: 'Wire/Routing',
-        align: 'center',
-    },
+        align: 'center'
+    }
 ];
 
 const PartyDataList = ({ infoList, setInfoList }) => {
@@ -240,7 +233,9 @@ const PartyDataList = ({ infoList, setInfoList }) => {
     const queryPartiesInfo = () => {
         fetch(getPartiesAllInfo, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {
@@ -254,9 +249,9 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -268,21 +263,21 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入會員代碼',
-                    },
-                }),
+                        message: '請輸入會員代碼'
+                    }
+                })
             );
             return false;
         }
-        if (code.length > 4){
+        if (code.length > 4) {
             dispatch(
                 setMessageStateOpen({
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '會員代碼請小於4碼',
-                    },
-                }),
+                        message: '會員代碼請小於4碼'
+                    }
+                })
             );
             return false;
         }
@@ -292,9 +287,9 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入海纜名稱',
-                    },
-                }),
+                        message: '請輸入海纜名稱'
+                    }
+                })
             );
             return false;
         }
@@ -304,9 +299,9 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入海纜作業',
-                    },
-                }),
+                        message: '請輸入海纜作業'
+                    }
+                })
             );
             return false;
         }
@@ -316,9 +311,9 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入會員名稱',
-                    },
-                }),
+                        message: '請輸入會員名稱'
+                    }
+                })
             );
             return false;
         }
@@ -328,9 +323,9 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入預付稅款百分比',
-                    },
-                }),
+                        message: '請輸入預付稅款百分比'
+                    }
+                })
             );
             return false;
         }
@@ -359,7 +354,7 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                 WireRouting: wireRouting,
                 BankName: bankName,
                 Branch: branch,
-                BankAddress: bankAddress,
+                BankAddress: bankAddress
             };
             console.log('', tmpArray);
             fetch(parties, {
@@ -367,8 +362,8 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                 body: JSON.stringify(tmpArray),
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-                },
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+                }
             })
                 .then((res) => res.json())
                 .then(() => {
@@ -377,9 +372,9 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'success',
-                                message: '新增會員資料成功',
-                            },
-                        }),
+                                message: '新增會員資料成功'
+                            }
+                        })
                     );
                     infoInit();
                     queryPartiesInfo();
@@ -390,9 +385,9 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
         }
@@ -402,7 +397,7 @@ const PartyDataList = ({ infoList, setInfoList }) => {
         fetch(deleteParties, {
             method: 'POST',
             body: JSON.stringify(row),
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json' }
         })
             .then((res) => res.json())
             .then(() => {
@@ -411,9 +406,9 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'success',
-                            message: '刪除會員資料成功',
-                        },
-                    }),
+                            message: '刪除會員資料成功'
+                        }
+                    })
                 );
                 queryPartiesInfo();
             })
@@ -423,9 +418,9 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -485,9 +480,9 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入會員代碼',
-                    },
-                }),
+                        message: '請輸入會員代碼'
+                    }
+                })
             );
             return false;
         }
@@ -497,9 +492,9 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入海纜名稱',
-                    },
-                }),
+                        message: '請輸入海纜名稱'
+                    }
+                })
             );
             return false;
         }
@@ -509,9 +504,9 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入海纜作業',
-                    },
-                }),
+                        message: '請輸入海纜作業'
+                    }
+                })
             );
             return false;
         }
@@ -521,9 +516,9 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入會員名稱',
-                    },
-                }),
+                        message: '請輸入會員名稱'
+                    }
+                })
             );
             return false;
         }
@@ -533,9 +528,9 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入預付稅款百分比',
-                    },
-                }),
+                        message: '請輸入預付稅款百分比'
+                    }
+                })
             );
             return false;
         }
@@ -565,15 +560,15 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                 WireRouting: wireRoutingEdit,
                 BankName: bankNameEdit,
                 Branch: branchEdit,
-                BankAddress: bankAddressEdit,
+                BankAddress: bankAddressEdit
             };
             fetch(editParties, {
                 method: 'POST',
                 body: JSON.stringify(tmpArray),
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-                },
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+                }
             })
                 .then((res) => res.json())
                 .then(() => {
@@ -582,9 +577,9 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'success',
-                                message: '更新會員資料成功',
-                            },
-                        }),
+                                message: '更新會員資料成功'
+                            }
+                        })
                     );
                     editInfoInit();
                     queryPartiesInfo();
@@ -595,9 +590,9 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
         }
@@ -609,7 +604,12 @@ const PartyDataList = ({ infoList, setInfoList }) => {
 
     useEffect(() => {
         //海纜名稱
-        fetch(submarineCableInfoList, { method: 'GET' })
+        fetch(submarineCableInfoList, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 setSubmarineCableList(data);
@@ -620,18 +620,18 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         fetch(getWorkTitle, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify({}),
+            body: JSON.stringify({})
         })
             .then((res) => res.json())
             .then((data) => {
@@ -648,9 +648,9 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     }, []);
@@ -674,11 +674,7 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                                                     setIsColumn1Open(!isColumn1Open);
                                                 }}
                                             >
-                                                {isColumn1Open ? (
-                                                    <DoNotDisturbOnIcon />
-                                                ) : (
-                                                    <AddCircleIcon />
-                                                )}
+                                                {isColumn1Open ? <DoNotDisturbOnIcon /> : <AddCircleIcon />}
                                             </Button>
                                         ) : null}
                                         {column.label}
@@ -709,11 +705,7 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                                                     setIsColumn2Open(!isColumn2Open);
                                                 }}
                                             >
-                                                {isColumn2Open ? (
-                                                    <DoNotDisturbOnIcon />
-                                                ) : (
-                                                    <AddCircleIcon />
-                                                )}
+                                                {isColumn2Open ? <DoNotDisturbOnIcon /> : <AddCircleIcon />}
                                             </Button>
                                         ) : null}
                                         {column.label}
@@ -744,11 +736,7 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                                                     setIsColumn3Open(!isColumn3Open);
                                                 }}
                                             >
-                                                {isColumn3Open ? (
-                                                    <DoNotDisturbOnIcon />
-                                                ) : (
-                                                    <AddCircleIcon />
-                                                )}
+                                                {isColumn3Open ? <DoNotDisturbOnIcon /> : <AddCircleIcon />}
                                             </Button>
                                         ) : null}
                                         {column.label}
@@ -779,11 +767,7 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                                                     setIsColumn4Open(!isColumn4Open);
                                                 }}
                                             >
-                                                {isColumn4Open ? (
-                                                    <DoNotDisturbOnIcon />
-                                                ) : (
-                                                    <AddCircleIcon />
-                                                )}
+                                                {isColumn4Open ? <DoNotDisturbOnIcon /> : <AddCircleIcon />}
                                             </Button>
                                         ) : null}
                                         {column.label}
@@ -813,7 +797,7 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                                     display: 'flex',
                                     flexFlow: isColumn2Open ? 'column' : 'row',
                                     justifyContent: 'center',
-                                    '& button': { mx: { md: 0.6, lg: 1, xl: 1.8 }, my: 0.2, p: 0 },
+                                    '& button': { mx: { md: 0.6, lg: 1, xl: 1.8 }, my: 0.2, p: 0 }
                                 }}
                             >
                                 <Button color="primary" variant="outlined" onClick={addPartyInfo}>
@@ -828,11 +812,7 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                         {isColumn1Open ? (
                             <>
                                 <TableCell align="center">
-                                    <Select
-                                        size="small"
-                                        value={submarineCable}
-                                        onChange={(e) => setSubmarineCable(e.target.value)}
-                                    >
+                                    <Select size="small" value={submarineCable} onChange={(e) => setSubmarineCable(e.target.value)}>
                                         {submarineCableList.map((i) => (
                                             <MenuItem key={i.CableName} value={i.CableName}>
                                                 {i.CableName}
@@ -841,12 +821,7 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                                     </Select>
                                 </TableCell>
                                 <TableCell align="center">
-                                    <Select
-                                        size="small"
-                                        value={workTitle}
-                                        label="填寫海纜作業"
-                                        onChange={(e) => setWorkTitle(e.target.value)}
-                                    >
+                                    <Select size="small" value={workTitle} label="填寫海纜作業" onChange={(e) => setWorkTitle(e.target.value)}>
                                         {workTitleList.map((i) => (
                                             <MenuItem key={i.Title} value={i.Title}>
                                                 {i.Title}
@@ -857,11 +832,7 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                             </>
                         ) : (
                             <TableCell align="center">
-                                <Select
-                                    size="small"
-                                    value={submarineCable}
-                                    onChange={(e) => setSubmarineCable(e.target.value)}
-                                >
+                                <Select size="small" value={submarineCable} onChange={(e) => setSubmarineCable(e.target.value)}>
                                     {submarineCableList.map((i) => (
                                         <MenuItem key={i.CableName} value={i.CableName}>
                                             {i.CableName}
@@ -1081,10 +1052,7 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                     </TableRow>
                     {infoList?.map((row, id) => {
                         return (
-                            <TableRow
-                                key={row.SubmarineCable + id}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
+                            <TableRow key={row.SubmarineCable + id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                 {row.PartyID !== partyID.current ? (
                                     <>
                                         <StyledTableCell align="center">
@@ -1096,8 +1064,8 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                                                     '& button': {
                                                         mx: { md: 0.1, lg: 0.1, xl: 0.2 },
                                                         my: 0.2,
-                                                        p: 0,
-                                                    },
+                                                        p: 0
+                                                    }
                                                 }}
                                             >
                                                 <Button
@@ -1132,95 +1100,47 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                                         <StyledTableCell align="center">{id + 1}</StyledTableCell>
                                         {isColumn1Open ? (
                                             <>
-                                                <StyledTableCell align="center">
-                                                    {row.SubmarineCable}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    {row.WorkTitle}
-                                                </StyledTableCell>
+                                                <StyledTableCell align="center">{row.SubmarineCable}</StyledTableCell>
+                                                <StyledTableCell align="center">{row.WorkTitle}</StyledTableCell>
                                             </>
                                         ) : (
-                                            <StyledTableCell align="center">
-                                                {row.SubmarineCable}
-                                            </StyledTableCell>
+                                            <StyledTableCell align="center">{row.SubmarineCable}</StyledTableCell>
                                         )}
                                         {isColumn2Open ? (
                                             <>
-                                                <StyledTableCell align="center">
-                                                    {row.PartyName}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    {row.PartyCode}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    {row.WHTRate}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    {row.CompanyName}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    {row.Address}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    {row.Contact}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    {handleCross(row.Email)}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    {row.Tel}
-                                                </StyledTableCell>
+                                                <StyledTableCell align="center">{row.PartyName}</StyledTableCell>
+                                                <StyledTableCell align="center">{row.PartyCode}</StyledTableCell>
+                                                <StyledTableCell align="center">{row.WHTRate}</StyledTableCell>
+                                                <StyledTableCell align="center">{row.CompanyName}</StyledTableCell>
+                                                <StyledTableCell align="center">{row.Address}</StyledTableCell>
+                                                <StyledTableCell align="center">{row.Contact}</StyledTableCell>
+                                                <StyledTableCell align="center">{handleCross(row.Email)}</StyledTableCell>
+                                                <StyledTableCell align="center">{row.Tel}</StyledTableCell>
                                             </>
                                         ) : (
-                                            <StyledTableCell align="center">
-                                                {row.PartyName}
-                                            </StyledTableCell>
+                                            <StyledTableCell align="center">{row.PartyName}</StyledTableCell>
                                         )}
                                         {isColumn3Open ? (
                                             <>
-                                                <StyledTableCell align="center">
-                                                    {row.BankAcctName}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    {row.BankName}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    {row.Branch}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    {row.BankAddress}
-                                                </StyledTableCell>
+                                                <StyledTableCell align="center">{row.BankAcctName}</StyledTableCell>
+                                                <StyledTableCell align="center">{row.BankName}</StyledTableCell>
+                                                <StyledTableCell align="center">{row.Branch}</StyledTableCell>
+                                                <StyledTableCell align="center">{row.BankAddress}</StyledTableCell>
                                             </>
                                         ) : (
-                                            <StyledTableCell align="center">
-                                                {row.BankAcctName}
-                                            </StyledTableCell>
+                                            <StyledTableCell align="center">{row.BankAcctName}</StyledTableCell>
                                         )}
                                         {isColumn4Open ? (
                                             <>
-                                                <StyledTableCell align="center">
-                                                    {row.BankAcctNo}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    {row.SavingAcctNo}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    {row.SWIFTCode}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    {row.IBAN}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    {row.ACHNo}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    {row.WireRouting}
-                                                </StyledTableCell>
+                                                <StyledTableCell align="center">{row.BankAcctNo}</StyledTableCell>
+                                                <StyledTableCell align="center">{row.SavingAcctNo}</StyledTableCell>
+                                                <StyledTableCell align="center">{row.SWIFTCode}</StyledTableCell>
+                                                <StyledTableCell align="center">{row.IBAN}</StyledTableCell>
+                                                <StyledTableCell align="center">{row.ACHNo}</StyledTableCell>
+                                                <StyledTableCell align="center">{row.WireRouting}</StyledTableCell>
                                             </>
                                         ) : (
-                                            <StyledTableCell align="center">
-                                                {row.BankAcctNo}
-                                            </StyledTableCell>
+                                            <StyledTableCell align="center">{row.BankAcctNo}</StyledTableCell>
                                         )}
                                     </>
                                 ) : (
@@ -1234,22 +1154,14 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                                                     '& button': {
                                                         mx: { md: 0.6, lg: 1, xl: 1.8 },
                                                         my: 0.2,
-                                                        p: 0,
-                                                    },
+                                                        p: 0
+                                                    }
                                                 }}
                                             >
-                                                <Button
-                                                    color="primary"
-                                                    variant="outlined"
-                                                    onClick={saveEditPartyInfo}
-                                                >
+                                                <Button color="primary" variant="outlined" onClick={saveEditPartyInfo}>
                                                     儲存
                                                 </Button>
-                                                <Button
-                                                    color="error"
-                                                    variant="outlined"
-                                                    onClick={editInfoInit}
-                                                >
+                                                <Button color="error" variant="outlined" onClick={editInfoInit}>
                                                     關閉
                                                 </Button>
                                             </Box>
@@ -1258,56 +1170,27 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                                         {isColumn1Open ? (
                                             <>
                                                 <TableCell align="center">
-                                                    <Select
-                                                        size="small"
-                                                        value={submarineCableEdit}
-                                                        onChange={(e) =>
-                                                            setSubmarineCableEdit(e.target.value)
-                                                        }
-                                                    >
+                                                    <Select size="small" value={submarineCableEdit} onChange={(e) => setSubmarineCableEdit(e.target.value)}>
                                                         {submarineCableList.map((i) => (
-                                                            <MenuItem
-                                                                key={i.CableName}
-                                                                value={i.CableName}
-                                                            >
+                                                            <MenuItem key={i.CableName} value={i.CableName}>
                                                                 {i.CableName}
                                                             </MenuItem>
                                                         ))}
                                                     </Select>
                                                 </TableCell>
                                                 <TableCell align="center">
-                                                    <Select
-                                                        size="small"
-                                                        value={workTitleEdit}
-                                                        label="填寫海纜作業"
-                                                        onChange={(e) =>
-                                                            setWorkTitleEdit(e.target.value)
-                                                        }
-                                                    >
-                                                        <MenuItem value={'Upgrade'}>
-                                                            Upgrade
-                                                        </MenuItem>
-                                                        <MenuItem value={'Construction'}>
-                                                            Construction
-                                                        </MenuItem>
+                                                    <Select size="small" value={workTitleEdit} label="填寫海纜作業" onChange={(e) => setWorkTitleEdit(e.target.value)}>
+                                                        <MenuItem value={'Upgrade'}>Upgrade</MenuItem>
+                                                        <MenuItem value={'Construction'}>Construction</MenuItem>
                                                         <MenuItem value={'O&M'}>O&M</MenuItem>
                                                     </Select>
                                                 </TableCell>
                                             </>
                                         ) : (
                                             <TableCell align="center">
-                                                <Select
-                                                    size="small"
-                                                    value={submarineCableEdit}
-                                                    onChange={(e) =>
-                                                        setSubmarineCableEdit(e.target.value)
-                                                    }
-                                                >
+                                                <Select size="small" value={submarineCableEdit} onChange={(e) => setSubmarineCableEdit(e.target.value)}>
                                                     {submarineCableList.map((i) => (
-                                                        <MenuItem
-                                                            key={i.CableName}
-                                                            value={i.CableName}
-                                                        >
+                                                        <MenuItem key={i.CableName} value={i.CableName}>
                                                             {i.CableName}
                                                         </MenuItem>
                                                     ))}
@@ -1456,10 +1339,7 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                                                     <TextField
                                                         size="small"
                                                         value={accountNoEdit}
-                                                        disabled={
-                                                            savingAccountNoEdit?.length > 0 ||
-                                                            !!savingAccountNoEdit
-                                                        }
+                                                        disabled={savingAccountNoEdit?.length > 0 || !!savingAccountNoEdit}
                                                         onChange={(e) => {
                                                             setAccountNoEdit(e.target.value);
                                                         }}
@@ -1469,10 +1349,7 @@ const PartyDataList = ({ infoList, setInfoList }) => {
                                                     <TextField
                                                         size="small"
                                                         value={savingAccountNoEdit}
-                                                        disabled={
-                                                            accountNoEdit?.length > 0 ||
-                                                            !!accountNoEdit
-                                                        }
+                                                        disabled={accountNoEdit?.length > 0 || !!accountNoEdit}
                                                         onChange={(e) => {
                                                             setSavingAccountNoEdit(e.target.value);
                                                         }}

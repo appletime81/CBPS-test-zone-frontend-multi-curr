@@ -1,18 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-    Typography,
-    Grid,
-    Button,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    Radio,
-    FormGroup,
-    RadioGroup,
-    FormControlLabel,
-    Checkbox,
-} from '@mui/material';
+import { Typography, Grid, Button, FormControl, InputLabel, Select, MenuItem, Radio, FormGroup, RadioGroup, FormControlLabel, Checkbox } from '@mui/material';
 
 // project import
 import MainCard from 'components/MainCard';
@@ -25,13 +12,7 @@ import { TextField } from '@mui/material/index';
 import dayjs from 'dayjs';
 
 // api
-import {
-    searchInvoiceWKMasterIsBilled,
-    supplierNameDropDownUnique,
-    submarineCableInfoList,
-    billMilestoneLiabilityList,
-    getWorkTitle,
-} from 'components/apis.jsx';
+import { searchInvoiceWKMasterIsBilled, supplierNameDropDownUnique, submarineCableInfoList, dropdownmenuBillMilestone, getWorkTitle } from 'components/apis.jsx';
 
 // redux
 import { useDispatch } from 'react-redux';
@@ -56,7 +37,7 @@ const ResearchBillQuery = ({ setListInfo, queryApi }) => {
         BILLED: false,
         PAYING: false,
         TEMPORARY: false,
-        VALIDATED: false,
+        VALIDATED: false
     }); //處理狀態
 
     const initQuery = () => {
@@ -95,16 +76,8 @@ const ResearchBillQuery = ({ setListInfo, queryApi }) => {
             tmpObject.DueDate = dayjs(issueDate).format('YYYYMMDD');
         }
         if (
-            !(
-                invoiceStatus?.TEMPORARY &&
-                invoiceStatus?.VALIDATED &&
-                invoiceStatus?.BILLED &&
-                invoiceStatus?.PAYING
-            ) &&
-            (invoiceStatus?.TEMPORARY ||
-                invoiceStatus?.VALIDATED ||
-                invoiceStatus?.BILLED ||
-                invoiceStatus?.PAYING)
+            !(invoiceStatus?.TEMPORARY && invoiceStatus?.VALIDATED && invoiceStatus?.BILLED && invoiceStatus?.PAYING) &&
+            (invoiceStatus?.TEMPORARY || invoiceStatus?.VALIDATED || invoiceStatus?.BILLED || invoiceStatus?.PAYING)
         ) {
             let tmpStatus = [];
             if (invoiceStatus?.TEMPORARY) {
@@ -131,9 +104,9 @@ const ResearchBillQuery = ({ setListInfo, queryApi }) => {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify(tmpObject),
+            body: JSON.stringify(tmpObject)
         })
             .then((res) => res.json())
             .then((data) => {
@@ -145,9 +118,9 @@ const ResearchBillQuery = ({ setListInfo, queryApi }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -159,7 +132,9 @@ const ResearchBillQuery = ({ setListInfo, queryApi }) => {
     useEffect(() => {
         fetch(supplierNameDropDownUnique, {
             method: 'GET',
-            Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {
@@ -173,14 +148,17 @@ const ResearchBillQuery = ({ setListInfo, queryApi }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         //海纜名稱
         fetch(submarineCableInfoList, {
             method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {
@@ -192,12 +170,17 @@ const ResearchBillQuery = ({ setListInfo, queryApi }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
-        fetch(billMilestoneLiabilityList, { method: 'GET' })
+        fetch(dropdownmenuBillMilestone, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 setBmsList(data);
@@ -208,18 +191,18 @@ const ResearchBillQuery = ({ setListInfo, queryApi }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         fetch(getWorkTitle, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify({}),
+            body: JSON.stringify({})
         })
             .then((res) => res.json())
             .then((data) => {
@@ -236,9 +219,9 @@ const ResearchBillQuery = ({ setListInfo, queryApi }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     }, []);
@@ -248,20 +231,12 @@ const ResearchBillQuery = ({ setListInfo, queryApi }) => {
             <Grid container display="flex" alignItems="center" spacing={2}>
                 {/* row1 */}
                 <Grid item xs={2} sm={2} md={1} lg={1}>
-                    <Typography
-                        sx={{ fontWeight: 'bold', fontSize: { lg: '0.7rem', xl: '0.88rem' } }}
-                    >
-                        供應商：
-                    </Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: { lg: '0.7rem', xl: '0.88rem' } }}>供應商：</Typography>
                 </Grid>
                 <Grid item xs={4} sm={4} md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇供應商</InputLabel>
-                        <Select
-                            value={supplierName}
-                            label="供應商"
-                            onChange={(e) => setSupplierName(e.target.value)}
-                        >
+                        <Select value={supplierName} label="供應商" onChange={(e) => setSupplierName(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {supNmList.map((i) => (
                                 <MenuItem key={i} value={i}>
@@ -272,20 +247,12 @@ const ResearchBillQuery = ({ setListInfo, queryApi }) => {
                     </FormControl>
                 </Grid>
                 <Grid item sm={1} md={1} lg={1}>
-                    <Typography
-                        sx={{ fontWeight: 'bold', fontSize: { lg: '0.7rem', xl: '0.88rem' } }}
-                    >
-                        海纜名稱：
-                    </Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: { lg: '0.7rem', xl: '0.88rem' } }}>海纜名稱：</Typography>
                 </Grid>
                 <Grid item xs={2} sm={2} md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇海纜名稱</InputLabel>
-                        <Select
-                            value={submarineCable}
-                            label="海纜名稱"
-                            onChange={(e) => setSubmarineCable(e.target.value)}
-                        >
+                        <Select value={submarineCable} label="海纜名稱" onChange={(e) => setSubmarineCable(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {submarineCableList.map((i) => (
                                 <MenuItem key={i.CableName} value={i.CableName}>
@@ -296,20 +263,12 @@ const ResearchBillQuery = ({ setListInfo, queryApi }) => {
                     </FormControl>
                 </Grid>
                 <Grid item sm={1} md={1} lg={1}>
-                    <Typography
-                        sx={{ fontWeight: 'bold', fontSize: { lg: '0.7rem', xl: '0.88rem' } }}
-                    >
-                        海纜作業：
-                    </Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: { lg: '0.7rem', xl: '0.88rem' } }}>海纜作業：</Typography>
                 </Grid>
                 <Grid item xs={2} sm={2} md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇海纜作業</InputLabel>
-                        <Select
-                            value={workTitle}
-                            label="海纜作業"
-                            onChange={(e) => setWorkTitle(e.target.value)}
-                        >
+                        <Select value={workTitle} label="海纜作業" onChange={(e) => setWorkTitle(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {workTitleList.map((i) => (
                                 <MenuItem key={i.Title} value={i.Title}>
@@ -321,20 +280,12 @@ const ResearchBillQuery = ({ setListInfo, queryApi }) => {
                 </Grid>
 
                 <Grid item sm={1} md={1} lg={1}>
-                    <Typography
-                        sx={{ fontWeight: 'bold', fontSize: { lg: '0.7rem', xl: '0.88rem' } }}
-                    >
-                        計帳段號：
-                    </Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: { lg: '0.7rem', xl: '0.88rem' } }}>計帳段號：</Typography>
                 </Grid>
                 <Grid item xs={2} sm={2} md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇計帳段號</InputLabel>
-                        <Select
-                            value={billMilestone}
-                            label="發票供應商"
-                            onChange={(e) => setBillMilestone(e.target.value)}
-                        >
+                        <Select value={billMilestone} label="發票供應商" onChange={(e) => setBillMilestone(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {bmsList.map((i) => (
                                 <MenuItem key={i} value={i}>
@@ -346,44 +297,25 @@ const ResearchBillQuery = ({ setListInfo, queryApi }) => {
                 </Grid>
                 {/* row2 */}
                 <Grid item sm={1} md={1} lg={1}>
-                    <Typography
-                        sx={{ fontWeight: 'bold', fontSize: { lg: '0.7rem', xl: '0.88rem' } }}
-                    >
-                        發票號碼：
-                    </Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: { lg: '0.7rem', xl: '0.88rem' } }}>發票號碼：</Typography>
                 </Grid>
                 <Grid item xs={2} sm={2} md={2} lg={2}>
                     <FormControl fullWidth size="small">
-                        <TextField
-                            fullWidth
-                            variant="outlined"
-                            value={invoiceNo}
-                            size="small"
-                            label="填寫發票號碼"
-                            onChange={(e) => setInvoiceNo(e.target.value)}
-                        />
+                        <TextField fullWidth variant="outlined" value={invoiceNo} size="small" label="填寫發票號碼" onChange={(e) => setInvoiceNo(e.target.value)} />
                     </FormControl>
                 </Grid>
                 <Grid item sm={1} md={1} lg={1}>
-                    <Typography
-                        sx={{ fontWeight: 'bold', fontSize: { lg: '0.7rem', xl: '0.88rem' } }}
-                    >
-                        日期條件：
-                    </Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: { lg: '0.7rem', xl: '0.88rem' } }}>日期條件：</Typography>
                 </Grid>
                 <Grid item xs={8} sm={8} md={8} lg={8} display="flex" alignItems="center">
                     <FormControl>
-                        <RadioGroup
-                            row
-                            value={isIssueDate}
-                            onChange={(e) => setIsIssueDate(e.target.value)}
-                        >
+                        <RadioGroup row value={isIssueDate} onChange={(e) => setIsIssueDate(e.target.value)}>
                             <FormControlLabel
                                 value={true}
                                 control={
                                     <Radio
                                         sx={{
-                                            '& .MuiSvgIcon-root': { fontSize: { lg: 14, xl: 20 } },
+                                            '& .MuiSvgIcon-root': { fontSize: { lg: 14, xl: 20 } }
                                         }}
                                     />
                                 }
@@ -394,7 +326,7 @@ const ResearchBillQuery = ({ setListInfo, queryApi }) => {
                                 control={
                                     <Radio
                                         sx={{
-                                            '& .MuiSvgIcon-root': { fontSize: { lg: 14, xl: 20 } },
+                                            '& .MuiSvgIcon-root': { fontSize: { lg: 14, xl: 20 } }
                                         }}
                                     />
                                 }
@@ -402,10 +334,7 @@ const ResearchBillQuery = ({ setListInfo, queryApi }) => {
                             />
                         </RadioGroup>
                     </FormControl>
-                    <LocalizationProvider
-                        dateAdapter={AdapterDayjs}
-                        localeText={{ start: '起始日', end: '結束日' }}
-                    >
+                    <LocalizationProvider dateAdapter={AdapterDayjs} localeText={{ start: '起始日', end: '結束日' }}>
                         <DesktopDatePicker
                             inputFormat="YYYY/MM/DD"
                             value={issueDate}
@@ -417,11 +346,7 @@ const ResearchBillQuery = ({ setListInfo, queryApi }) => {
                     </LocalizationProvider>
                 </Grid>
                 <Grid item sm={1} md={1} lg={1}>
-                    <Typography
-                        sx={{ fontWeight: 'bold', fontSize: { lg: '0.7rem', xl: '0.88rem' } }}
-                    >
-                        處理狀態：
-                    </Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: { lg: '0.7rem', xl: '0.88rem' } }}>處理狀態：</Typography>
                 </Grid>
                 <Grid item xs={5} sm={5} md={5} lg={5}>
                     <FormGroup
@@ -464,27 +389,13 @@ const ResearchBillQuery = ({ setListInfo, queryApi }) => {
                         />
                         <FormControlLabel
                             control={
-                                <Checkbox
-                                    name={'PAYING'}
-                                    onChange={handleChange}
-                                    checked={invoiceStatus.PAYING}
-                                    sx={{ '& .MuiSvgIcon-root': { fontSize: { lg: 14, xl: 20 } } }}
-                                />
+                                <Checkbox name={'PAYING'} onChange={handleChange} checked={invoiceStatus.PAYING} sx={{ '& .MuiSvgIcon-root': { fontSize: { lg: 14, xl: 20 } } }} />
                             }
                             label="付款中"
                         />
                     </FormGroup>
                 </Grid>
-                <Grid
-                    item
-                    xs={6}
-                    sm={6}
-                    md={6}
-                    lg={6}
-                    display="flex"
-                    justifyContent="end"
-                    alignItems="center"
-                >
+                <Grid item xs={6} sm={6} md={6} lg={6} display="flex" justifyContent="end" alignItems="center">
                     <Button sx={{ mr: '0.5rem' }} variant="contained" onClick={journalQuery}>
                         查詢
                     </Button>

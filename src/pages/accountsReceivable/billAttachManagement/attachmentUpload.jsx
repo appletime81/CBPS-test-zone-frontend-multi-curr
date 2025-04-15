@@ -40,8 +40,8 @@ const AttachmentUpload = ({ isAttachUploadOpen, handleAttachUploadClose, itemID 
                 body: pdfData,
                 headers: {
                     Accept: 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
-                },
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+                }
             })
                 .then((res) => res.json())
                 .then((data) => {
@@ -52,9 +52,9 @@ const AttachmentUpload = ({ isAttachUploadOpen, handleAttachUploadClose, itemID 
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'success',
-                                    message: '上傳成功',
-                                },
-                            }),
+                                    message: '上傳成功'
+                                }
+                            })
                         );
                         setUploadFile(null);
                         handleAttachUploadClose();
@@ -65,9 +65,9 @@ const AttachmentUpload = ({ isAttachUploadOpen, handleAttachUploadClose, itemID 
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'error',
-                                    message: '上傳失敗',
-                                },
-                            }),
+                                    message: '上傳失敗'
+                                }
+                            })
                         );
                     }
                 })
@@ -77,16 +77,16 @@ const AttachmentUpload = ({ isAttachUploadOpen, handleAttachUploadClose, itemID 
                             messageStateOpen: {
                                 isOpen: true,
                                 severity: 'error',
-                                message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                            },
-                        }),
+                                message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                            }
+                        })
                     );
                 });
         } else {
             dispatch(
                 setMessageStateOpen({
-                    messageStateOpen: { isOpen: true, severity: 'error', message: '請上傳檔案' },
-                }),
+                    messageStateOpen: { isOpen: true, severity: 'error', message: '請上傳檔案' }
+                })
             );
         }
     };
@@ -106,33 +106,21 @@ const AttachmentUpload = ({ isAttachUploadOpen, handleAttachUploadClose, itemID 
             <BootstrapDialogTitle>上傳附件作業</BootstrapDialogTitle>
             <DialogContent dividers>
                 {/* 第二階段優化 */}
-                <Grid
-                    container
-                    spacing={2}
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                >
+                <Grid container spacing={2} display="flex" justifyContent="center" alignItems="center">
                     <Grid item xs={12} sm={12} md={12} lg={12} display="flex">
                         <Box
                             sx={{
                                 display: 'flex',
                                 flexFlow: 'column',
                                 alignItems: 'center',
-                                width: '100%',
+                                width: '100%'
                             }}
                         >
-                            <DropzoneArea
-                                onChange={handleUploadChange}
-                                acceptedFiles={['.zip']}
-                                maxFileSize={100000000}
-                            />
+                            <DropzoneArea onChange={handleUploadChange} acceptedFiles={['.zip']} maxFileSize={100000000} />
                         </Box>
                     </Grid>
                     <Grid item xs={12} sm={12} md={12} lg={12} display="flex">
-                        <Box sx={{ fontSize: 0.1, textAlign: 'left' }}>
-                            {displayName[0] ? `上傳成功：${displayName[0]}` : ''}
-                        </Box>
+                        <Box sx={{ fontSize: 0.1, textAlign: 'left' }}>{displayName[0] ? `上傳成功：${displayName[0]}` : ''}</Box>
                     </Grid>
                 </Grid>
             </DialogContent>
@@ -146,11 +134,7 @@ const AttachmentUpload = ({ isAttachUploadOpen, handleAttachUploadClose, itemID 
                 >
                     確定
                 </Button>
-                <Button
-                    sx={{ mr: '0.05rem' }}
-                    variant="contained"
-                    onClick={handleAttachUploadClose}
-                >
+                <Button sx={{ mr: '0.05rem' }} variant="contained" onClick={handleAttachUploadClose}>
                     關閉
                 </Button>
             </DialogActions>

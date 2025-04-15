@@ -1,14 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import {
-    Typography,
-    Grid,
-    Button,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    TextField,
-} from '@mui/material';
+import { Typography, Grid, Button, FormControl, InputLabel, Select, MenuItem, TextField } from '@mui/material';
 import dayjs from 'dayjs';
 
 // day
@@ -31,11 +22,7 @@ import { styled } from '@mui/material/styles';
 import { BootstrapDialogTitle } from 'components/commonFunction';
 
 // api
-import {
-    addCurrencyExchangeData,
-    updateCurrencyExchangeData,
-    corporatesView,
-} from 'components/apis.jsx';
+import { addCurrencyExchangeData, updateCurrencyExchangeData, corporatesView } from 'components/apis.jsx';
 
 // redux
 import { useDispatch } from 'react-redux';
@@ -46,25 +33,16 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
         // backgroundColor: theme.palette.common.gary,
         color: theme.palette.common.black,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
+        paddingBottom: '0.2rem'
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
         paddingTop: '0.2rem',
-        paddingBottom: '0.2rem',
-    },
+        paddingBottom: '0.2rem'
+    }
 }));
 
-const CurrencyAdd = ({
-    handleAddCurrencyClose,
-    isAddCurrencyOpen,
-    currencyListInfo,
-    submarineCableList,
-    editItem,
-    currencyQuery,
-    dialogAction,
-    workTitleList,
-}) => {
+const CurrencyAdd = ({ handleAddCurrencyClose, isAddCurrencyOpen, currencyListInfo, submarineCableList, editItem, currencyQuery, dialogAction, workTitleList }) => {
     const dispatch = useDispatch();
     const [submarineCable, setSubmarineCable] = useState('');
     const [billYM, setBillYM] = useState(null); //發票日期
@@ -99,9 +77,9 @@ const CurrencyAdd = ({
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入主旨/用途',
-                    },
-                }),
+                        message: '請輸入主旨/用途'
+                    }
+                })
             );
             return false;
         }
@@ -111,9 +89,9 @@ const CurrencyAdd = ({
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入海纜名稱',
-                    },
-                }),
+                        message: '請輸入海纜名稱'
+                    }
+                })
             );
             return false;
         }
@@ -123,9 +101,9 @@ const CurrencyAdd = ({
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入海纜作業',
-                    },
-                }),
+                        message: '請輸入海纜作業'
+                    }
+                })
             );
             return false;
         }
@@ -135,9 +113,9 @@ const CurrencyAdd = ({
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入出帳日期',
-                    },
-                }),
+                        message: '請輸入出帳日期'
+                    }
+                })
             );
             return false;
         }
@@ -147,9 +125,9 @@ const CurrencyAdd = ({
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入原始幣別',
-                    },
-                }),
+                        message: '請輸入原始幣別'
+                    }
+                })
             );
             return false;
         }
@@ -159,9 +137,9 @@ const CurrencyAdd = ({
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入兌換幣別',
-                    },
-                }),
+                        message: '請輸入兌換幣別'
+                    }
+                })
             );
             return false;
         }
@@ -171,9 +149,9 @@ const CurrencyAdd = ({
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請輸入匯率',
-                    },
-                }),
+                        message: '請輸入匯率'
+                    }
+                })
             );
             return false;
         }
@@ -184,9 +162,9 @@ const CurrencyAdd = ({
                     messageStateOpen: {
                         isOpen: true,
                         severity: 'error',
-                        message: '請先新增聯盟資料',
-                    },
-                }),
+                        message: '請先新增聯盟資料'
+                    }
+                })
             );
             return false;
         }
@@ -210,9 +188,9 @@ const CurrencyAdd = ({
                     method: 'POST',
                     headers: {
                         'Content-type': 'application/json',
-                        Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                        Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
                     },
-                    body: JSON.stringify(tmpArray),
+                    body: JSON.stringify(tmpArray)
                 })
                     .then((res) => res.json())
                     .then((data) => {
@@ -222,9 +200,9 @@ const CurrencyAdd = ({
                                     messageStateOpen: {
                                         isOpen: true,
                                         severity: 'error',
-                                        message: data.alert_msg,
-                                    },
-                                }),
+                                        message: data.alert_msg
+                                    }
+                                })
                             );
                         } else {
                             handleAddCurrencyClose();
@@ -233,9 +211,9 @@ const CurrencyAdd = ({
                                     messageStateOpen: {
                                         isOpen: true,
                                         severity: 'success',
-                                        message: '新增成功',
-                                    },
-                                }),
+                                        message: '新增成功'
+                                    }
+                                })
                             );
                             initInfo();
                             currencyQuery();
@@ -260,9 +238,9 @@ const CurrencyAdd = ({
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
                 },
-                body: JSON.stringify(tmpArray),
+                body: JSON.stringify(tmpArray)
             })
                 .then((res) => res.json())
                 .then((data) => {
@@ -272,9 +250,9 @@ const CurrencyAdd = ({
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'error',
-                                    message: data.alert_msg,
-                                },
-                            }),
+                                    message: data.alert_msg
+                                }
+                            })
                         );
                     } else {
                         initInfo();
@@ -284,9 +262,9 @@ const CurrencyAdd = ({
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'success',
-                                    message: '編輯成功',
-                                },
-                            }),
+                                    message: '編輯成功'
+                                }
+                            })
                         );
                         currencyQuery();
                     }
@@ -309,16 +287,16 @@ const CurrencyAdd = ({
         if (submarineCable && workTitle) {
             let tmpObject = {
                 SubmarineCable: submarineCable,
-                WorkTitle: workTitle,
+                WorkTitle: workTitle
             };
 
             fetch(corporatesView, {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                    Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
                 },
-                body: JSON.stringify(tmpObject),
+                body: JSON.stringify(tmpObject)
             })
                 .then((res) => res.json())
                 .then((data) => {
@@ -328,9 +306,9 @@ const CurrencyAdd = ({
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'error',
-                                    message: '請先新增聯盟資料',
-                                },
-                            }),
+                                    message: '請先新增聯盟資料'
+                                }
+                            })
                         );
                         isDataExist.current = false;
                     } else {
@@ -339,9 +317,9 @@ const CurrencyAdd = ({
                                 messageStateOpen: {
                                     isOpen: true,
                                     severity: 'success',
-                                    message: '已有聯盟資料，請繼續輸入其他匯率資訊',
-                                },
-                            }),
+                                    message: '已有聯盟資料，請繼續輸入其他匯率資訊'
+                                }
+                            })
                         );
                         isDataExist.current = true;
                     }
@@ -366,23 +344,15 @@ const CurrencyAdd = ({
 
     return (
         <Dialog maxWidth="md" fullWidth open={isAddCurrencyOpen}>
-            <BootstrapDialogTitle>
-                {dialogAction === 'Edit' ? '編輯貨幣與匯率資料' : '新增貨幣與匯率資料'}
-            </BootstrapDialogTitle>
+            <BootstrapDialogTitle>{dialogAction === 'Edit' ? '編輯貨幣與匯率資料' : '新增貨幣與匯率資料'}</BootstrapDialogTitle>
             <DialogContent dividers>
-                <Grid
-                    container
-                    spacing={1}
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                >
+                <Grid container spacing={1} display="flex" justifyContent="center" alignItems="center">
                     <Grid item md={3} lg={3} display="flex" justifyContent="center">
                         <Typography
                             variant="h5"
                             sx={{
                                 fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                ml: { lg: '0.5rem', xl: '1.5rem' },
+                                ml: { lg: '0.5rem', xl: '1.5rem' }
                             }}
                         >
                             海纜名稱：
@@ -391,11 +361,7 @@ const CurrencyAdd = ({
                     <Grid item md={3} lg={3}>
                         <FormControl fullWidth size="small">
                             <InputLabel>選擇海纜</InputLabel>
-                            <Select
-                                value={submarineCable}
-                                label="海纜"
-                                onChange={(e) => setSubmarineCable(e.target.value)}
-                            >
+                            <Select value={submarineCable} label="海纜" onChange={(e) => setSubmarineCable(e.target.value)}>
                                 {submarineCableList.map((i) => (
                                     <MenuItem key={i} value={i}>
                                         {i}
@@ -409,7 +375,7 @@ const CurrencyAdd = ({
                             variant="h5"
                             sx={{
                                 fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                ml: { lg: '0.5rem', xl: '1.5rem' },
+                                ml: { lg: '0.5rem', xl: '1.5rem' }
                             }}
                         >
                             海纜作業：
@@ -418,11 +384,7 @@ const CurrencyAdd = ({
                     <Grid item md={3} lg={3}>
                         <FormControl fullWidth size="small">
                             <InputLabel>選擇海纜作業</InputLabel>
-                            <Select
-                                value={workTitle}
-                                label="海纜作業"
-                                onChange={(e) => setWorkTitle(e.target.value)}
-                            >
+                            <Select value={workTitle} label="海纜作業" onChange={(e) => setWorkTitle(e.target.value)}>
                                 <MenuItem value={'All'}>All</MenuItem>
                                 {workTitleList.map((i) => (
                                     <MenuItem key={i.Title} value={i.Title}>
@@ -437,7 +399,7 @@ const CurrencyAdd = ({
                             variant="h5"
                             sx={{
                                 fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                ml: { lg: '0.5rem', xl: '1.5rem' },
+                                ml: { lg: '0.5rem', xl: '1.5rem' }
                             }}
                         >
                             出帳日期：
@@ -463,28 +425,21 @@ const CurrencyAdd = ({
                             variant="h5"
                             sx={{
                                 fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                ml: { lg: '0.5rem', xl: '1.5rem' },
+                                ml: { lg: '0.5rem', xl: '1.5rem' }
                             }}
                         >
                             主旨/用途：
                         </Typography>
                     </Grid>
                     <Grid item xs={3} sm={3} md={3} lg={3}>
-                        <TextField
-                            fullWidth
-                            variant="outlined"
-                            value={purpose}
-                            size="small"
-                            label="填寫主旨/用途"
-                            onChange={(e) => setPurpose(e.target.value)}
-                        />
+                        <TextField fullWidth variant="outlined" value={purpose} size="small" label="填寫主旨/用途" onChange={(e) => setPurpose(e.target.value)} />
                     </Grid>
                     <Grid item xs={3} sm={3} md={3} lg={3} display="flex" justifyContent="center">
                         <Typography
                             variant="h5"
                             sx={{
                                 fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                ml: { lg: '0.5rem', xl: '1.5rem' },
+                                ml: { lg: '0.5rem', xl: '1.5rem' }
                             }}
                         >
                             原始幣別：
@@ -492,10 +447,7 @@ const CurrencyAdd = ({
                     </Grid>
                     <Grid item xs={3} sm={3} md={3} lg={3}>
                         <FormControl fullWidth size="small">
-                            <Select
-                                value={fromCode}
-                                onChange={(e) => handleFromCode(e.target.value)}
-                            >
+                            <Select value={fromCode} onChange={(e) => handleFromCode(e.target.value)}>
                                 {currencyListInfo.map((i) => (
                                     <MenuItem key={i.Code} value={i.Code}>
                                         {i.Code}
@@ -509,28 +461,21 @@ const CurrencyAdd = ({
                             variant="h5"
                             sx={{
                                 fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                ml: { lg: '0.5rem', xl: '1.5rem' },
+                                ml: { lg: '0.5rem', xl: '1.5rem' }
                             }}
                         >
                             原始幣別中文：
                         </Typography>
                     </Grid>
                     <Grid item xs={3} sm={3} md={3} lg={3}>
-                        <TextField
-                            fullWidth
-                            variant="outlined"
-                            value={fromCName}
-                            size="small"
-                            disabled
-                            label="請選取左方原始幣別"
-                        />
+                        <TextField fullWidth variant="outlined" value={fromCName} size="small" disabled label="請選取左方原始幣別" />
                     </Grid>
                     <Grid item xs={3} sm={3} md={3} lg={3} display="flex" justifyContent="center">
                         <Typography
                             variant="h5"
                             sx={{
                                 fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                ml: { lg: '0.5rem', xl: '1.5rem' },
+                                ml: { lg: '0.5rem', xl: '1.5rem' }
                             }}
                         >
                             兌換幣別：
@@ -552,63 +497,42 @@ const CurrencyAdd = ({
                             variant="h5"
                             sx={{
                                 fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                ml: { lg: '0.5rem', xl: '1.5rem' },
+                                ml: { lg: '0.5rem', xl: '1.5rem' }
                             }}
                         >
                             兌換幣別中文：
                         </Typography>
                     </Grid>
                     <Grid item xs={3} sm={3} md={3} lg={3}>
-                        <TextField
-                            fullWidth
-                            variant="outlined"
-                            value={toCName}
-                            size="small"
-                            disabled
-                            label="請選取左方兌換幣別"
-                        />
+                        <TextField fullWidth variant="outlined" value={toCName} size="small" disabled label="請選取左方兌換幣別" />
                     </Grid>
                     <Grid item xs={3} sm={3} md={3} lg={3} display="flex" justifyContent="center">
                         <Typography
                             variant="h5"
                             sx={{
                                 fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                ml: { lg: '0.5rem', xl: '1.5rem' },
+                                ml: { lg: '0.5rem', xl: '1.5rem' }
                             }}
                         >
                             匯率：
                         </Typography>
                     </Grid>
                     <Grid item xs={3} sm={3} md={3} lg={3}>
-                        <TextField
-                            fullWidth
-                            variant="outlined"
-                            value={exgRate}
-                            size="small"
-                            label="填寫匯率"
-                            onChange={(e) => setExgRate(e.target.value)}
-                        />
+                        <TextField fullWidth variant="outlined" value={exgRate} size="small" label="填寫匯率" onChange={(e) => setExgRate(e.target.value)} />
                     </Grid>
                     <Grid item xs={3} sm={3} md={3} lg={3} display="flex" justifyContent="center">
                         <Typography
                             variant="h5"
                             sx={{
                                 fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                ml: { lg: '0.5rem', xl: '1.5rem' },
+                                ml: { lg: '0.5rem', xl: '1.5rem' }
                             }}
                         >
                             備註：
                         </Typography>
                     </Grid>
                     <Grid item xs={3} sm={3} md={3} lg={3}>
-                        <TextField
-                            fullWidth
-                            variant="outlined"
-                            value={note}
-                            size="small"
-                            label="填寫備註"
-                            onChange={(e) => setNote(e.target.value)}
-                        />
+                        <TextField fullWidth variant="outlined" value={note} size="small" label="填寫備註" onChange={(e) => setNote(e.target.value)} />
                     </Grid>
                 </Grid>
             </DialogContent>

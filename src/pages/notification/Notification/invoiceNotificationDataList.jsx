@@ -32,13 +32,13 @@ const InvoiceNotificationDataList = ({ listInfo, partiesList, submarineCableList
             // backgroundColor: theme.palette.common.gary,
             color: theme.palette.common.black,
             paddingTop: '0.2rem',
-            paddingBottom: '0.2rem',
+            paddingBottom: '0.2rem'
         },
         [`&.${tableCellClasses.body}`]: {
             fontSize: 14,
             paddingTop: '0.2rem',
-            paddingBottom: '0.2rem',
-        },
+            paddingBottom: '0.2rem'
+        }
     }));
 
     const handleAddRuleClose = () => {
@@ -60,15 +60,15 @@ const InvoiceNotificationDataList = ({ listInfo, partiesList, submarineCableList
     const handleDelete = (id) => {
         console.log('id=>>', id);
         let tmpArray = {
-            RuleID: id,
+            RuleID: id
         };
         fetch(deleteSysInvNotifyRule, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify(tmpArray),
+            body: JSON.stringify(tmpArray)
         })
             .then((res) => res.json())
             .then(() => {
@@ -77,9 +77,9 @@ const InvoiceNotificationDataList = ({ listInfo, partiesList, submarineCableList
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'success',
-                            message: '刪除成功',
-                        },
-                    }),
+                            message: '刪除成功'
+                        }
+                    })
                 );
                 initQuery();
             })
@@ -89,9 +89,9 @@ const InvoiceNotificationDataList = ({ listInfo, partiesList, submarineCableList
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -119,12 +119,8 @@ const InvoiceNotificationDataList = ({ listInfo, partiesList, submarineCableList
                             <StyledTableCell align="center">海纜作業</StyledTableCell>
                             <StyledTableCell align="center">提醒對象種類</StyledTableCell>
                             <StyledTableCell align="center">到期日</StyledTableCell>
-                            <StyledTableCell align="center">
-                                到期日之前的第一門檻天數
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                                到期日之前的第二門檻天數
-                            </StyledTableCell>
+                            <StyledTableCell align="center">到期日之前的第一門檻天數</StyledTableCell>
+                            <StyledTableCell align="center">到期日之前的第二門檻天數</StyledTableCell>
                             <StyledTableCell align="center">到期日之後的門檻天數</StyledTableCell>
                             <StyledTableCell align="center">是否以Email通知</StyledTableCell>
                             <StyledTableCell align="center">是否以Web通知</StyledTableCell>
@@ -135,52 +131,20 @@ const InvoiceNotificationDataList = ({ listInfo, partiesList, submarineCableList
                     <TableBody>
                         {listInfo?.map((row, id) => {
                             return (
-                                <TableRow
-                                    key={
-                                        row.SysInvNotifyRule.RuleName +
-                                        row.SysInvNotifyRule.RuleCName
-                                    }
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
+                                <TableRow key={row.SysInvNotifyRule.RuleName + row.SysInvNotifyRule.RuleCName} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <StyledTableCell align="center">{id + 1}</StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.SysInvNotifyRule.RuleName}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.SysInvNotifyRule.RuleCName}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.SysInvNotifyRule.SubmarineCable}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.SysInvNotifyRule.WorkTitle}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.SysInvNotifyRule.NotifyTarget}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {dayjs(row.SysInvNotifyRule.ColumnName).format(
-                                            'YYYY/MM/DD',
-                                        )}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.SysInvNotifyRule.Days1BeforeDue}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.SysInvNotifyRule.Days2BeforeDue}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.SysInvNotifyRule.DaysAfterDue}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.SysInvNotifyRule.Email ? '√' : ''}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.SysInvNotifyRule.Web ? '√' : ''}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {row.SysInvNotifyRule.SMS ? '√' : ''}
-                                    </StyledTableCell>
+                                    <StyledTableCell align="center">{row.SysInvNotifyRule.RuleName}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.SysInvNotifyRule.RuleCName}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.SysInvNotifyRule.SubmarineCable}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.SysInvNotifyRule.WorkTitle}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.SysInvNotifyRule.NotifyTarget}</StyledTableCell>
+                                    <StyledTableCell align="center">{dayjs(row.SysInvNotifyRule.ColumnName).format('YYYY/MM/DD')}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.SysInvNotifyRule.Days1BeforeDue}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.SysInvNotifyRule.Days2BeforeDue}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.SysInvNotifyRule.DaysAfterDue}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.SysInvNotifyRule.Email ? '√' : ''}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.SysInvNotifyRule.Web ? '√' : ''}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.SysInvNotifyRule.SMS ? '√' : ''}</StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Box
                                             sx={{
@@ -188,31 +152,17 @@ const InvoiceNotificationDataList = ({ listInfo, partiesList, submarineCableList
                                                 justifyContent: 'center',
                                                 '& button': {
                                                     mx: { md: 0.1, lg: 0.1, xl: 0.2 },
-                                                    p: 0,
-                                                },
+                                                    p: 0
+                                                }
                                             }}
                                         >
-                                            <Button
-                                                color="success"
-                                                variant="outlined"
-                                                onClick={() => handleView(row)}
-                                            >
+                                            <Button color="success" variant="outlined" onClick={() => handleView(row)}>
                                                 檢視
                                             </Button>
-                                            <Button
-                                                color="primary"
-                                                variant="outlined"
-                                                onClick={() => handleEdit(row)}
-                                            >
+                                            <Button color="primary" variant="outlined" onClick={() => handleEdit(row)}>
                                                 編輯
                                             </Button>
-                                            <Button
-                                                color="error"
-                                                variant="outlined"
-                                                onClick={() =>
-                                                    handleDelete(row.SysInvNotifyRule.RuleID)
-                                                }
-                                            >
+                                            <Button color="error" variant="outlined" onClick={() => handleDelete(row.SysInvNotifyRule.RuleID)}>
                                                 刪除
                                             </Button>
                                         </Box>

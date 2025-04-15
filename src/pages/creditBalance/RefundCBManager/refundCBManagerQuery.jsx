@@ -1,17 +1,5 @@
 import { useState } from 'react';
-import {
-    Typography,
-    Grid,
-    Button,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    Box,
-    FormGroup,
-    FormControlLabel,
-    Checkbox,
-} from '@mui/material';
+import { Typography, Grid, Button, FormControl, InputLabel, Select, MenuItem, Box, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
 
 // project import
 import MainCard from 'components/MainCard';
@@ -32,14 +20,7 @@ import { setMessageStateOpen } from 'store/reducers/dropdown';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
-const RefundCBManagerQuery = ({
-    value,
-    setListInfo,
-    partiesList,
-    submarineCableList,
-    queryApi,
-    workTitleList,
-}) => {
+const RefundCBManagerQuery = ({ value, setListInfo, partiesList, submarineCableList, queryApi, workTitleList }) => {
     const dispatch = useDispatch();
     const [partyName, setPartyName] = useState('All'); //會員名稱
     const [cBType, setCBType] = useState('All'); //CB種類
@@ -83,9 +64,7 @@ const RefundCBManagerQuery = ({
         if (createDate[0] || createDate[1]) {
             tmpQuery.CreateDate = {
                 start: createDate[0] ? dayjs(createDate[0]).format('YYYYMMDD') : '19110101',
-                end: createDate[1]
-                    ? dayjs(createDate[1]).format('YYYYMMDD')
-                    : dayjs(new Date()).format('YYYYMMDD'),
+                end: createDate[1] ? dayjs(createDate[1]).format('YYYYMMDD') : dayjs(new Date()).format('YYYYMMDD')
             };
         }
         if (currAmount?.TRUE && !currAmount?.FALSE) {
@@ -103,9 +82,9 @@ const RefundCBManagerQuery = ({
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify(tmpQuery),
+            body: JSON.stringify(tmpQuery)
         })
             .then((res) => res.json())
             .then((data) => {
@@ -122,9 +101,9 @@ const RefundCBManagerQuery = ({
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -140,21 +119,14 @@ const RefundCBManagerQuery = ({
                 {value === 0 ? (
                     <>
                         <Grid item sm={1} md={1} lg={1} display="flex" justifyContent="center">
-                            <Typography
-                                variant="h5"
-                                sx={{ fontSize: { lg: '0.7rem', xl: '0.88rem' } }}
-                            >
+                            <Typography variant="h5" sx={{ fontSize: { lg: '0.7rem', xl: '0.88rem' } }}>
                                 會員：
                             </Typography>
                         </Grid>
                         <Grid item sm={2} md={2} lg={2}>
                             <FormControl fullWidth size="small">
                                 <InputLabel>選擇會員</InputLabel>
-                                <Select
-                                    value={partyName}
-                                    label="會員"
-                                    onChange={(e) => setPartyName(e.target.value)}
-                                >
+                                <Select value={partyName} label="會員" onChange={(e) => setPartyName(e.target.value)}>
                                     <MenuItem value={'All'}>All</MenuItem>
                                     {partiesList.map((i) => (
                                         <MenuItem key={i} value={i}>
@@ -165,21 +137,14 @@ const RefundCBManagerQuery = ({
                             </FormControl>
                         </Grid>
                         <Grid item sm={1} md={1} lg={1} display="flex" justifyContent="center">
-                            <Typography
-                                variant="h5"
-                                sx={{ fontSize: { lg: '0.7rem', xl: '0.88rem' } }}
-                            >
+                            <Typography variant="h5" sx={{ fontSize: { lg: '0.7rem', xl: '0.88rem' } }}>
                                 CB種類：
                             </Typography>
                         </Grid>
                         <Grid item sm={2} md={2} lg={2}>
                             <FormControl fullWidth size="small">
                                 <InputLabel>選擇CB種類</InputLabel>
-                                <Select
-                                    value={cBType}
-                                    label="CB種類"
-                                    onChange={(e) => setCBType(e.target.value)}
-                                >
+                                <Select value={cBType} label="CB種類" onChange={(e) => setCBType(e.target.value)}>
                                     <MenuItem value={'All'}>All</MenuItem>
                                     <MenuItem value={'MWG'}>MWG</MenuItem>
                                     <MenuItem value={'重溢繳'}>重溢繳</MenuItem>
@@ -199,11 +164,7 @@ const RefundCBManagerQuery = ({
                 <Grid item sm={2} md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇海纜名稱</InputLabel>
-                        <Select
-                            value={submarineCable}
-                            label="海纜名稱"
-                            onChange={(e) => setSubmarineCable(e.target.value)}
-                        >
+                        <Select value={submarineCable} label="海纜名稱" onChange={(e) => setSubmarineCable(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {submarineCableList.map((i) => (
                                 <MenuItem key={i.CableName} value={i.CableName}>
@@ -221,11 +182,7 @@ const RefundCBManagerQuery = ({
                 <Grid item sm={2} md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇海纜作業</InputLabel>
-                        <Select
-                            value={workTitle}
-                            label="海纜作業"
-                            onChange={(e) => setWorkTitle(e.target.value)}
-                        >
+                        <Select value={workTitle} label="海纜作業" onChange={(e) => setWorkTitle(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {workTitleList.map((i) => (
                                 <MenuItem key={i.Title} value={i.Title}>
@@ -238,21 +195,14 @@ const RefundCBManagerQuery = ({
                 {value === 1 ? (
                     <>
                         <Grid item md={1} lg={1} display="flex" justifyContent="center">
-                            <Typography
-                                variant="h5"
-                                sx={{ fontSize: { lg: '0.7rem', xl: '0.88rem' } }}
-                            >
+                            <Typography variant="h5" sx={{ fontSize: { lg: '0.7rem', xl: '0.88rem' } }}>
                                 會員(受款人)：
                             </Typography>
                         </Grid>
                         <Grid item md={2} lg={2}>
                             <FormControl fullWidth size="small">
                                 <InputLabel>選擇會員</InputLabel>
-                                <Select
-                                    value={partyName}
-                                    label="會員"
-                                    onChange={(e) => setPartyName(e.target.value)}
-                                >
+                                <Select value={partyName} label="會員" onChange={(e) => setPartyName(e.target.value)}>
                                     {partiesList.map((i) => (
                                         <MenuItem key={i} value={i}>
                                             {i}
@@ -271,7 +221,7 @@ const RefundCBManagerQuery = ({
                                 variant="h5"
                                 sx={{
                                     fontSize: { lg: '0.7rem', xl: '0.88rem' },
-                                    ml: { lg: '0rem', xl: '0rem' },
+                                    ml: { lg: '0rem', xl: '0rem' }
                                 }}
                             >
                                 剩餘金額：
@@ -288,8 +238,8 @@ const RefundCBManagerQuery = ({
                                                 onChange={handleChange}
                                                 sx={{
                                                     '& .MuiSvgIcon-root': {
-                                                        fontSize: { lg: 14, xl: 20 },
-                                                    },
+                                                        fontSize: { lg: 14, xl: 20 }
+                                                    }
                                                 }}
                                             />
                                         }
@@ -303,8 +253,8 @@ const RefundCBManagerQuery = ({
                                                 onChange={handleChange}
                                                 sx={{
                                                     '& .MuiSvgIcon-root': {
-                                                        fontSize: { lg: 14, xl: 20 },
-                                                    },
+                                                        fontSize: { lg: 14, xl: 20 }
+                                                    }
                                                 }}
                                             />
                                         }
@@ -314,18 +264,12 @@ const RefundCBManagerQuery = ({
                             </FormControl>
                         </Grid>
                         <Grid item sm={2} md={1} lg={1} display="flex" justifyContent="center">
-                            <Typography
-                                variant="h5"
-                                sx={{ fontSize: { lg: '0.7rem', xl: '0.88rem' } }}
-                            >
+                            <Typography variant="h5" sx={{ fontSize: { lg: '0.7rem', xl: '0.88rem' } }}>
                                 建立日期：
                             </Typography>
                         </Grid>
                         <Grid item sm={4} md={4} lg={4}>
-                            <LocalizationProvider
-                                dateAdapter={AdapterDayjs}
-                                localeText={{ start: '起始日', end: '結束日' }}
-                            >
+                            <LocalizationProvider dateAdapter={AdapterDayjs} localeText={{ start: '起始日', end: '結束日' }}>
                                 <DateRangePicker
                                     inputFormat="YYYY/MM/DD"
                                     value={createDate}

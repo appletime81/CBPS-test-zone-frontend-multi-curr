@@ -12,12 +12,7 @@ import dayjs from 'dayjs';
 import { TextField } from '@mui/material/index';
 
 // api
-import {
-    searchInvoiceWKMasterByBillMaster,
-    submarineCableInfoList,
-    dropdownmenuParties,
-    getWorkTitle,
-} from 'components/apis.jsx';
+import { searchInvoiceWKMasterByBillMaster, submarineCableInfoList, dropdownmenuParties, getWorkTitle } from 'components/apis.jsx';
 
 // redux
 import { useDispatch } from 'react-redux';
@@ -69,9 +64,9 @@ const ResearchBillQuery = ({ setListInfo, setDetailInfo }) => {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify(tmpQuery),
+            body: JSON.stringify(tmpQuery)
         })
             .then((res) => res.json())
             .then((data) => {
@@ -87,9 +82,9 @@ const ResearchBillQuery = ({ setListInfo, setDetailInfo }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     };
@@ -98,6 +93,9 @@ const ResearchBillQuery = ({ setListInfo, setDetailInfo }) => {
         //海纜名稱
         fetch(submarineCableInfoList, {
             method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
         })
             .then((res) => res.json())
             .then((data) => {
@@ -109,13 +107,18 @@ const ResearchBillQuery = ({ setListInfo, setDetailInfo }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         //會員名稱
-        fetch(dropdownmenuParties, { method: 'GET' })
+        fetch(dropdownmenuParties, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 setPartiesList(data);
@@ -126,18 +129,18 @@ const ResearchBillQuery = ({ setListInfo, setDetailInfo }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
         fetch(getWorkTitle, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                Authorization: 'Bearer' + localStorage.getItem('accessToken') ?? '',
+                Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
             },
-            body: JSON.stringify({}),
+            body: JSON.stringify({})
         })
             .then((res) => res.json())
             .then((data) => {
@@ -154,9 +157,9 @@ const ResearchBillQuery = ({ setListInfo, setDetailInfo }) => {
                         messageStateOpen: {
                             isOpen: true,
                             severity: 'error',
-                            message: '網路異常，請檢查網路連線或與系統窗口聯絡',
-                        },
-                    }),
+                            message: '網路異常，請檢查網路連線或與系統窗口聯絡'
+                        }
+                    })
                 );
             });
     }, []);
@@ -173,11 +176,7 @@ const ResearchBillQuery = ({ setListInfo, setDetailInfo }) => {
                 <Grid item xs={2} sm={2} md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇會員</InputLabel>
-                        <Select
-                            value={partyName}
-                            label="會員"
-                            onChange={(e) => setPartyName(e.target.value)}
-                        >
+                        <Select value={partyName} label="會員" onChange={(e) => setPartyName(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {partiesList.map((i) => (
                                 <MenuItem key={i} value={i}>
@@ -195,11 +194,7 @@ const ResearchBillQuery = ({ setListInfo, setDetailInfo }) => {
                 <Grid item xs={2} sm={2} md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇海纜名稱</InputLabel>
-                        <Select
-                            value={submarineCable}
-                            label="海纜名稱"
-                            onChange={(e) => setSubmarineCable(e.target.value)}
-                        >
+                        <Select value={submarineCable} label="海纜名稱" onChange={(e) => setSubmarineCable(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {submarineCableList.map((i) => (
                                 <MenuItem key={i.CableName} value={i.CableName}>
@@ -217,11 +212,7 @@ const ResearchBillQuery = ({ setListInfo, setDetailInfo }) => {
                 <Grid item xs={2} sm={2} md={2} lg={2}>
                     <FormControl fullWidth size="small">
                         <InputLabel>選擇海纜作業</InputLabel>
-                        <Select
-                            value={workTitle}
-                            label="海纜作業"
-                            onChange={(e) => setWorkTitle(e.target.value)}
-                        >
+                        <Select value={workTitle} label="海纜作業" onChange={(e) => setWorkTitle(e.target.value)}>
                             <MenuItem value={'All'}>All</MenuItem>
                             {workTitleList.map((i) => (
                                 <MenuItem key={i.Title} value={i.Title}>
@@ -238,14 +229,7 @@ const ResearchBillQuery = ({ setListInfo, setDetailInfo }) => {
                 </Grid>
                 <Grid item xs={2} sm={2} md={2} lg={2}>
                     <FormControl fullWidth size="small">
-                        <TextField
-                            fullWidth
-                            variant="outlined"
-                            value={billingNo}
-                            size="small"
-                            label="填寫帳單號碼"
-                            onChange={(e) => setBillingNo(e.target.value)}
-                        />
+                        <TextField fullWidth variant="outlined" value={billingNo} size="small" label="填寫帳單號碼" onChange={(e) => setBillingNo(e.target.value)} />
                     </FormControl>
                 </Grid>
                 {/* row2 */}
@@ -255,10 +239,7 @@ const ResearchBillQuery = ({ setListInfo, setDetailInfo }) => {
                     </Typography>
                 </Grid>
                 <Grid item xs={5} sm={5} md={5} lg={5} display="flex" alignItems="center">
-                    <LocalizationProvider
-                        dateAdapter={AdapterDayjs}
-                        localeText={{ start: '起始日', end: '結束日' }}
-                    >
+                    <LocalizationProvider dateAdapter={AdapterDayjs} localeText={{ start: '起始日', end: '結束日' }}>
                         <DesktopDatePicker
                             inputFormat="YYYY/MM/DD"
                             value={dueDate}
@@ -269,16 +250,7 @@ const ResearchBillQuery = ({ setListInfo, setDetailInfo }) => {
                         />
                     </LocalizationProvider>
                 </Grid>
-                <Grid
-                    item
-                    xs={6}
-                    sm={6}
-                    md={6}
-                    lg={6}
-                    display="flex"
-                    justifyContent="end"
-                    alignItems="center"
-                >
+                <Grid item xs={6} sm={6} md={6} lg={6} display="flex" justifyContent="end" alignItems="center">
                     <Button sx={{ mr: '0.5rem' }} variant="contained" onClick={invoiceQuery}>
                         查詢
                     </Button>
